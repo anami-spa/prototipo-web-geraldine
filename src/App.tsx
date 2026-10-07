@@ -484,17 +484,16 @@ export default function App() {
                   {/* Right Column: Editorial Portrait Frame (5 cols) */}
                   <div className="lg:col-span-5">
                     <figure className="relative mx-auto max-w-md lg:max-w-none">
-                      {/* Retrato pendiente: la foto de IA que había acá mostraba a una
-                          mujer que no es Geraldine — se retira hasta tener su foto
-                          real (pregunta 1 del brief de WhatsApp, ver T1.12 del plan) */}
-                      <div
-                        className="relative flex flex-col items-center justify-center overflow-hidden rounded-sm border border-[#D4CFC3] bg-[#EAE6DC] aspect-[3/4] p-8 text-center"
-                        role="img"
-                        aria-label="Retrato de Geraldine Manríquez — pendiente"
-                      >
-                        <span className="font-editorial text-3xl italic text-[#171A17]">
-                          Geraldine Manríquez
-                        </span>
+                      {/* Foto real de Geraldine (Sony ILCE-6400, misma foto que
+                          usa en geraldinemanriquez.com/escuela, filename
+                          fullsizeoutput_97fe) — reemplaza el bloque pendiente */}
+                      <div className="relative overflow-hidden rounded-sm border border-[#D4CFC3] bg-[#EAE6DC] aspect-[3/4]">
+                        <ResilientImage
+                          src="/images/geraldine_manriquez_retrato.webp"
+                          alt="Retrato de Geraldine Manríquez, coach de ventas y narrativa comercial en Concepción, Chile"
+                          fallbackTitle="Geraldine Manríquez"
+                          className="w-full h-full object-cover object-top"
+                        />
                         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#171A17]/85 via-[#171A17]/20 to-transparent p-5 sm:p-6 text-[#F8F6F1]">
                           <p className="font-editorial text-lg sm:text-xl italic leading-snug">
                             “Vender no es convencer a la fuerza; es saber traducir lo que haces al

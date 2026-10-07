@@ -62,15 +62,15 @@ export function SobreMiPage({ onNavigate }: SobreMiPageProps) {
 
             <div className="lg:col-span-5">
               <figure>
-                {/* Retrato pendiente: la foto de IA que había acá mostraba a una
-                    mujer que no es Geraldine — se retira hasta tener su foto
-                    real (pregunta 1 del brief de WhatsApp, ver T1.12 del plan) */}
-                <div
-                  className="flex flex-col items-center justify-center bg-[#E8E4DA] text-[#3B403B] p-8 text-center aspect-[3/4] max-w-md mx-auto"
-                  role="img"
-                  aria-label="Retrato de Geraldine Manríquez — pendiente"
-                >
-                  <span className="font-editorial text-2xl italic">Geraldine Manríquez</span>
+                {/* Foto real de Geraldine (Sony ILCE-6400, misma foto que usa en
+                    geraldinemanriquez.com/escuela) — reemplaza el bloque pendiente */}
+                <div className="overflow-hidden rounded-sm border border-[#D4CFC3] bg-[#EAE6DC] aspect-[3/4] max-w-md mx-auto">
+                  <ResilientImage
+                    src="/images/geraldine_manriquez_retrato.webp"
+                    alt="Retrato de Geraldine Manríquez, profesora de emprendedores y especialista en neurociencia aplicada a las ventas"
+                    fallbackTitle="Geraldine Manríquez — Profesora"
+                    className="w-full h-full object-cover object-top"
+                  />
                 </div>
                 <figcaption className="mt-2.5 text-xs font-tabular text-[#5E615B]">
                   Fig. 01 — 12 años de docencia y neurociencia
