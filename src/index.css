@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+/**
+ * Vestido A/B — ver T1.5 del plan de mejoras.
+ * Vestido B ("Terracota Cálido", default) es lo que ya existía en el
+ * prototipo. Vestido A ("Dorado Editorial") usa la paleta y tipografía
+ * REALES de la marca de Geraldine (Rediseno_Web_Stitch_Conceptos_2026-07-13).
+ * Se activa con ?tema=a en la URL (ver App.tsx).
+ *
+ * Alcance real de este toggle: tipografía (100% del sitio, ambos headings y
+ * cuerpo heredan de estas variables) + el color de acento principal
+ * (terracota↔dorado, ~113 usos ya migrados a var(--color-accent)).
+ * NO migrado aún: los tonos base de fondo/texto (papel/tinta/carbón) siguen
+ * fijos en hex — tocar eso es un refactor más grande, pendiente para cuando
+ * se elija un vestido definitivo. Documentado así en el plan, no es un
+ * olvido.
+ */
+@layer base {
+  :root {
+    --font-display: 'Fraunces', Georgia, serif;
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --color-accent: #B83B2A;
+    --color-accent-dark: #992D1E;
+  }
+
+  :root[data-tema="a"] {
+    --font-display: 'Bodoni Moda', Georgia, serif;
+    --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --color-accent: #C6A44E;
+    --color-accent-dark: #B8912E;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    scroll-behavior: smooth;
+    color: #171A17;
+    background-color: #F8F6F1;
+  }
+
+  h1, h2, h3, .font-editorial {
+    font-family: var(--font-display);
+    font-feature-settings: "liga" 1, "kern" 1;
+  }
+
+  .font-tabular {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@keyframes editorial-marquee {
+  0% {
+    transform: translate3d(0%, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee-loop {
+  display: flex;
+  width: max-content;
+  animation: editorial-marquee 34s linear infinite;
+}
+
+.animate-marquee-loop:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee-loop {
+    animation: none;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
