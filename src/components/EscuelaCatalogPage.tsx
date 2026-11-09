@@ -1,6 +1,9 @@
+import { ServiceBrand } from './BrandLogo';
 import React from 'react';
 import { ArrowRight, Check } from 'lucide-react';
 import { ESCUELA_CARDS, RoutePath } from '../data/siteContent';
+import { photo } from '../data/photos';
+import { ResilientImage } from './ResilientImage';
 
 interface EscuelaCatalogPageProps {
   onNavigate: (route: RoutePath) => void;
@@ -8,10 +11,12 @@ interface EscuelaCatalogPageProps {
 
 export function EscuelaCatalogPage({ onNavigate }: EscuelaCatalogPageProps) {
   return (
-    <div className="bg-[#F8F6F1] text-[#171A17]">
+    <div className="bg-[var(--color-paper)] text-[#171A17]">
       {/* Hero Section */}
       <section className="py-14 lg:py-20 border-b border-[#DEDAD0]">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+          <div className="lg:col-span-7">
+          <ServiceBrand service="escuela" />
           <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm font-tabular text-[var(--color-accent)] mb-4">
             <span>ESCUELA DE VENTAS · CATÁLOGO OFICIAL</span>
             <span aria-hidden="true">·</span>
@@ -28,6 +33,20 @@ export function EscuelaCatalogPage({ onNavigate }: EscuelaCatalogPageProps) {
           <p className="text-lg sm:text-xl text-[#383B36] max-w-[60ch] leading-relaxed border-l-2 border-[var(--color-accent)] pl-5">
             Prepárate para transformar la frustración en conexión y la confusión en claridad.
           </p>
+          </div>
+
+          <div className="lg:col-span-5">
+            <div className="overflow-hidden rounded-sm border border-[#D4CFC3] bg-[#EAE6DC] aspect-[4/5] max-w-sm mx-auto lg:max-w-none">
+              <ResilientImage
+                {...photo('escuela-hero')}
+                sizes="(min-width: 1280px) 480px, (min-width: 1024px) 38vw, 90vw"
+                fetchPriority="high"
+                decoding="async"
+                fallbackTitle="Geraldine Manríquez"
+                className="h-full w-full object-cover"
+              />
+            </div>
+          </div>
         </div>
       </section>
 
@@ -38,9 +57,19 @@ export function EscuelaCatalogPage({ onNavigate }: EscuelaCatalogPageProps) {
             {ESCUELA_CARDS.map((card) => (
               <article
                 key={card.slug}
-                className="bg-[#FBF9F5] border border-[#D5CFC2] rounded-sm p-6 sm:p-8 lg:p-10 flex flex-col justify-between hover:border-[var(--color-accent)] transition-colors duration-150"
+                className="overflow-hidden bg-[var(--color-surface)] border border-[#D5CFC2] rounded-sm p-6 sm:p-8 lg:p-10 flex flex-col justify-between hover:border-[var(--color-accent)] transition-colors duration-150"
               >
                 <div>
+                  <div className="-mx-6 -mt-6 sm:-mx-8 sm:-mt-8 lg:-mx-10 lg:-mt-10 mb-6 aspect-[16/9] overflow-hidden border-b border-[#D5CFC2] bg-[#EAE6DC]">
+                    <ResilientImage
+                      {...photo(card.image)}
+                      sizes="(min-width: 1280px) 600px, (min-width: 1024px) 45vw, 92vw"
+                      loading="lazy"
+                      decoding="async"
+                      fallbackTitle={card.title}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
                   {/* Unboxed top metadata */}
                   <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-tabular text-[#5A5D56] pb-4 mb-6 border-b border-[#E5E0D4]">
                     <span className="text-[var(--color-accent)] font-semibold">
@@ -90,7 +119,7 @@ export function EscuelaCatalogPage({ onNavigate }: EscuelaCatalogPageProps) {
                   <button
                     type="button"
                     onClick={() => onNavigate(card.slug)}
-                    className="inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold text-white bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] rounded-sm transition-colors duration-150 whitespace-nowrap cursor-pointer"
+                    className="inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold text-[var(--color-accent-on-fill)] bg-[var(--color-accent-fill)] hover:brightness-95 rounded-sm transition-colors duration-150 whitespace-nowrap cursor-pointer"
                   >
                     <span>Ver ficha y pagar con Flow</span>
                     <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />

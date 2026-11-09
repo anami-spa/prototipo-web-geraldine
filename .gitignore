@@ -2,3 +2,9 @@ node_modules/
 dist/
 .DS_Store
 *.log
+.remember/
+.env*
+CONTINUIDAD_*.md
+design.md
+CLAUDE.md
+AGENTS.md

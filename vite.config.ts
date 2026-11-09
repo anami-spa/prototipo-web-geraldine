@@ -5,6 +5,8 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
+    // GitHub Pages sirve bajo /prototipo-web-geraldine/ (VITE_BASE); en dominio propio y en local es '/'.
+    base: process.env.VITE_BASE ?? '/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {

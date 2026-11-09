@@ -1,3 +1,5 @@
+import type { PhotoId } from './photos';
+
 export type RoutePath =
   | '/'
   | '/sobre-mi'
@@ -7,12 +9,14 @@ export type RoutePath =
   | '/escuela/vender-sin-vender'
   | '/escuela/conexiones-que-conectan'
   | '/radio'
+  | '/radio/auspicio-pyme'
+  | '/radio/auspicio-empresa'
   | '/speaker'
+  | '/blog'
+  | '/libro'
+  | '/privacidad'
+  | '/terminos'
   | '/contacto';
-// Nota: '/blog' se retiró del prototipo — las 3 entradas eran demo con el
-// mismo excerpt. Se reactiva cuando Geraldine tenga artículos reales
-// (pregunta 6 del brief de WhatsApp). BLOG_PLACEHOLDER_POSTS y BlogPage
-// quedan en el código, sin usar, para retomarlo rápido.
 
 export interface ServiceTestimonial {
   name: string;
@@ -63,6 +67,8 @@ export interface ServiceDetailData {
 
 export const ESCUELA_CARDS: {
   slug: RoutePath;
+  /** Foto de encabezado de la card y de la ficha (decorativa). */
+  image: PhotoId;
   index: string;
   title: string;
   hook: string;
@@ -73,6 +79,7 @@ export const ESCUELA_CARDS: {
 }[] = [
   {
     slug: '/escuela/diagnostico',
+    image: 'esc-diagnostica',
     index: '01',
     title: 'Sesión Diagnóstica',
     hook: '“¿Tienes mentorías pero sigues estancada? No es falta de capacidad, es falta de claridad.”',
@@ -83,6 +90,7 @@ export const ESCUELA_CARDS: {
   },
   {
     slug: '/escuela/narrativa-comercial',
+    image: 'esc-narrativa',
     index: '02',
     title: 'Narrativa Comercial',
     hook: '“¿Te preguntan a qué te dedicas y te cuesta encontrar las palabras?”',
@@ -93,6 +101,7 @@ export const ESCUELA_CARDS: {
   },
   {
     slug: '/escuela/vender-sin-vender',
+    image: 'esc-vender',
     index: '03',
     title: 'Vender sin Vender (curso grupal)',
     hook: '“El curso práctico para personas emprendedoras que quieren vender sin forzar, conectar sin manipular y cerrar con confianza.”',
@@ -103,6 +112,7 @@ export const ESCUELA_CARDS: {
   },
   {
     slug: '/escuela/conexiones-que-conectan',
+    image: 'esc-conexiones',
     index: '04',
     title: 'Networking: Conexiones que Conectan',
     hook: '“10º Taller de Networking presencial en Concepción para emprendedores, terapeutas, coaches y profesionales independientes.”',
@@ -538,13 +548,89 @@ export const SITE_LINKS = {
     Spotify: 'https://open.spotify.com/show/0CDXxDx16FFI9kfr9Gr6kg',
   },
   bookBuscalibre: 'https://www.buscalibre.cl/libros/search/?q=geraldine+manriquez+plaza',
+  // Playlist entregada por Cristian el 29-oct-2026.
+  radioYouTubePlaylist: 'https://www.youtube.com/watch?v=eRyexugXTqs&list=PL6Z8t3mS8vaTUDtCw2ocTuCkEFyfUqJ3P',
   radioListaEsperaForm: 'https://forms.gle/k4d7pQH9irQ3WPee6',
   diagnosticoHubspotForm: 'https://ug7oc.share.hsforms.com/2fbpk6PsRR3eNPipbB2bF8Q',
   radioHorario: 'Lunes, Miércoles y Viernes de 18:00 a 19:00 hrs',
   radioEmisora: 'Radio Femenina de Concepción (44 años al aire, asociada a ARCHI)',
   radioAlcance: '25.000–45.000 auditores por emisión en el Gran Concepción',
   radioInvitados: '+150 invitados entrevistados · 2 meses de lista de espera',
+  newsletterHubspotForm: undefined as string | undefined,
+  calendario: undefined as string | undefined,
 };
+
+export interface HeroSlide {
+  id: string;
+  kicker: string;
+  title: string;
+  emphasis: string;
+  subtitle: string;
+  primaryCta: { label: string; route: RoutePath | '#diagnostico' };
+  secondaryCta?: { label: string; route: RoutePath };
+  /** Foto de la slide: se anima junto con el texto. `quote` va sobre la foto; `caption` debajo. */
+  image: { photo: PhotoId; fit?: 'cover' | 'contain'; quote: string; caption: string };
+}
+
+export const HERO_SLIDES: HeroSlide[] = [
+  {
+    id: 'retina',
+    kicker: 'Profesora de Emprendedores',
+    title: 'Deja de explicar tu técnica: destraba tu negocio nombrando',
+    emphasis: 'el problema real de tu cliente.',
+    subtitle:
+      'Ayudarte a destrabar tu negocio, estructurar tus ideas y dominar una narrativa comercial que atraiga a tu cliente ideal.',
+    primaryCta: { label: 'Encuentra tu programa', route: '/escuela' },
+    secondaryCta: { label: 'Conoce a Geraldine', route: '/sobre-mi' },
+    image: {
+      photo: 'home-hero-retina',
+      quote: '“Vender no es convencer a la fuerza; es saber traducir lo que haces al dolor que tu cliente ya quiere resolver.”',
+      caption: 'Geraldine Manríquez · Concepción, Biobío',
+    },
+  },
+  {
+    id: 'vender-sin-vender',
+    kicker: 'Próxima edición: por confirmar',
+    title: 'Vender sin Vender',
+    emphasis: 'conecta sin forzar.',
+    subtitle: 'Conoce el curso y revisa sus contenidos en la Escuela de Ventas.',
+    primaryCta: { label: 'Conocer el curso', route: '/escuela/vender-sin-vender' },
+    secondaryCta: { label: 'Ver todos los servicios', route: '/escuela' },
+    image: {
+      photo: 'home-hero-vender',
+      quote: 'Vender sin Vender · conoce el curso',
+      caption: 'Geraldine Manríquez · Vender sin Vender',
+    },
+  },
+  {
+    id: 'libro',
+    kicker: 'Coautora',
+    title: 'Revolución Emprendedora',
+    emphasis: 'un libro para crear sin agotarte.',
+    subtitle: 'Coautora del libro «Revolución Emprendedora».',
+    primaryCta: { label: 'Conocer el libro', route: '/libro' },
+    secondaryCta: { label: 'Sobre Geraldine', route: '/sobre-mi' },
+    image: {
+      photo: 'home-hero-libro',
+      quote: 'Revolución Emprendedora · conoce el libro',
+      caption: 'Revolución Emprendedora',
+    },
+  },
+];
+
+export interface SpeakerGalleryItem {
+  photo: PhotoId;
+  title: string;
+}
+
+export const SPEAKER_GALLERY: SpeakerGalleryItem[] = [
+  { photo: 'spk-g-escenario', title: 'En el escenario' },
+  { photo: 'spk-g-retrato', title: 'Retrato en el auditorio' },
+  { photo: 'spk-g-auditorio', title: 'Durante una charla' },
+  { photo: 'spk-g-ecosistema', title: 'Junto al atril' },
+  { photo: 'spk-g-atril', title: 'Presentando' },
+  { photo: 'spk-g-perfil', title: 'De perfil en el atril' },
+];
 
 /**
  * Organizaciones aliadas. `url` solo cuando está verificado contra el sitio
@@ -559,37 +645,4 @@ export const PARTNER_ORGS: { name: string; url?: string }[] = [
   { name: 'CIDERE' },
   { name: 'Etmday' },
   { name: 'Openbeauchef' },
-];
-
-export const BLOG_PLACEHOLDER_POSTS = [
-  {
-    id: 'post-1',
-    title: 'Por qué describir las características de tu servicio aleja a tu cliente ideal',
-    excerpt:
-      'Artículo de demostración estructural para ilustrar el formato editorial del blog de Aprende a Emprender. El contenido definitivo será publicado próximamente.',
-    date: '14 de octubre, 2026 (Fecha de ejemplo)',
-    category: 'Narrativa Comercial',
-    readTime: '4 min de lectura',
-    image: '/images/retina_emprendedora_cafe_1791226529701.webp',
-  },
-  {
-    id: 'post-2',
-    title: 'Cómo responder “¿a qué te dedicas?” sin sonar como un folleto corporativo',
-    excerpt:
-      'Artículo de demostración estructural para ilustrar el formato editorial del blog de Aprende a Emprender. El contenido definitivo será publicado próximamente.',
-    date: '02 de octubre, 2026 (Fecha de ejemplo)',
-    category: 'La Retina Emprendedora',
-    readTime: '5 min de lectura',
-    image: '/images/sobre_mi_libro_revolucion_1791229215968.webp',
-  },
-  {
-    id: 'post-3',
-    title: 'Tres señales de que tu negocio necesita un diagnóstico comercial antes de invertir en anuncios',
-    excerpt:
-      'Artículo de demostración estructural para ilustrar el formato editorial del blog de Aprende a Emprender. El contenido definitivo será publicado próximamente.',
-    date: '21 de septiembre, 2026 (Fecha de ejemplo)',
-    category: 'Estrategia de Ventas',
-    readTime: '6 min de lectura',
-    image: '/images/speaker_conferencia_auditorio_1791229225599.webp',
-  },
 ];

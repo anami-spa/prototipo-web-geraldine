@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import { SocialLinks } from './SocialLinks';
+import { ServiceBrand } from './BrandLogo';
+import React, { useRef, useState } from 'react';
 import {
   ArrowRight,
   ArrowUpRight,
@@ -9,7 +11,9 @@ import {
   Mic,
   Users,
 } from 'lucide-react';
-import { BLOG_PLACEHOLDER_POSTS, RoutePath, SITE_LINKS } from '../data/siteContent';
+import { BLOG_POSTS } from '../data/blogPosts';
+import { RoutePath, SITE_LINKS, SPEAKER_GALLERY } from '../data/siteContent';
+import { photo } from '../data/photos';
 import { ResilientImage } from './ResilientImage';
 
 interface SpeakerPageProps {
@@ -17,6 +21,47 @@ interface SpeakerPageProps {
 }
 
 export function SpeakerPage({ onNavigate }: SpeakerPageProps) {
+  const [availabilityName, setAvailabilityName] = useState('');
+  const [availabilityEmail, setAvailabilityEmail] = useState('');
+  const [availabilityWhen, setAvailabilityWhen] = useState('');
+  const [availabilityMessage, setAvailabilityMessage] = useState('');
+  const [availabilityErrors, setAvailabilityErrors] = useState<Record<string, string>>({});
+  const [mailClientOpened, setMailClientOpened] = useState(false);
+  const availabilityNameRef = useRef<HTMLInputElement>(null);
+  const availabilityEmailRef = useRef<HTMLInputElement>(null);
+  const availabilityMessageRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleAvailabilitySubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const errors: Record<string, string> = {};
+    if (!availabilityName.trim()) errors.name = 'Ingresa tu nombre.';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(availabilityEmail.trim())) {
+      errors.email = 'Ingresa un correo electrónico válido.';
+    }
+    if (!availabilityMessage.trim()) errors.message = 'Cuéntanos brevemente sobre tu evento.';
+    setAvailabilityErrors(errors);
+
+    if (Object.keys(errors).length > 0) {
+      if (errors.name) availabilityNameRef.current?.focus();
+      else if (errors.email) availabilityEmailRef.current?.focus();
+      else availabilityMessageRef.current?.focus();
+      return;
+    }
+
+    const subject = encodeURIComponent('Consulta de disponibilidad para conferencia');
+    const body = encodeURIComponent(
+      [
+        `Nombre: ${availabilityName.trim()}`,
+        `Correo: ${availabilityEmail.trim()}`,
+        `Fecha o referencia: ${availabilityWhen.trim() || 'Por definir'}`,
+        '',
+        availabilityMessage.trim(),
+      ].join('\n')
+    );
+    window.location.href = `mailto:${SITE_LINKS.email}?subject=${subject}&body=${body}`;
+    setMailClientOpened(true);
+  };
+
   const speakerTopics = [
     {
       number: '01',
@@ -43,12 +88,13 @@ export function SpeakerPage({ onNavigate }: SpeakerPageProps) {
   ];
 
   return (
-    <div className="bg-[#F8F6F1] text-[#171A17]">
+    <div className="bg-[var(--color-paper)] text-[#171A17]">
       {/* Hero Section */}
       <section className="py-14 lg:py-20 border-b border-[#DEDAD0]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             <div className="lg:col-span-7">
+              <ServiceBrand service="speaker" />
               <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm font-tabular text-[var(--color-accent)] mb-4">
                 <span>SPEAKER &amp; RELATORÍAS</span>
                 <span aria-hidden="true">·</span>
@@ -68,14 +114,14 @@ export function SpeakerPage({ onNavigate }: SpeakerPageProps) {
                 comercial inmediata en audiencias de emprendedores, organizaciones e instituciones.
               </p>
 
-              {/* Sin botón Flow: solo CTA de contacto / Quiero Info Auspiciador */}
+              {/* Consulta de disponibilidad y acceso a contacto */}
               <div className="flex flex-wrap items-center gap-4">
                 <a
-                  href="mailto:hola@geraldinemanriquez.com?subject=Cotizar%20Conferencia%20Speaker%20-%20Geraldine%20Manr%C3%ADquez"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-sm sm:text-base font-semibold text-white bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] rounded-sm transition-colors whitespace-nowrap"
+                  href="#consulta-speaker"
+                  className="inline-flex min-h-11 items-center justify-center gap-2 px-6 py-3.5 text-sm sm:text-base font-semibold text-[var(--color-accent-on-fill)] bg-[var(--color-accent-fill)] hover:brightness-95 rounded-sm transition-colors whitespace-nowrap"
                 >
                   <Mail className="w-4 h-4 shrink-0" aria-hidden="true" />
-                  <span>Quiero Info Auspiciador / Cotizar Conferencia</span>
+                  <span>Consultar disponibilidad</span>
                 </a>
                 <button
                   type="button"
@@ -89,15 +135,15 @@ export function SpeakerPage({ onNavigate }: SpeakerPageProps) {
 
             <div className="lg:col-span-5">
               <figure>
-                {/* Foto pendiente: la imagen de IA que había acá mostraba a una
-                    mujer que no es Geraldine dando esta charla — se retira
-                    hasta tener su foto real (pregunta 1 del brief de WhatsApp) */}
-                <div
-                  className="flex flex-col items-center justify-center bg-[#E8E4DA] text-[#3B403B] p-8 text-center aspect-[16/9] lg:aspect-[4/3]"
-                  role="img"
-                  aria-label="Geraldine Manríquez en conferencia — pendiente"
-                >
-                  <span className="font-editorial text-2xl italic">Speaker & Conferencias</span>
+                <div className="overflow-hidden rounded-sm bg-[#121A16] aspect-[16/9] lg:aspect-[4/3]">
+                  <ResilientImage
+                    {...photo('speaker-hero')}
+                    sizes="(min-width: 1280px) 480px, (min-width: 1024px) 38vw, 92vw"
+                    fetchPriority="high"
+                    decoding="async"
+                    fallbackTitle="Geraldine Manríquez · Speaker"
+                    className="h-full w-full object-cover"
+                  />
                 </div>
                 <figcaption className="mt-2.5 text-xs font-tabular text-[#5E615B]">
                   Conferencias presenciales y online
@@ -112,7 +158,7 @@ export function SpeakerPage({ onNavigate }: SpeakerPageProps) {
       <section className="py-16 lg:py-24 border-b border-[#DEDAD0] bg-[#121A16] text-[#F4F1EA]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="mb-12">
-            <div className="font-tabular text-xs text-[#D4A359] mb-2">
+            <div className="font-tabular text-xs text-[var(--color-accent-fill)] mb-2">
               EJES TEMÁTICOS OFICIALES
             </div>
             <h2 className="font-editorial text-3xl sm:text-4xl lg:text-5xl text-[#F4F1EA]">
@@ -127,13 +173,13 @@ export function SpeakerPage({ onNavigate }: SpeakerPageProps) {
                 className="bg-[#18221D] border border-[#2C3A32] rounded-sm p-6 sm:p-8 flex flex-col justify-between"
               >
                 <div>
-                  <div className="font-tabular text-xs text-[#D4A359] pb-3 mb-4 border-b border-[#2C3A32]">
+                  <div className="font-tabular text-xs text-[var(--color-accent-fill)] pb-3 mb-4 border-b border-[#2C3A32]">
                     CONFERENCIA {topic.number}
                   </div>
                   <h3 className="font-editorial text-2xl sm:text-3xl text-[#F4F1EA] mb-2">
                     {topic.number}. {topic.title}
                   </h3>
-                  <div className="font-editorial italic text-base text-[#D4A359] mb-4">
+                  <div className="font-editorial italic text-base text-[var(--color-accent-fill)] mb-4">
                     “{topic.subtitle}”
                   </div>
                   <p className="text-sm text-[#C4C0B6] leading-relaxed">{topic.description}</p>
@@ -148,11 +194,221 @@ export function SpeakerPage({ onNavigate }: SpeakerPageProps) {
         </div>
       </section>
 
-      {/* Ficha Técnica: Público, Formato, Duración y Precio */}
-      <section className="py-16 lg:py-20 bg-[#F2EFE7] border-b border-[#DEDAD0]">
+      <section className="py-16 lg:py-20 border-b border-[#DEDAD0]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
+          <div className="max-w-[64ch] mb-10">
+            <div className="font-tabular text-xs text-[var(--color-accent)] mb-2">
+              EXPERIENCIAS EN ESCENARIO
+            </div>
+            <h2 className="font-editorial text-3xl sm:text-4xl text-[#171A17] mb-3">
+              Conferencias destacadas
+            </h2>
+            <p className="text-sm sm:text-base text-[#383B36] leading-relaxed">
+              Registros de Geraldine en escenario durante conferencias y charlas.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {SPEAKER_GALLERY.map((item) => {
+              const p = photo(item.photo);
+              return (
+                <figure key={item.photo}>
+                  <div className="aspect-[4/3] overflow-hidden rounded-sm border border-[#D5CFC2] bg-[#EAE6DC]">
+                    <ResilientImage
+                      {...p}
+                      sizes="(min-width: 1024px) 400px, (min-width: 768px) 30vw, 92vw"
+                      loading="lazy"
+                      decoding="async"
+                      fallbackTitle={item.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <figcaption className="mt-2 text-sm font-medium text-[#171A17]">
+                    {item.title}
+                  </figcaption>
+                </figure>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="consulta-speaker"
+        className="scroll-mt-20 py-16 lg:py-20 bg-[var(--color-surface-alt)] border-b border-[#DEDAD0]"
+        aria-labelledby="consulta-speaker-title"
+      >
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
+          <div className="max-w-[760px] mx-auto bg-[var(--color-surface)] border border-[#D5CFC2] rounded-sm p-6 sm:p-9">
+            <div className="font-tabular text-xs text-[var(--color-accent)] mb-2">
+              CONSULTA DE DISPONIBILIDAD
+            </div>
+            <h2
+              id="consulta-speaker-title"
+              className="font-editorial text-2xl sm:text-3xl text-[#171A17] mb-3"
+            >
+              Cuéntame sobre tu evento
+            </h2>
+            <p className="text-sm sm:text-base text-[#383B36] leading-relaxed mb-6">
+              Indica una fecha o una referencia. Si aún no tienes fecha, puedes dejar ese campo en
+              blanco y contarme qué estás organizando.
+            </p>
+
+            {!mailClientOpened ? (
+              <form onSubmit={handleAvailabilitySubmit} noValidate className="space-y-4">
+                <div>
+                  <label htmlFor="speaker-name" className="block text-sm font-semibold mb-1.5">
+                    Nombre completo <span aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    ref={availabilityNameRef}
+                    id="speaker-name"
+                    name="name"
+                    type="text"
+                    autoComplete="name"
+                    required
+                    value={availabilityName}
+                    onChange={(event) => {
+                      setAvailabilityName(event.target.value);
+                      setAvailabilityErrors((errors) => ({ ...errors, name: '' }));
+                    }}
+                    aria-invalid={Boolean(availabilityErrors.name)}
+                    aria-describedby={availabilityErrors.name ? 'speaker-name-error' : undefined}
+                    className="w-full min-h-11 px-3.5 py-3 text-sm bg-white border border-[#767166] rounded-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                  />
+                  {availabilityErrors.name && (
+                    <p id="speaker-name-error" className="mt-1.5 text-sm font-medium text-[#8B2419]">
+                      {availabilityErrors.name}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label htmlFor="speaker-email" className="block text-sm font-semibold mb-1.5">
+                    Correo electrónico <span aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    ref={availabilityEmailRef}
+                    id="speaker-email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    value={availabilityEmail}
+                    onChange={(event) => {
+                      setAvailabilityEmail(event.target.value);
+                      setAvailabilityErrors((errors) => ({ ...errors, email: '' }));
+                    }}
+                    aria-invalid={Boolean(availabilityErrors.email)}
+                    aria-describedby={availabilityErrors.email ? 'speaker-email-error' : undefined}
+                    className="w-full min-h-11 px-3.5 py-3 text-sm bg-white border border-[#767166] rounded-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                  />
+                  {availabilityErrors.email && (
+                    <p id="speaker-email-error" className="mt-1.5 text-sm font-medium text-[#8B2419]">
+                      {availabilityErrors.email}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label htmlFor="speaker-when" className="block text-sm font-semibold mb-1.5">
+                    Fecha o referencia <span className="font-normal text-[#5A5D56">(opcional)</span>
+                  </label>
+                  <input
+                    id="speaker-when"
+                    name="when"
+                    type="text"
+                    value={availabilityWhen}
+                    onChange={(event) => setAvailabilityWhen(event.target.value)}
+                    placeholder="Fecha tentativa, institución o contexto"
+                    className="w-full min-h-11 px-3.5 py-3 text-sm bg-white border border-[#767166] rounded-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="speaker-message" className="block text-sm font-semibold mb-1.5">
+                    Mensaje <span aria-hidden="true">*</span>
+                  </label>
+                  <textarea
+                    ref={availabilityMessageRef}
+                    id="speaker-message"
+                    name="message"
+                    rows={4}
+                    required
+                    value={availabilityMessage}
+                    onChange={(event) => {
+                      setAvailabilityMessage(event.target.value);
+                      setAvailabilityErrors((errors) => ({ ...errors, message: '' }));
+                    }}
+                    aria-invalid={Boolean(availabilityErrors.message)}
+                    aria-describedby={availabilityErrors.message ? 'speaker-message-error' : undefined}
+                    className="w-full px-3.5 py-3 text-sm bg-white border border-[#767166] rounded-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                  />
+                  {availabilityErrors.message && (
+                    <p id="speaker-message-error" className="mt-1.5 text-sm font-medium text-[#8B2419]">
+                      {availabilityErrors.message}
+                    </p>
+                  )}
+                </div>
+
+                <button
+                  type="submit"
+                  className="inline-flex min-h-11 w-full sm:w-auto items-center justify-center gap-2 px-6 py-3.5 text-sm font-semibold text-[var(--color-accent-on-fill)] bg-[var(--color-accent-fill)] hover:brightness-95 rounded-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus)]"
+                >
+                  <span>Abrir consulta en mi correo</span>
+                  <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                </button>
+                <p className="text-xs sm:text-sm text-[#4A4D47] leading-relaxed">
+                  Este prototipo abrirá tu aplicación de correo con el mensaje preparado; no lo
+                  envía ni guarda tus datos en el sitio.
+                </p>
+              </form>
+            ) : (
+              <div
+                role="status"
+                aria-live="polite"
+                className="p-5 bg-[#EAE6DC] border border-[#767166] rounded-sm"
+              >
+                <h3 className="font-editorial text-xl text-[#171A17] mb-2">
+                  Consulta preparada
+                </h3>
+                <p className="text-sm text-[#383B36] leading-relaxed">
+                  Si tu aplicación de correo no se abrió, revisa la configuración del dispositivo.
+                  Revisa el borrador y envíalo desde tu correo. El sitio no envió la consulta.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setMailClientOpened(false)}
+                  className="inline-flex min-h-11 items-center mt-3 text-sm font-semibold text-[var(--color-accent)] underline underline-offset-2"
+                >
+                  Preparar otra consulta
+                </button>
+              </div>
+            )}
+
+            {SITE_LINKS.calendario && (
+              <a
+                href={SITE_LINKS.calendario}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-11 items-center justify-center mt-4 px-5 py-3 text-sm font-semibold border border-[#767166] rounded-sm hover:bg-[var(--color-surface-alt)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus)]"
+              >
+                Agendar en mi calendario
+                <ArrowUpRight className="w-4 h-4 ml-2" aria-hidden="true" />
+              </a>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Ficha Técnica: Público, Formato, Duración y Precio */}
+      <section className="py-16 lg:py-20 bg-[var(--color-surface-alt)] border-b border-[#DEDAD0]">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
+          <h2 className="font-editorial text-3xl sm:text-4xl text-[#171A17] mb-8">
+            Ficha técnica
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="p-6 bg-[#FBF9F5] border border-[#D5CFC2] rounded-sm">
+            <div className="p-6 bg-[var(--color-surface)] border border-[#D5CFC2] rounded-sm">
               <div className="flex items-center gap-2 font-tabular text-xs text-[var(--color-accent)] mb-2">
                 <Users className="w-4 h-4" aria-hidden="true" />
                 <span>PÚBLICO OBJETIVO</span>
@@ -164,7 +420,7 @@ export function SpeakerPage({ onNavigate }: SpeakerPageProps) {
               </p>
             </div>
 
-            <div className="p-6 bg-[#FBF9F5] border border-[#D5CFC2] rounded-sm">
+            <div className="p-6 bg-[var(--color-surface)] border border-[#D5CFC2] rounded-sm">
               <div className="flex items-center gap-2 font-tabular text-xs text-[var(--color-accent)] mb-2">
                 <Mic className="w-4 h-4" aria-hidden="true" />
                 <span>MODALIDAD</span>
@@ -176,7 +432,7 @@ export function SpeakerPage({ onNavigate }: SpeakerPageProps) {
               </p>
             </div>
 
-            <div className="p-6 bg-[#FBF9F5] border border-[#D5CFC2] rounded-sm">
+            <div className="p-6 bg-[var(--color-surface)] border border-[#D5CFC2] rounded-sm">
               <div className="flex items-center gap-2 font-tabular text-xs text-[var(--color-accent)] mb-2">
                 <Clock className="w-4 h-4" aria-hidden="true" />
                 <span>BLOQUES DE TIEMPO</span>
@@ -190,7 +446,7 @@ export function SpeakerPage({ onNavigate }: SpeakerPageProps) {
               </p>
             </div>
 
-            <div className="p-6 bg-[#FBF9F5] border border-[#D5CFC2] rounded-sm flex flex-col justify-between">
+            <div className="p-6 bg-[var(--color-surface)] border border-[#D5CFC2] rounded-sm flex flex-col justify-between">
               <div>
                 <div className="font-tabular text-xs text-[var(--color-accent)] mb-2">ARANCEL SPEAKER</div>
                 <h3 className="font-editorial text-xl text-[#171A17] mb-2">Precio: Consultar</h3>
@@ -201,7 +457,7 @@ export function SpeakerPage({ onNavigate }: SpeakerPageProps) {
               </div>
               <a
                 href="mailto:hola@geraldinemanriquez.com?subject=Consulta%20Speaker%20-%20Geraldine%20Manr%C3%ADquez"
-                className="inline-flex items-center justify-between px-4 py-2.5 text-xs font-semibold text-white bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] rounded-sm"
+                className="inline-flex items-center justify-between px-4 py-2.5 text-xs font-semibold text-[var(--color-accent-on-fill)] bg-[var(--color-accent-fill)] hover:brightness-95 rounded-sm"
               >
                 <span>Consultar disponibilidad</span>
                 <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -215,16 +471,12 @@ export function SpeakerPage({ onNavigate }: SpeakerPageProps) {
 }
 
 export function BlogPage() {
-  const [selectedDemoPost, setSelectedDemoPost] = useState<string | null>(null);
-
   return (
-    <div className="bg-[#F8F6F1] text-[#171A17]">
+    <div className="bg-[var(--color-paper)] text-[#171A17]">
       <section className="py-14 lg:py-20 border-b border-[#DEDAD0]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm font-tabular text-[var(--color-accent)] mb-4">
             <span>BLOG EDITORIAL · APRENDE A EMPRENDER</span>
-            <span aria-hidden="true">·</span>
-            <span>CONTENIDO DE EJEMPLO (PLACEHOLDER DE SECCIÓN)</span>
           </div>
 
           <h1 className="font-editorial text-4xl sm:text-5xl text-[#171A17] mb-4">
@@ -232,78 +484,72 @@ export function BlogPage() {
           </h1>
 
           <p className="text-base sm:text-lg text-[#383B36] max-w-[64ch] leading-relaxed">
-            Vista previa estructural de la sección Blog. Las 3 tarjetas siguientes corresponden a{' '}
-            <strong>contenido de ejemplo</strong> para representar el diseño editorial antes de la
-            carga de artículos definitivos.
+            Ideas y experiencias publicadas por Geraldine en su sitio.
           </p>
         </div>
       </section>
 
       <section className="py-16 lg:py-24 border-b border-[#DEDAD0]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
-          {selectedDemoPost && (
-            <div
-              role="status"
-              className="mb-8 p-4 bg-[#EAE5DA] border border-[#C9C3B4] rounded-sm flex items-center justify-between gap-4 text-xs sm:text-sm text-[#171A17]"
-            >
-              <span>
-                <strong>Nota de prototipo:</strong> “{selectedDemoPost}” es una tarjeta placeholder
-                de ejemplo para validar la grilla de artículos del Blog.
-              </span>
-              <button
-                type="button"
-                onClick={() => setSelectedDemoPost(null)}
-                className="font-tabular text-xs text-[var(--color-accent)] hover:underline shrink-0 cursor-pointer"
-              >
-                Cerrar aviso
-              </button>
-            </div>
-          )}
+          {BLOG_POSTS.length > 0 ? (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {BLOG_POSTS.map((post) => (
+                <article
+                  key={post.slug}
+                  className="bg-[var(--color-surface)] border border-[#D5CFC2] rounded-sm overflow-hidden flex flex-col"
+                >
+                  {post.image && (
+                    <div className="aspect-[4/3] overflow-hidden bg-[#EAE6DC] border-b border-[#D5CFC2]">
+                      <ResilientImage
+                        src={post.image}
+                        alt={`Imagen relacionada con el artículo: ${post.title}`}
+                        fallbackTitle={post.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {BLOG_PLACEHOLDER_POSTS.map((post) => (
-              <article
-                key={post.id}
-                className="bg-[#FBF9F5] border border-[#D5CFC2] rounded-sm overflow-hidden flex flex-col justify-between"
-              >
-                <div>
-                  <div className="aspect-[4/3] overflow-hidden bg-[#EAE6DC] border-b border-[#D5CFC2]">
-                    <ResilientImage
-                      src={post.image}
-                      alt={`Imagen de ejemplo para artículo: ${post.title}`}
-                      fallbackTitle={post.category}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-
-                  <div className="p-6 sm:p-7">
-                    <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-tabular text-[#5A5D56] mb-3">
-                      <span className="text-[var(--color-accent)] font-semibold">Contenido de ejemplo</span>
-                      <span>{post.date}</span>
+                  <div className="p-6 sm:p-7 flex flex-1 flex-col">
+                    <div className="flex flex-wrap items-center gap-2 text-xs font-tabular text-[#4A4D47] mb-3">
+                      {post.category && (
+                        <span className="text-[var(--color-accent)] font-semibold">
+                          {post.category}
+                        </span>
+                      )}
+                      <time dateTime={post.date}>
+                        {new Intl.DateTimeFormat('es-CL', {
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric',
+                        }).format(new Date(post.date))}
+                      </time>
                     </div>
 
                     <h2 className="font-editorial text-xl sm:text-2xl text-[#171A17] mb-3 leading-snug">
                       {post.title}
                     </h2>
 
-                    <p className="text-sm text-[#4A4D47] leading-relaxed">{post.excerpt}</p>
-                  </div>
-                </div>
+                    <p className="text-sm text-[#383B36] leading-relaxed mb-6">{post.excerpt}</p>
 
-                <div className="px-6 pb-6 sm:px-7 pt-4 border-t border-[#EAE6DC] flex items-center justify-between text-xs font-tabular">
-                  <span className="text-[#646760]">{post.category} · Placeholder</span>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedDemoPost(post.title)}
-                    className="text-[var(--color-accent)] font-semibold hover:underline inline-flex items-center gap-1 cursor-pointer"
-                  >
-                    <span>Vista de ejemplo</span>
-                    <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-                  </button>
-                </div>
-              </article>
-            ))}
-          </div>
+                    <a
+                      href={post.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Leer “${post.title}” en el sitio de Geraldine; se abre en una pestaña nueva`}
+                      className="inline-flex min-h-11 items-center gap-2 mt-auto text-sm font-semibold text-[var(--color-accent)] underline underline-offset-2 decoration-1 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus)]"
+                    >
+                      <span>Leer artículo</span>
+                      <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
+                    </a>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <p className="max-w-[64ch] rounded-sm border border-[#767166] bg-[var(--color-surface)] p-6 text-base leading-relaxed text-[#383B36]">
+              Los artículos están pendientes de publicación en esta vista del prototipo.
+            </p>
+          )}
         </div>
       </section>
     </div>
@@ -336,9 +582,10 @@ export function ContactoPage() {
   };
 
   return (
-    <div className="bg-[#F8F6F1] text-[#171A17]">
+    <div className="bg-[var(--color-paper)] text-[#171A17]">
       <section className="py-14 lg:py-20 border-b border-[#DEDAD0]">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+          <div className="min-w-0 lg:col-span-7">
           <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm font-tabular text-[var(--color-accent)] mb-4">
             <span>CONTACTO DIRECTO</span>
             <span aria-hidden="true">·</span>
@@ -357,6 +604,20 @@ export function ContactoPage() {
             auspiciar el programa radial <em>Aprende a Emprender</em> o resolver una duda puntual?
             Escríbeme directamente.
           </p>
+          </div>
+
+          <div className="lg:col-span-5">
+            <div className="overflow-hidden rounded-sm border border-[#D4CFC3] bg-[#EAE6DC] aspect-[4/5] max-w-xs mx-auto lg:max-w-none">
+              <ResilientImage
+                {...photo('contacto-hero')}
+                sizes="(min-width: 1280px) 480px, (min-width: 1024px) 38vw, 320px"
+                fetchPriority="high"
+                decoding="async"
+                fallbackTitle="Geraldine Manríquez"
+                className="h-full w-full object-cover"
+              />
+            </div>
+          </div>
         </div>
       </section>
 
@@ -364,30 +625,30 @@ export function ContactoPage() {
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
             {/* Left Column: Real Email + WhatsApp & Social Placeholders (6 cols) */}
-            <div className="lg:col-span-6 space-y-6">
+            <div className="min-w-0 lg:col-span-6 space-y-6">
               {/* Real Email Card */}
               <div className="bg-[#121A16] text-[#F4F1EA] border border-[#2C3A32] rounded-sm p-6 sm:p-8">
-                <div className="font-tabular text-xs text-[#D4A359] mb-2">
+                <div className="font-tabular text-xs text-[var(--color-accent-fill)] mb-2">
                   CORREO ELECTRÓNICO OFICIAL (CONFIRMADO)
                 </div>
-                <h2 className="font-editorial text-2xl sm:text-3xl text-[#F4F1EA] mb-2">
-                  hola@geraldinemanriquez.com
+                <h2 className="font-editorial text-2xl sm:text-3xl text-[#F4F1EA] mb-2 [overflow-wrap:anywhere]">
+                  {SITE_LINKS.email}
                 </h2>
                 <p className="text-sm text-[#C4C0B6] mb-6">
                   Respondo personalmente cada mensaje en{' '}
                   <strong className="text-[#F4F1EA]">menos de 24 horas hábiles</strong>.
                 </p>
                 <a
-                  href="mailto:hola@geraldinemanriquez.com"
-                  className="inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold text-[#121A16] bg-[#D4A359] hover:bg-[#E3B56C] rounded-sm transition-colors"
+                  href={`mailto:${SITE_LINKS.email}`}
+                  className="inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold text-[#121A16] bg-[var(--color-accent-fill)] hover:bg-[#E3B56C] rounded-sm transition-colors"
                 >
                   <Mail className="w-4 h-4" aria-hidden="true" />
-                  <span>Escribir a hola@geraldinemanriquez.com</span>
+                  <span>Escribir un correo</span>
                 </a>
               </div>
 
               {/* WhatsApp & Social Networks */}
-              <div className="bg-[#FBF9F5] border border-[#D5CFC2] rounded-sm p-6 sm:p-8">
+              <div className="bg-[var(--color-surface)] border border-[#D5CFC2] rounded-sm p-6 sm:p-8">
                 <div className="flex items-center justify-between gap-2 text-xs font-tabular text-[#5A5D56] pb-3 mb-4 border-b border-[#E5E0D4]">
                   <span>WHATSAPP Y REDES SOCIALES</span>
                 </div>
@@ -407,27 +668,12 @@ export function ContactoPage() {
                   </a>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {(Object.keys(SITE_LINKS.social) as Array<keyof typeof SITE_LINKS.social>).map(
-                    (net) => (
-                      <a
-                        key={net}
-                        href={SITE_LINKS.social[net]}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-3.5 py-2.5 bg-[#F2EFE7] border border-[#D5CFC2] hover:border-[var(--color-accent)] rounded-sm text-xs font-medium text-[#171A17] flex items-center justify-between"
-                      >
-                        <span>{net}</span>
-                        <ArrowUpRight className="w-3.5 h-3.5 text-[var(--color-accent)]" aria-hidden="true" />
-                      </a>
-                    )
-                  )}
-                </div>
+                <SocialLinks variant="card" />
               </div>
             </div>
 
             {/* Right Column: Direct Message Form (No Payment Button) (6 cols) */}
-            <div className="lg:col-span-6 bg-[#FBF9F5] border border-[#D5CFC2] rounded-sm p-6 sm:p-8">
+            <div className="lg:col-span-6 bg-[var(--color-surface)] border border-[#D5CFC2] rounded-sm p-6 sm:p-8">
               <div className="font-tabular text-xs text-[var(--color-accent)] mb-2">
                 MENSAJE RÁPIDO · SIN COMPROMISO
               </div>
@@ -450,7 +696,7 @@ export function ContactoPage() {
                       value={contactName}
                       onChange={(e) => setContactName(e.target.value)}
                       placeholder="Ej. Carolina Muñoz"
-                      className="w-full px-3.5 py-3 text-sm bg-white border border-[#C8C2B4] rounded-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                      className="w-full px-3.5 py-3 text-sm bg-white border border-[#767166] rounded-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
                     />
                   </div>
 
@@ -467,7 +713,7 @@ export function ContactoPage() {
                       value={contactEmail}
                       onChange={(e) => setContactEmail(e.target.value)}
                       placeholder="nombre@tudominio.cl"
-                      className="w-full px-3.5 py-3 text-sm bg-white border border-[#C8C2B4] rounded-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                      className="w-full px-3.5 py-3 text-sm bg-white border border-[#767166] rounded-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
                     />
                   </div>
 
@@ -484,7 +730,7 @@ export function ContactoPage() {
                       value={contactMessage}
                       onChange={(e) => setContactMessage(e.target.value)}
                       placeholder="Cuéntame brevemente sobre tu negocio, si buscas información de la Escuela, Auspicio en Radio o Conferencias..."
-                      className="w-full px-3.5 py-3 text-sm bg-white border border-[#C8C2B4] rounded-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                      className="w-full px-3.5 py-3 text-sm bg-white border border-[#767166] rounded-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
                     />
                   </div>
 
@@ -496,7 +742,7 @@ export function ContactoPage() {
 
                   <button
                     type="submit"
-                    className="w-full py-3.5 px-6 text-sm font-semibold text-white bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] rounded-sm transition-colors inline-flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full py-3.5 px-6 text-sm font-semibold text-[var(--color-accent-on-fill)] bg-[var(--color-accent-fill)] hover:brightness-95 rounded-sm transition-colors inline-flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <span>Enviar mensaje a hola@geraldinemanriquez.com</span>
                     <ArrowRight className="w-4 h-4" aria-hidden="true" />
@@ -504,7 +750,7 @@ export function ContactoPage() {
                 </form>
               ) : (
                 <div className="p-6 bg-[#121A16] text-[#F4F1EA] rounded-sm space-y-3">
-                  <div className="w-9 h-9 rounded-sm bg-[#D4A359] text-[#121A16] flex items-center justify-center">
+                  <div className="w-9 h-9 rounded-sm bg-[var(--color-accent-fill)] text-[#121A16] flex items-center justify-center">
                     <Check className="w-5 h-5 stroke-[2.5]" aria-hidden="true" />
                   </div>
                   <h3 className="font-editorial text-2xl text-[#F4F1EA]">
@@ -523,7 +769,7 @@ export function ContactoPage() {
                       setContactEmail('');
                       setContactMessage('');
                     }}
-                    className="font-tabular text-xs text-[#D4A359] hover:underline"
+                    className="font-tabular text-xs text-[var(--color-accent-fill)] hover:underline"
                   >
                     Enviar otra consulta
                   </button>

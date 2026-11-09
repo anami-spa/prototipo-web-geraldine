@@ -1,41 +1,53 @@
 @import "tailwindcss";
 
-/**
- * Vestido A/B — ver T1.5 del plan de mejoras.
- * Vestido B ("Terracota Cálido", default) es lo que ya existía en el
- * prototipo. Vestido A ("Dorado Editorial") usa la paleta y tipografía
- * REALES de la marca de Geraldine (Rediseno_Web_Stitch_Conceptos_2026-07-13).
- * Se activa con ?tema=a en la URL (ver App.tsx).
- *
- * Alcance real de este toggle: tipografía (100% del sitio, ambos headings y
- * cuerpo heredan de estas variables) + el color de acento principal
- * (terracota↔dorado, ~113 usos ya migrados a var(--color-accent)).
- * NO migrado aún: los tonos base de fondo/texto (papel/tinta/carbón) siguen
- * fijos en hex — tocar eso es un refactor más grande, pendiente para cuando
- * se elija un vestido definitivo. Documentado así en el plan, no es un
- * olvido.
+/*
+ * Propuesta basada en el branding GM 2024, pendiente de validación.
+ * Cinzel para títulos; DM Sans provisional hasta recibir NOW/licencia. El oro claro
+ * se reserva para fondos y decoración; el acento oscuro se usa en texto/foco.
  */
 @layer base {
   :root {
-    --font-display: 'Fraunces', Georgia, serif;
-    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-display: 'Cinzel', Georgia, serif;
+    --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
-    --color-accent: #B83B2A;
-    --color-accent-dark: #992D1E;
+
+    --color-paper: #F0EAE7;
+    --color-ink: #171A17;
+    --color-ink-soft: #383B36;
+    --color-muted: #5A5D56;
+    --color-surface: #FFFFFF;
+    --color-surface-alt: #F6F2EF;
+    --color-border: #DEDAD0;
+    --color-night: #121A16;
+    --color-night-raised: #18221D;
+
+    --color-accent: #73520D;
+    --color-accent-dark: #624407;
+    --color-accent-strong: #624407;
+    --color-accent-fill: #E5CE84;
+    --color-accent-on-fill: #171A17;
+    --color-focus: #73520D;
+    --color-focus-on-dark: #E5CE84;
+    --color-gold-on-dark: #E5CE84;
+    --target-min: 44px;
+    --section-space: clamp(3.5rem, 7vw, 6rem);
   }
 
-  :root[data-tema="a"] {
-    --font-display: 'Bodoni Moda', Georgia, serif;
-    --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-    --color-accent: #C6A44E;
-    --color-accent-dark: #B8912E;
-  }
 
   html {
     font-family: var(--font-sans);
     scroll-behavior: smooth;
-    color: #171A17;
-    background-color: #F8F6F1;
+    color: var(--color-ink);
+    background-color: var(--color-paper);
+    text-size-adjust: 100%;
+  }
+
+  body {
+    min-width: 320px;
+    color: var(--color-ink);
+    background-color: var(--color-paper);
+    font-size: 16px;
+    line-height: 1.55;
   }
 
   h1, h2, h3, .font-editorial {
@@ -47,15 +59,31 @@
     font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
   }
+
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 3px var(--color-paper);
+  }
+
+  .skip-link {
+    position: fixed;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 100;
+    transform: translateY(-160%);
+    padding: 0.75rem 1rem;
+    color: var(--color-accent-on-fill);
+    background: var(--color-accent-fill);
+    font-weight: 700;
+  }
+
+  .skip-link:focus { transform: translateY(0); }
 }
 
 @keyframes editorial-marquee {
-  0% {
-    transform: translate3d(0%, 0, 0);
-  }
-  100% {
-    transform: translate3d(-50%, 0, 0);
-  }
+  0% { transform: translate3d(0%, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
 }
 
 .animate-marquee-loop {
@@ -69,6 +97,13 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
   .animate-marquee-loop {
     animation: none;
     flex-wrap: wrap;
@@ -77,3 +112,4 @@
   }
 }
 
+::selection { background: #E5CE84; color: #000000; }

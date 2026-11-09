@@ -1,3 +1,4 @@
+import { ServiceBrand } from './BrandLogo';
 import React, { useState } from 'react';
 import {
   ArrowLeft,
@@ -13,6 +14,8 @@ import {
   ServiceDetailData,
 } from '../data/siteContent';
 import { FlowCheckoutBox } from './FlowCheckoutBox';
+import { ResilientImage } from './ResilientImage';
+import { photo } from '../data/photos';
 
 interface ServiceDetailTemplateProps {
   service: ServiceDetailData;
@@ -25,12 +28,13 @@ export function ServiceDetailTemplate({
 }: ServiceDetailTemplateProps) {
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
 
+  const cardImage = ESCUELA_CARDS.find((c) => c.slug === service.slug)?.image;
   const otherServices = ESCUELA_CARDS.filter((c) => c.slug !== service.slug);
 
   return (
-    <div className="bg-[#F8F6F1] text-[#171A17]">
+    <div className="bg-[var(--color-paper)] text-[#171A17]">
       {/* Breadcrumb Bar */}
-      <div className="border-b border-[#DEDAD0] bg-[#F2EFE7]">
+      <div className="border-b border-[#DEDAD0] bg-[var(--color-surface-alt)]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10 py-3.5 flex flex-wrap items-center justify-between gap-3 text-xs font-tabular text-[#5A5D56]">
           <button
             type="button"
@@ -53,6 +57,7 @@ export function ServiceDetailTemplate({
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
             <div className="lg:col-span-8">
+              <ServiceBrand service={service.slug.includes("conexiones") ? "networking" : "escuela"} />
               <div className="font-tabular text-xs sm:text-sm text-[var(--color-accent)] font-semibold mb-4">
                 {service.categoryKicker}
               </div>
@@ -63,6 +68,19 @@ export function ServiceDetailTemplate({
               >
                 {service.painQuestion}
               </h1>
+
+              {cardImage && (
+                <div className="mb-8 aspect-[16/9] lg:aspect-[21/9] overflow-hidden rounded-sm border border-[#D4CFC3] bg-[#EAE6DC]">
+                  <ResilientImage
+                    {...photo(cardImage)}
+                    sizes="(min-width: 1280px) 720px, (min-width: 1024px) 60vw, 92vw"
+                    fetchPriority="high"
+                    decoding="async"
+                    fallbackTitle={service.shortTitle}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              )}
 
               {/* Regla de oro / Promesa central */}
               <div className="p-6 bg-[#F1EDE4] border-l-2 border-[var(--color-accent)] rounded-r-sm mb-6">
@@ -88,7 +106,7 @@ export function ServiceDetailTemplate({
             </div>
 
             {/* Quick Summary Sidebar Card */}
-            <div className="lg:col-span-4 bg-[#FBF9F5] border border-[#D4CFC3] rounded-sm p-6 sm:p-7">
+            <div className="lg:col-span-4 bg-[var(--color-surface)] border border-[#D4CFC3] rounded-sm p-6 sm:p-7">
               <div className="font-tabular text-xs text-[#646760] pb-3 mb-4 border-b border-[#E5E0D5]">
                 RESUMEN DE INVERSIÓN
               </div>
@@ -112,7 +130,7 @@ export function ServiceDetailTemplate({
 
               <a
                 href="#checkout-flow"
-                className="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 text-sm font-semibold text-white bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] rounded-sm transition-colors duration-150 whitespace-nowrap"
+                className="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 text-sm font-semibold text-[var(--color-accent-on-fill)] bg-[var(--color-accent-fill)] hover:brightness-95 rounded-sm transition-colors duration-150 whitespace-nowrap"
               >
                 <span>Ir a inscripción y pago Flow</span>
                 <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
@@ -123,7 +141,7 @@ export function ServiceDetailTemplate({
       </section>
 
       {/* 2. BULLETS DE "LO QUE VAS A LOGRAR" + INCLUYE / BONOS */}
-      <section className="py-14 lg:py-20 border-b border-[#DEDAD0] bg-[#FBF9F5]">
+      <section className="py-14 lg:py-20 border-b border-[#DEDAD0] bg-[var(--color-surface)]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
             <div className="lg:col-span-6">
@@ -138,7 +156,7 @@ export function ServiceDetailTemplate({
                 {service.achievements.map((item, idx) => (
                   <li
                     key={idx}
-                    className="flex items-start gap-3.5 p-4 bg-[#F8F6F1] border border-[#E2DDD1] rounded-sm"
+                    className="flex items-start gap-3.5 p-4 bg-[var(--color-paper)] border border-[#E2DDD1] rounded-sm"
                   >
                     <div className="w-6 h-6 rounded-sm bg-[var(--color-accent)] text-white flex items-center justify-center shrink-0 mt-0.5">
                       <Check className="w-3.5 h-3.5 stroke-[2.5]" aria-hidden="true" />
@@ -153,7 +171,7 @@ export function ServiceDetailTemplate({
 
             <div className="lg:col-span-6">
               {service.includesList && (
-                <div className="bg-[#F2EFE7] border border-[#D8D2C5] rounded-sm p-6 sm:p-8 mb-6">
+                <div className="bg-[var(--color-surface-alt)] border border-[#D8D2C5] rounded-sm p-6 sm:p-8 mb-6">
                   <div className="font-tabular text-xs text-[var(--color-accent)] mb-2">
                     CONTENIDO DEL PROGRAMA
                   </div>
@@ -174,7 +192,7 @@ export function ServiceDetailTemplate({
               )}
 
               {service.bonuses && (
-                <div className="bg-[#F2EFE7] border border-[#D8D2C5] rounded-sm p-6 sm:p-8">
+                <div className="bg-[var(--color-surface-alt)] border border-[#D8D2C5] rounded-sm p-6 sm:p-8">
                   <div className="font-tabular text-xs text-[var(--color-accent)] mb-2">
                     VALOR AGREGADO INCLUIDO
                   </div>
@@ -185,7 +203,7 @@ export function ServiceDetailTemplate({
                     {service.bonuses.map((bonus, i) => (
                       <li
                         key={i}
-                        className="p-3.5 bg-[#FBF9F5] border border-[#DED9CC] rounded-sm"
+                        className="p-3.5 bg-[var(--color-surface)] border border-[#DED9CC] rounded-sm"
                       >
                         {bonus}
                       </li>
@@ -195,7 +213,7 @@ export function ServiceDetailTemplate({
               )}
 
               {!service.includesList && !service.bonuses && (
-                <div className="bg-[#F2EFE7] border border-[#D8D2C5] rounded-sm p-6 sm:p-8 h-full flex flex-col justify-between">
+                <div className="bg-[var(--color-surface-alt)] border border-[#D8D2C5] rounded-sm p-6 sm:p-8 h-full flex flex-col justify-between">
                   <div>
                     <div className="font-tabular text-xs text-[var(--color-accent)] mb-2">
                       ENFOQUE LA RETINA EMPRENDEDORA
@@ -233,7 +251,7 @@ export function ServiceDetailTemplate({
             {service.steps.map((step) => (
               <div
                 key={step.number}
-                className="bg-[#FBF9F5] border border-[#D8D3C6] rounded-sm p-6 sm:p-8 flex flex-col justify-between"
+                className="bg-[var(--color-surface)] border border-[#D8D3C6] rounded-sm p-6 sm:p-8 flex flex-col justify-between"
               >
                 <div>
                   <div className="font-tabular text-xs text-[var(--color-accent)] pb-3 mb-4 border-b border-[#E6E2D6]">
@@ -254,7 +272,7 @@ export function ServiceDetailTemplate({
 
       {/* 4. TESTIMONIOS REALES — solo se muestra la sección si hay testimonios reales asignados */}
       {service.testimonials.length > 0 && (
-      <section className="py-14 lg:py-20 border-b border-[#DEDAD0] bg-[#F2EFE7]">
+      <section className="py-14 lg:py-20 border-b border-[#DEDAD0] bg-[var(--color-surface-alt)]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="mb-10">
             <div className="font-tabular text-xs text-[var(--color-accent)] mb-2">
@@ -269,7 +287,7 @@ export function ServiceDetailTemplate({
             {service.testimonials.map((t, idx) => (
               <article
                 key={`${t.name}-${idx}`}
-                className="bg-[#FBF9F5] border border-[#D8D3C6] rounded-sm p-6 sm:p-8 flex flex-col justify-between"
+                className="bg-[var(--color-surface)] border border-[#D8D3C6] rounded-sm p-6 sm:p-8 flex flex-col justify-between"
               >
                 <div>
                   <div className="font-tabular text-xs text-[#646760] pb-3 mb-5 border-b border-[#E6E2D6]">
@@ -302,7 +320,7 @@ export function ServiceDetailTemplate({
             {/* Left Column: Guarantee & Value Summary (5 cols) */}
             <div className="lg:col-span-5 space-y-6">
               <div>
-                <div className="font-tabular text-xs text-[#D4A359] mb-2">
+                <div className="font-tabular text-xs text-[var(--color-accent-fill)] mb-2">
                   INVERSIÓN Y RESPALDO
                 </div>
                 <h2 className="font-editorial text-3xl sm:text-4xl text-[#F4F1EA]">
@@ -312,7 +330,7 @@ export function ServiceDetailTemplate({
 
               {/* Guarantee Box */}
               <div className="p-6 bg-[#18221D] border border-[#2C3A32] rounded-sm">
-                <div className="flex items-center gap-2.5 text-[#D4A359] font-tabular text-xs mb-2">
+                <div className="flex items-center gap-2.5 text-[var(--color-accent-fill)] font-tabular text-xs mb-2">
                   <Shield className="w-4 h-4 shrink-0" aria-hidden="true" />
                   <span>GARANTÍA EXPLÍCITA</span>
                 </div>
@@ -325,13 +343,13 @@ export function ServiceDetailTemplate({
               </div>
 
               <div className="p-5 bg-[#18221D] border border-[#2C3A32] rounded-sm text-xs text-[#B6B2A8] space-y-2">
-                <div className="font-tabular text-[#D4A359]">¿TIENES DUDAS ANTES DE PAGAR?</div>
+                <div className="font-tabular text-[var(--color-accent-fill)]">¿TIENES DUDAS ANTES DE PAGAR?</div>
                 <p>
                   Si perteneces a alguno de los ecosistemas en convenio o necesitas ayuda con tu
                   inscripción, puedes escribir directamente a{' '}
                   <a
                     href="mailto:hola@geraldinemanriquez.com"
-                    className="text-[#F4F1EA] underline hover:text-[#D4A359]"
+                    className="text-[#F4F1EA] underline hover:text-[var(--color-accent-fill)]"
                   >
                     hola@geraldinemanriquez.com
                   </a>
@@ -357,7 +375,7 @@ export function ServiceDetailTemplate({
       </section>
 
       {/* 8. PREGUNTAS FRECUENTES (FAQ) */}
-      <section className="py-14 lg:py-20 border-b border-[#DEDAD0] bg-[#F8F6F1]">
+      <section className="py-14 lg:py-20 border-b border-[#DEDAD0] bg-[var(--color-paper)]">
         <div className="max-w-[960px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="mb-10">
             <div className="font-tabular text-xs text-[var(--color-accent)] mb-2">PREGUNTAS FRECUENTES</div>
@@ -397,7 +415,7 @@ export function ServiceDetailTemplate({
       </section>
 
       {/* Cross-navigation to other Escuela programs */}
-      <section className="py-12 bg-[#F2EFE7]">
+      <section className="py-12 bg-[var(--color-surface-alt)]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="font-tabular text-xs text-[#5A5D56] mb-6">
             OTROS PROGRAMAS DE LA ESCUELA DE VENTAS
@@ -408,7 +426,7 @@ export function ServiceDetailTemplate({
                 key={card.slug}
                 type="button"
                 onClick={() => onNavigate(card.slug)}
-                className="text-left p-5 bg-[#FBF9F5] border border-[#D8D3C6] hover:border-[var(--color-accent)] rounded-sm transition-colors cursor-pointer flex flex-col justify-between group"
+                className="text-left p-5 bg-[var(--color-surface)] border border-[#D8D3C6] hover:border-[var(--color-accent)] rounded-sm transition-colors cursor-pointer flex flex-col justify-between group"
               >
                 <div>
                   <div className="font-tabular text-xs text-[var(--color-accent)] mb-1">

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
-interface ResilientImageProps {
+interface ResilientImageProps
+  extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'src' | 'alt' | 'onError'> {
   src: string;
   alt: string;
   className?: string;
@@ -12,8 +13,11 @@ export function ResilientImage({
   alt,
   className,
   fallbackTitle,
+  ...imgProps
 }: ResilientImageProps) {
-  const [hasError, setHasError] = useState(false);
+  // Se guarda QUÉ src falló (no un booleano): si el src cambia, el error se olvida solo.
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+  const hasError = failedSrc === src;
 
   if (hasError) {
     return (
@@ -23,6 +27,7 @@ export function ResilientImage({
         }`}
         role="img"
         aria-label={alt}
+        aria-hidden={imgProps['aria-hidden']}
       >
         <span className="font-editorial text-2xl italic">{fallbackTitle}</span>
       </div>
@@ -31,14 +36,15 @@ export function ResilientImage({
 
   return (
     <img
+      referrerPolicy="no-referrer"
+      {...imgProps}
       src={src}
       alt={alt}
-      referrerPolicy="no-referrer"
       onError={() => {
         if (import.meta.env.DEV) {
           console.error(`[ResilientImage] Falló la carga de "${src}" (alt: "${alt}"). Revisa la ruta — las imágenes deben vivir en public/.`);
         }
-        setHasError(true);
+        setFailedSrc(src);
       }}
       className={className}
     />

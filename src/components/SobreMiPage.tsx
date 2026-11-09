@@ -1,6 +1,8 @@
+import { EcosistemaLALogo, EcosistemaBiobioLogo } from './BrandLogo';
 import React from 'react';
 import { ArrowRight, ArrowUpRight, BookOpen, ExternalLink } from 'lucide-react';
 import { RoutePath, SITE_LINKS } from '../data/siteContent';
+import { photo } from '../data/photos';
 import { ResilientImage } from './ResilientImage';
 
 interface SobreMiPageProps {
@@ -9,10 +11,11 @@ interface SobreMiPageProps {
 
 export function SobreMiPage({ onNavigate }: SobreMiPageProps) {
   return (
-    <div className="bg-[#F8F6F1] text-[#171A17]">
+    <div className="bg-[var(--color-paper)] text-[#171A17]">
       {/* Page Hero */}
       <section className="py-14 lg:py-20 border-b border-[#DEDAD0]">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+          <div className="lg:col-span-7">
           <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm font-tabular text-[var(--color-accent)] mb-4">
             <span>SOBRE MÍ · RELATO DE ORIGEN</span>
             <span aria-hidden="true">·</span>
@@ -31,6 +34,20 @@ export function SobreMiPage({ onNavigate }: SobreMiPageProps) {
             Esta es mi historia real: cómo pasé de hacer “todo bien” sin lograr que llegaran los
             clientes, al punto de quiebre que dio origen a Aprende a Emprender en Concepción.
           </p>
+          </div>
+
+          <div className="lg:col-span-5">
+            <div className="overflow-hidden rounded-sm border border-[#D4CFC3] bg-[#EAE6DC] aspect-[4/5] max-w-sm mx-auto lg:max-w-none">
+              <ResilientImage
+                {...photo('sobre-hero')}
+                sizes="(min-width: 1280px) 480px, (min-width: 1024px) 38vw, 90vw"
+                fetchPriority="high"
+                decoding="async"
+                fallbackTitle="Geraldine Manríquez"
+                className="h-full w-full object-cover"
+              />
+            </div>
+          </div>
         </div>
       </section>
 
@@ -62,14 +79,14 @@ export function SobreMiPage({ onNavigate }: SobreMiPageProps) {
 
             <div className="lg:col-span-5">
               <figure>
-                {/* Foto real de Geraldine (Sony ILCE-6400, misma foto que usa en
-                    geraldinemanriquez.com/escuela) — reemplaza el bloque pendiente */}
                 <div className="overflow-hidden rounded-sm border border-[#D4CFC3] bg-[#EAE6DC] aspect-[3/4] max-w-md mx-auto">
                   <ResilientImage
-                    src="/images/geraldine_manriquez_retrato.webp"
-                    alt="Retrato de Geraldine Manríquez, profesora de emprendedores y especialista en neurociencia aplicada a las ventas"
+                    {...photo('sobre-retrato')}
+                    sizes="(min-width: 1024px) 420px, 90vw"
+                    loading="lazy"
+                    decoding="async"
                     fallbackTitle="Geraldine Manríquez — Profesora"
-                    className="w-full h-full object-cover object-top"
+                    className="w-full h-full object-cover"
                   />
                 </div>
                 <figcaption className="mt-2.5 text-xs font-tabular text-[#5E615B]">
@@ -85,10 +102,12 @@ export function SobreMiPage({ onNavigate }: SobreMiPageProps) {
               <figure>
                 <div className="overflow-hidden rounded-sm border border-[#D4CFC3] bg-[#EAE6DC] aspect-[4/3]">
                   <ResilientImage
-                    src="/images/retina_emprendedora_cafe_1791226529701.webp"
-                    alt="Sesión de trabajo aplicando La Retina Emprendedora en Concepción"
-                    fallbackTitle="El nacimiento de La Retina Emprendedora"
-                    className="w-full h-full object-cover"
+                    {...photo('sobre-sesion')}
+                    sizes="(min-width: 1024px) 420px, 90vw"
+                    loading="lazy"
+                    decoding="async"
+                    fallbackTitle="Geraldine Manríquez"
+                    className="h-full w-full object-cover"
                   />
                 </div>
                 <figcaption className="mt-2.5 text-xs font-tabular text-[#5E615B]">
@@ -127,7 +146,7 @@ export function SobreMiPage({ onNavigate }: SobreMiPageProps) {
           </div>
 
           {/* Chapter 03: Coautora de "Revolución Emprendedora" */}
-          <div className="bg-[#F2EFE7] border border-[#D5CFC2] rounded-sm p-6 sm:p-10 lg:p-12">
+          <div className="bg-[var(--color-surface-alt)] border border-[#D5CFC2] rounded-sm p-6 sm:p-10 lg:p-12">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
               <div className="lg:col-span-7 space-y-4">
                 <div className="inline-flex items-center gap-2 font-tabular text-xs text-[var(--color-accent)] font-semibold">
@@ -147,7 +166,7 @@ export function SobreMiPage({ onNavigate }: SobreMiPageProps) {
                   <button
                     type="button"
                     onClick={() => onNavigate('/escuela')}
-                    className="inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold text-white bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] rounded-sm transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold text-[var(--color-accent-on-fill)] bg-[var(--color-accent-fill)] hover:brightness-95 rounded-sm transition-colors cursor-pointer"
                   >
                     <span>Conocer la Escuela de Ventas</span>
                     <ArrowRight className="w-4 h-4" aria-hidden="true" />
@@ -165,12 +184,14 @@ export function SobreMiPage({ onNavigate }: SobreMiPageProps) {
 
               <div className="lg:col-span-5">
                 <figure>
-                  <div className="overflow-hidden rounded-sm border border-[#D4CFC3] bg-[#EAE6DC] aspect-[4/3]">
+                  <div className="overflow-hidden rounded-sm border border-[#2C3A32] bg-[#171A17] aspect-[4/3]">
                     <ResilientImage
-                      src="/images/sobre_mi_libro_revolucion_1791229215968.webp"
-                      alt="Libro Revolución Emprendedora, coautoría de Geraldine Manríquez junto a 5 mujeres emprendedoras"
+                      {...photo('libro-portada')}
+                      sizes="(min-width: 1024px) 420px, 90vw"
+                      loading="lazy"
+                      decoding="async"
                       fallbackTitle="Libro: Revolución Emprendedora"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain p-4"
                     />
                   </div>
                   <figcaption className="mt-2 text-xs font-tabular text-[#5E615B]">
@@ -183,52 +204,31 @@ export function SobreMiPage({ onNavigate }: SobreMiPageProps) {
         </div>
       </section>
 
-      {/* Embajadora de Ecosistemas (Logos Placeholder) */}
-      <section className="py-16 lg:py-20 bg-[#121A16] text-[#F4F1EA] border-b border-[#26312B]">
+      <section className="py-16 lg:py-20 bg-[#121A16] text-[#F4F1EA] border-b border-[#26312B]" aria-labelledby="organizaciones-title">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-5">
-              <div className="font-tabular text-xs text-[#D4A359] mb-2">
-                REPRESENTACIÓN Y REDES EN CHILE
-              </div>
-              <h2 className="font-editorial text-3xl sm:text-4xl text-[#F4F1EA] mb-3">
-                Embajadora oficial de Ecosistemas
-              </h2>
-              <p className="text-sm sm:text-base text-[#C4C0B6] leading-relaxed">
-                Articulando colaboración, formación comercial y redes de apoyo activo como
-                Embajadora de <strong>Ecosistema Biobío</strong> y <strong>Rediversas</strong>.
-              </p>
+              <div className="font-tabular text-xs text-[var(--color-accent-fill)] mb-2">COMUNIDAD Y REDES</div>
+              <h2 id="organizaciones-title" className="font-editorial text-3xl sm:text-4xl text-[#F4F1EA] mb-3">Organizaciones vinculadas</h2>
+              <p className="text-sm sm:text-base text-[#C4C0B6] leading-relaxed">Redes de emprendimiento y colaboración.</p>
+              <p className="mt-4 text-sm text-[var(--color-accent-fill)]">Propuesta para revisión: confirmar con Geraldine el vínculo y la descripción de cada organización.</p>
             </div>
-
-            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <ul className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
               {[
-                {
-                  name: 'Ecosistema Biobío',
-                  role: 'Embajadora Oficial · Región del Biobío',
-                  url: 'https://ecosistemabiobio.cl/',
-                },
-                {
-                  name: 'Rediversas',
-                  role: 'Embajadora Oficial · Red de Mujeres y Emprendimiento',
-                  url: 'https://www.rediversas.cl',
-                },
+                { name: 'Ecosistema Biobío', file: 'ecosistema-biobio.png' },
+                { name: 'Rediversas', file: 'rediversas.png' },
+                { name: 'CorpArauco', file: 'corparauco.png' },
+                { name: 'Ecosistema LA', file: 'ecosistema-la.jpg' },
               ].map((org) => (
-                <a
-                  key={org.name}
-                  href={org.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-6 bg-[#18221D] border border-[#2C3A32] rounded-sm flex flex-col justify-between hover:border-[#D4A359] transition-colors"
-                >
-                  <div className="flex items-center justify-between text-xs font-tabular text-[#8E9690] pb-4 mb-4 border-b border-[#26332B]">
-                    <span>RED ALIADA</span>
-                    <ArrowUpRight className="w-3.5 h-3.5 text-[#D4A359]" aria-hidden="true" />
+                <li key={org.name} className="p-5 bg-[#18221D] border border-[#2C3A32] rounded-sm">
+                  <div className="h-32 bg-white rounded-sm flex items-center justify-center p-4 mb-4">
+                    {org.name === 'Ecosistema Biobío' ? <EcosistemaBiobioLogo /> : org.name === 'Ecosistema LA' ? <EcosistemaLALogo decorative /> : <img src={`/images/marca/${org.file}`} alt={org.name} className="max-h-24 max-w-full object-contain" loading="lazy" />}
                   </div>
-                  <div className="font-editorial text-2xl text-[#F4F1EA] mb-1">{org.name}</div>
-                  <div className="text-xs text-[#B6B2A8]">{org.role}</div>
-                </a>
+                  <p className="text-sm font-semibold">{org.name}</p>
+                  <p className="mt-1 text-xs text-[#C4C0B6]">Vínculo por validar</p>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </div>
       </section>

@@ -1,3 +1,5 @@
+import { SocialLinks } from './components/SocialLinks';
+import { GeraldineLogo } from './components/BrandLogo';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   ArrowRight,
@@ -11,12 +13,19 @@ import {
   X,
 } from 'lucide-react';
 import { EscuelaCatalogPage } from './components/EscuelaCatalogPage';
+import { photo } from './data/photos';
 import { RadioPage } from './components/RadioPage';
+import { RadioSponsorLandingPage } from './components/RadioSponsorLandingPage';
 import { ResilientImage } from './components/ResilientImage';
 import { ServiceDetailTemplate } from './components/ServiceDetailTemplate';
 import { SobreMiPage } from './components/SobreMiPage';
-import { ContactoPage, SpeakerPage } from './components/SpeakerBlogContactoPages';
+import { BlogPage, ContactoPage, SpeakerPage } from './components/SpeakerBlogContactoPages';
+import { HeroSlider } from './components/HeroCarousel';
+import { BookPage } from './components/BookPage';
+import { LegalPage } from './components/LegalPage';
 import { ESCUELA_CARDS, RoutePath, SERVICE_DETAILS, SITE_LINKS } from './data/siteContent';
+import { latestPosts } from './data/blogPosts';
+import { withBase, stripBase } from './lib/base';
 
 const MARQUEE_ITEMS = [
   'Profesora de Emprendedores',
@@ -74,7 +83,13 @@ const VALID_ROUTES: RoutePath[] = [
   '/escuela/vender-sin-vender',
   '/escuela/conexiones-que-conectan',
   '/radio',
+  '/radio/auspicio-pyme',
+  '/radio/auspicio-empresa',
   '/speaker',
+  '/blog',
+  '/libro',
+  '/privacidad',
+  '/terminos',
   '/contacto',
 ];
 
@@ -88,11 +103,13 @@ function normalizePath(pathname: string): RoutePath {
 
 export default function App() {
   const [activeRoute, setActiveRoute] = useState<RoutePath>(() =>
-    typeof window !== 'undefined' ? normalizePath(window.location.pathname) : '/'
+    typeof window !== 'undefined' ? normalizePath(stripBase(window.location.pathname)) : '/'
   );
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
   const mobileDrawerRef = useRef<HTMLDivElement>(null);
+  const mainRef = useRef<HTMLElement>(null);
+  const previousRouteRef = useRef(activeRoute);
   const [storyExpanded, setStoryExpanded] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<string | null>(null);
   // Quick 1-minute diagnostic state
@@ -102,36 +119,53 @@ export default function App() {
     q3: false,
   });
 
-  // Newsletter form state
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState<string | null>(null);
-  const [isSubscribed, setIsSubscribed] = useState(false);
-  const [submittedEmail, setSubmittedEmail] = useState('');
-
-  // Vestido A/B (T1.5 del plan): ?tema=a activa la paleta y tipografía
-  // reales de la marca de Geraldine (dorado + Bodoni Moda + DM Sans).
-  // Sin el parámetro, o con ?tema=b, queda el Vestido B (terracota +
-  // Fraunces) ya construido. Decisión para la reunión de Fase 3, no nuestra.
-  const [tema, setTema] = useState<'a' | 'b'>(() => {
-    if (typeof window === 'undefined') return 'b';
-    return new URLSearchParams(window.location.search).get('tema') === 'a' ? 'a' : 'b';
-  });
-
+  // One presentation direction, including links with the old ?tema=b parameter.
   useEffect(() => {
-    if (tema === 'a') {
-      document.documentElement.setAttribute('data-tema', 'a');
-    } else {
-      document.documentElement.removeAttribute('data-tema');
-    }
-  }, [tema]);
+    document.documentElement.setAttribute('data-tema', 'a');
+  }, []);
 
   useEffect(() => {
     const handlePopState = () => {
-      setActiveRoute(normalizePath(window.location.pathname));
+      setActiveRoute(normalizePath(stripBase(window.location.pathname)));
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
+
+  useEffect(() => {
+    const titles: Record<RoutePath, string> = {
+      '/': 'Inicio',
+      '/sobre-mi': 'Sobre Geraldine',
+      '/escuela': 'Escuela de Ventas',
+      '/escuela/diagnostico': 'Sesión Diagnóstica',
+      '/escuela/narrativa-comercial': 'Narrativa Comercial',
+      '/escuela/vender-sin-vender': 'Vender sin Vender',
+      '/escuela/conexiones-que-conectan': 'Conexiones que Conectan',
+      '/radio': 'Radio',
+      '/radio/auspicio-pyme': 'Auspicio radial PyME',
+      '/radio/auspicio-empresa': 'Auspicio radial Empresa',
+      '/speaker': 'Speaker',
+      '/blog': 'Blog',
+      '/libro': 'Libro',
+      '/privacidad': 'Política de privacidad',
+      '/terminos': 'Términos y condiciones',
+      '/contacto': 'Contacto',
+    };
+    document.title = `${titles[activeRoute]} | Geraldine Manríquez — Aprende a Emprender`;
+
+    if (previousRouteRef.current !== activeRoute) {
+      window.requestAnimationFrame(() => {
+        const heading = mainRef.current?.querySelector<HTMLElement>('h1');
+        if (heading) {
+          heading.tabIndex = -1;
+          heading.focus();
+        } else {
+          mainRef.current?.focus();
+        }
+      });
+    }
+    previousRouteRef.current = activeRoute;
+  }, [activeRoute]);
 
   // Drawer móvil: Escape cierra, el scroll del body queda bloqueado mientras
   // está abierto, y el foco entra al primer link y vuelve al botón al cerrar.
@@ -178,8 +212,8 @@ export default function App() {
       setSelectedProgram(programContext);
     }
 
-    if (typeof window !== 'undefined' && window.location.pathname !== route) {
-      window.history.pushState({}, '', route);
+    if (typeof window !== 'undefined' && stripBase(window.location.pathname) !== route) {
+      window.history.pushState({}, '', withBase(route));
     }
     setActiveRoute(route);
 
@@ -203,38 +237,16 @@ export default function App() {
   };
 
   const checkedCount = Object.values(checkedQuestions).filter(Boolean).length;
-
-  const handleNewsletterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const trimmed = email.trim();
-
-    if (!trimmed) {
-      setEmailError('Por favor, ingresa tu correo electrónico para recibir el diagnóstico.');
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-    if (!emailRegex.test(trimmed)) {
-      setEmailError('Ingresa un correo electrónico válido (ejemplo: nombre@tudominio.cl).');
-      return;
-    }
-
-    setEmailError(null);
-    setSubmittedEmail(trimmed);
-    setIsSubscribed(true);
-    setEmail('');
-    // Prototipo sin backend de newsletter: el formulario real de Geraldine
-    // para este mismo diagnóstico ya existe en HubSpot — lo abrimos en vez
-    // de fingir un registro. Ver T1.7 del plan de mejoras.
-    window.open(SITE_LINKS.diagnosticoHubspotForm, '_blank', 'noopener,noreferrer');
-  };
+  const isSponsorLanding = activeRoute === '/radio/auspicio-pyme' || activeRoute === '/radio/auspicio-empresa';
 
   const navItems: { label: string; route: RoutePath; matchPrefix?: string }[] = [
     { label: 'Inicio', route: '/' },
     { label: 'Escuela', route: '/escuela', matchPrefix: '/escuela' },
     { label: 'Radio', route: '/radio' },
     { label: 'Speaker', route: '/speaker' },
+    { label: 'Blog', route: '/blog' },
     { label: 'Sobre Mí', route: '/sobre-mi' },
+    { label: 'Libro', route: '/libro' },
     { label: 'Contacto', route: '/contacto' },
   ];
 
@@ -246,52 +258,30 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F6F1] text-[#171A17] flex flex-col">
-      {/* Selector de vestido — herramienta de la reunión de Fase 3, no es
-          parte del sitio final. Cambia tipografía + color de acento entre
-          "Dorado Editorial" (marca real de Geraldine) y "Terracota Cálido"
-          (propuesta nueva). Ver T1.5 del plan de mejoras. */}
-      <div className="fixed bottom-3 right-3 sm:bottom-4 sm:right-4 z-[60] flex items-center gap-1 bg-[#171A17]/95 text-[#F8F6F1] rounded-sm p-1 shadow-lg font-tabular text-[10px] sm:text-xs">
-        <button
-          type="button"
-          onClick={() => setTema('b')}
-          className={`px-2 py-1.5 sm:px-3 sm:py-2 rounded-sm transition-colors whitespace-nowrap ${
-            tema === 'b' ? 'bg-[#F8F6F1] text-[#171A17] font-semibold' : 'hover:bg-white/10'
-          }`}
-        >
-          Terracota
-        </button>
-        <button
-          type="button"
-          onClick={() => setTema('a')}
-          className={`px-2 py-1.5 sm:px-3 sm:py-2 rounded-sm transition-colors whitespace-nowrap ${
-            tema === 'a' ? 'bg-[#F8F6F1] text-[#171A17] font-semibold' : 'hover:bg-white/10'
-          }`}
-        >
-          Dorado
-        </button>
-      </div>
-
+    <div className="min-h-screen bg-[var(--color-paper)] text-[#171A17] flex flex-col">
+      <a href="#main-content" className="skip-link">
+        Saltar al contenido
+      </a>
       {/* 1. HEADER FIJO (Strict 3-Zone Top Bar Contract) */}
-      <header className="fixed top-0 inset-x-0 z-50 h-16 bg-[#F8F6F1]/95 backdrop-blur-md border-b border-[#DEDAD0]">
+      <header className={`${isSponsorLanding ? 'hidden' : 'fixed'} top-0 inset-x-0 z-50 h-16 bg-[var(--color-paper)]/95 backdrop-blur-md border-b border-[#DEDAD0]`}>
         <div className="max-w-[1280px] mx-auto h-full px-4 sm:px-6 lg:px-10 flex items-center justify-between gap-4">
           {/* Zone 1: Brand Title (Single text element wordmark) */}
           <a
-            href="/"
+            href={withBase("/")}
             onClick={(e) => {
               e.preventDefault();
               navigateTo('/');
             }}
             aria-label="Geraldine Manríquez — Volver al inicio"
-            className="font-editorial text-2xl font-semibold tracking-tight text-[#171A17] hover:text-[var(--color-accent)] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-accent)]"
+            className="inline-flex min-h-11 shrink-0 items-center font-editorial text-2xl font-semibold tracking-tight text-[#171A17] hover:text-[var(--color-accent)] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-accent)]"
           >
-            GM
+            <GeraldineLogo />
           </a>
 
           {/* Zone 2: Navigation Links */}
           <nav
             aria-label="Navegación principal"
-            className="hidden md:flex items-center gap-5 lg:gap-7 text-sm font-medium text-[#464944]"
+            className="hidden xl:flex items-center gap-4 text-sm font-medium text-[#464944]"
           >
             {navItems.map((item) => {
               const active = isNavActive(item);
@@ -319,14 +309,14 @@ export default function App() {
           {/* Zone 3: Primary Action + Mobile Menu Trigger */}
           <div className="flex items-center gap-3">
             <a
-              href="/#diagnostico"
+              href={withBase("/escuela")}
               onClick={(e) => {
                 e.preventDefault();
-                navigateTo('/', 'diagnostico');
+                navigateTo('/escuela');
               }}
-              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 text-xs lg:text-sm font-semibold text-white bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] rounded-sm transition-colors duration-150 whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#171A17]"
+              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 text-xs lg:text-sm font-semibold text-[var(--color-accent-on-fill)] bg-[var(--color-accent-fill)] hover:brightness-95 rounded-sm transition-colors duration-150 whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#171A17]"
             >
-              <span>Descubre en 1 min. si tu mensaje vende</span>
+              <span>Encuentra tu programa</span>
               <ArrowRight className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
             </a>
 
@@ -335,9 +325,8 @@ export default function App() {
               type="button"
               onClick={() => setMobileMenuOpen((prev) => !prev)}
               aria-expanded={mobileMenuOpen}
-              aria-controls="mobile-drawer-nav"
               aria-label={mobileMenuOpen ? 'Cerrar menú de navegación' : 'Abrir menú de navegación'}
-              className="md:hidden inline-flex items-center justify-center w-10 h-10 text-[#171A17] hover:bg-[#EBE7DD] rounded-sm transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-[var(--color-accent)]"
+              className="xl:hidden inline-flex items-center justify-center w-11 h-11 text-[#171A17] hover:bg-[#EBE7DD] rounded-sm transition-colors duration-150"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -349,7 +338,7 @@ export default function App() {
           <div
             id="mobile-drawer-nav"
             ref={mobileDrawerRef}
-            className="md:hidden bg-[#F8F6F1] border-b border-[#DEDAD0] px-4 pt-3 pb-5 shadow-lg"
+            className="xl:hidden bg-[var(--color-paper)] border-b border-[#DEDAD0] px-4 pt-3 pb-5 shadow-lg"
           >
             <nav
               aria-label="Navegación móvil"
@@ -360,13 +349,13 @@ export default function App() {
                 return (
                   <a
                     key={item.route}
-                    href={item.route}
+                  href={item.route}
                     onClick={(e) => {
                       e.preventDefault();
                       navigateTo(item.route);
                     }}
-                    aria-current={active ? 'page' : undefined}
-                    className={`py-2 border-b border-[#EAE6DC] ${
+                  aria-current={active ? 'page' : undefined}
+                  className={`min-h-11 flex items-center py-2 border-b border-[#EAE6DC] ${
                       active ? 'text-[var(--color-accent)] font-semibold' : 'text-[#171A17]'
                     }`}
                   >
@@ -375,14 +364,14 @@ export default function App() {
                 );
               })}
               <a
-                href="/#diagnostico"
+                href={withBase("/escuela")}
                 onClick={(e) => {
                   e.preventDefault();
-                  navigateTo('/', 'diagnostico');
+                  navigateTo('/escuela');
                 }}
-                className="mt-2 inline-flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold text-white bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] rounded-sm whitespace-nowrap"
+                className="mt-2 inline-flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold text-[var(--color-accent-on-fill)] bg-[var(--color-accent-fill)] hover:brightness-95 rounded-sm whitespace-nowrap"
               >
-                <span>Descubre en 1 min. si tu mensaje vende</span>
+                <span>Encuentra tu programa</span>
                 <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
               </a>
             </nav>
@@ -390,7 +379,7 @@ export default function App() {
         )}
       </header>
 
-      <main className="flex-1 pt-16">
+      <main id="main-content" ref={mainRef} tabIndex={-1} className={`flex-1 focus:outline-none ${isSponsorLanding ? '' : 'pt-16'}`}>
         {/* ROUTE SWITCHER */}
         {activeRoute === '/sobre-mi' && <SobreMiPage onNavigate={navigateTo} />}
 
@@ -406,9 +395,19 @@ export default function App() {
           />
         )}
 
-        {activeRoute === '/radio' && <RadioPage />}
+        {activeRoute === '/radio' && <RadioPage onNavigate={navigateTo} />}
+        {activeRoute === '/radio/auspicio-pyme' && <RadioSponsorLandingPage audience="pyme" onNavigate={navigateTo} />}
+        {activeRoute === '/radio/auspicio-empresa' && <RadioSponsorLandingPage audience="empresa" onNavigate={navigateTo} />}
 
         {activeRoute === '/speaker' && <SpeakerPage onNavigate={navigateTo} />}
+
+        {activeRoute === '/blog' && <BlogPage />}
+
+        {activeRoute === '/libro' && <BookPage />}
+
+        {activeRoute === '/privacidad' && <LegalPage kind="privacidad" />}
+
+        {activeRoute === '/terminos' && <LegalPage kind="terminos" />}
 
         {activeRoute === '/contacto' && <ContactoPage />}
 
@@ -421,92 +420,7 @@ export default function App() {
               className="scroll-mt-16 relative overflow-hidden pt-10 pb-16 lg:pt-16 lg:pb-24 border-b border-[#DEDAD0]"
             >
               <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-                  {/* Left Column: Editorial Proposition (7 cols) */}
-                  <div className="lg:col-span-7 flex flex-col items-start">
-                    {/* Unboxed metadata kicker */}
-                    <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm font-medium text-[#5A5D56] mb-5">
-                      <span className="text-[var(--color-accent)] font-semibold">
-                        Profesora de Emprendedores
-                      </span>
-                      <span aria-hidden="true">·</span>
-                      <span>Geraldine Manríquez</span>
-                      <span aria-hidden="true">·</span>
-                      <span>Concepción, Chile</span>
-                    </div>
-
-                    {/* Titular principal — ver §2 del plan de mejoras para las 2 variantes
-                        descartadas, que quedan como lámina de presentación, no en la UI */}
-                    <h1
-                      className="font-editorial text-4xl sm:text-5xl lg:text-[3.5rem] leading-[1.08] tracking-tight text-[#171A17] mb-6"
-                      style={{ textWrap: 'balance' }}
-                    >
-                      Deja de explicar tu técnica: destraba tu negocio nombrando{' '}
-                      <span className="italic font-normal text-[var(--color-accent)]">
-                        el problema real de tu cliente.
-                      </span>
-                    </h1>
-
-                    {/* Exact Mission Statement */}
-                    <p className="text-base sm:text-lg lg:text-xl text-[#383B36] leading-relaxed max-w-[62ch] mb-8 border-l-2 border-[var(--color-accent)] pl-5">
-                      Ayudarte a destrabar tu negocio, estructurar tus ideas y dominar una
-                      narrativa comercial que atraiga a tu cliente ideal.
-                    </p>
-
-                    {/* Two CTAs: 1 to Lead Magnet, 1 to Escuela */}
-                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto mb-10">
-                      <a
-                        href="#diagnostico"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          navigateTo('/', 'diagnostico');
-                        }}
-                        className="inline-flex items-center justify-center gap-3 px-6 py-3.5 text-sm sm:text-base font-semibold text-white bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] rounded-sm transition-colors duration-150 whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#171A17]"
-                      >
-                        <span>Descubre en 1 min. si tu mensaje vende</span>
-                        <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
-                      </a>
-
-                      <a
-                        href="/escuela"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          navigateTo('/escuela');
-                        }}
-                        className="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-sm sm:text-base font-semibold text-[#171A17] bg-transparent border border-[#171A17]/30 hover:border-[#171A17] hover:bg-[#ECE8DF] rounded-sm transition-colors duration-150 whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
-                      >
-                        <span>Ir a la Escuela de Ventas</span>
-                      </a>
-                    </div>
-
-                  </div>
-
-                  {/* Right Column: Editorial Portrait Frame (5 cols) */}
-                  <div className="lg:col-span-5">
-                    <figure className="relative mx-auto max-w-md lg:max-w-none">
-                      {/* Foto real de Geraldine (Sony ILCE-6400, misma foto que
-                          usa en geraldinemanriquez.com/escuela, filename
-                          fullsizeoutput_97fe) — reemplaza el bloque pendiente */}
-                      <div className="relative overflow-hidden rounded-sm border border-[#D4CFC3] bg-[#EAE6DC] aspect-[3/4]">
-                        <ResilientImage
-                          src="/images/geraldine_manriquez_retrato.webp"
-                          alt="Retrato de Geraldine Manríquez, coach de ventas y narrativa comercial en Concepción, Chile"
-                          fallbackTitle="Geraldine Manríquez"
-                          className="w-full h-full object-cover object-top"
-                        />
-                        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#171A17]/85 via-[#171A17]/20 to-transparent p-5 sm:p-6 text-[#F8F6F1]">
-                          <p className="font-editorial text-lg sm:text-xl italic leading-snug">
-                            “Vender no es convencer a la fuerza; es saber traducir lo que haces al
-                            dolor que tu cliente ya quiere resolver.”
-                          </p>
-                        </div>
-                      </div>
-                      <figcaption className="mt-2.5 text-xs text-[#5E615B] font-tabular">
-                        Geraldine Manríquez · Concepción, Biobío
-                      </figcaption>
-                    </figure>
-                  </div>
-                </div>
+                <HeroSlider onNavigate={navigateTo} />
               </div>
             </section>
 
@@ -527,7 +441,7 @@ export default function App() {
                         <span className="px-5 sm:px-7 text-sm sm:text-base font-editorial tracking-wide whitespace-nowrap text-[#F4F1EA]">
                           {item}
                         </span>
-                        <span className="text-[#D4A359] select-none" aria-hidden="true">
+                        <span className="text-[var(--color-accent-fill)] select-none" aria-hidden="true">
                           ·
                         </span>
                       </React.Fragment>
@@ -540,7 +454,7 @@ export default function App() {
             {/* 4. SECCIÓN "LA RETINA EMPRENDEDORA" */}
             <section
               id="sobre-mi"
-              className="scroll-mt-16 py-16 lg:py-24 border-b border-[#DEDAD0] bg-[#F8F6F1]"
+              className="scroll-mt-16 py-16 lg:py-24 border-b border-[#DEDAD0] bg-[var(--color-paper)]"
             >
               <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
                 <div className="flex flex-wrap items-center justify-between gap-4 pb-8 mb-10 border-b border-[#DEDAD0]">
@@ -562,14 +476,16 @@ export default function App() {
                     <figure>
                       <div className="overflow-hidden rounded-sm border border-[#D4CFC3] bg-[#EAE6DC] aspect-[4/3]">
                         <ResilientImage
-                          src="/images/retina_emprendedora_cafe_1791226529701.webp"
-                          alt="Dos mujeres conversando en un café y espacio de coworking aplicando el método La Retina Emprendedora"
-                          fallbackTitle="La Retina Emprendedora"
-                          className="w-full h-full object-cover"
+                          {...photo('home-retina-sesion')}
+                          sizes="(min-width: 1280px) 480px, (min-width: 1024px) 38vw, 92vw"
+                          loading="lazy"
+                          decoding="async"
+                          fallbackTitle="Geraldine Manríquez"
+                          className="h-full w-full object-cover"
                         />
                       </div>
                       <figcaption className="mt-2.5 text-xs text-[#5E615B] font-tabular">
-                        Fig. 02 — Diagnóstico de narrativa comercial en terreno
+                        Fig. 02 — Geraldine Manríquez en su espacio de trabajo
                       </figcaption>
                     </figure>
 
@@ -632,12 +548,12 @@ export default function App() {
 
                     <div className="mt-8 pt-6 border-t border-[#DEDAD0] flex flex-wrap items-center gap-4">
                       <a
-                        href="/sobre-mi"
+                        href={withBase("/sobre-mi")}
                         onClick={(e) => {
                           e.preventDefault();
                           navigateTo('/sobre-mi');
                         }}
-                        className="inline-flex items-center gap-3 px-5 py-3 text-sm sm:text-base font-semibold text-white bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] rounded-sm transition-colors duration-150 whitespace-nowrap"
+                        className="inline-flex items-center gap-3 px-5 py-3 text-sm sm:text-base font-semibold text-[var(--color-accent-on-fill)] bg-[var(--color-accent-fill)] hover:brightness-95 rounded-sm transition-colors duration-150 whitespace-nowrap"
                       >
                         <span>Conoce mi historia</span>
                         <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
@@ -690,7 +606,7 @@ export default function App() {
               <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-10 mb-12 border-b border-[#27332C]">
                   <div>
-                    <div className="flex items-center gap-2 text-xs sm:text-sm font-tabular text-[#D4A359] mb-3">
+                    <div className="flex items-center gap-2 text-xs sm:text-sm font-tabular text-[var(--color-accent-fill)] mb-3">
                       <span>ARQUITECTURA DE PROGRAMAS</span>
                       <span aria-hidden="true">·</span>
                       <span>ESCUELA Y SPEAKER</span>
@@ -715,10 +631,20 @@ export default function App() {
                     confirmar con la pregunta 7 del brief de WhatsApp (ver T2.4) */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
                   {/* COLUMNA 01: ESCUELA DE VENTAS */}
-                  <article className="flex flex-col justify-between bg-[#18221D] border border-[#2C3A32] rounded-sm p-6 sm:p-8">
+                  <article className="flex flex-col justify-between overflow-hidden bg-[#18221D] border border-[#2C3A32] rounded-sm p-6 sm:p-8">
                     <div>
+                      <div className="-mx-6 -mt-6 sm:-mx-8 sm:-mt-8 mb-6 aspect-[16/9] overflow-hidden border-b border-[#2C3A32] bg-[#121A16]">
+                        <ResilientImage
+                          {...photo('home-card-escuela')}
+                          sizes="(min-width: 1280px) 600px, (min-width: 1024px) 45vw, 92vw"
+                          loading="lazy"
+                          decoding="async"
+                          fallbackTitle="Escuela de Ventas"
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
                       <div className="flex items-center justify-between gap-2 pb-4 mb-6 border-b border-[#2C3A32]">
-                        <span className="font-tabular text-xs text-[#D4A359]">
+                        <span className="font-tabular text-xs text-[var(--color-accent-fill)]">
                           FORMACIÓN APLICADA
                         </span>
                         <span className="font-tabular text-xs text-[#9BA39D]">
@@ -742,21 +668,15 @@ export default function App() {
                             <button
                               type="button"
                               onClick={() => navigateTo('/escuela/diagnostico')}
-                              className="font-semibold text-base text-[#F4F1EA] hover:text-[#D4A359] text-left transition-colors cursor-pointer"
+                              className="font-semibold text-base text-[#F4F1EA] hover:text-[var(--color-accent-fill)] text-left transition-colors cursor-pointer"
                             >
                               Sesión Diagnóstica →
                             </button>
-                            <span className="font-tabular text-base font-semibold text-[#F4F1EA]">
-                              {ESCUELA_CARDS[0].regularPrice}
-                            </span>
                           </div>
                           <p className="text-xs text-[#B6B2A8] mb-2 leading-relaxed">
                             Revisión estratégica de 60 min para detectar dónde se traba hoy tu
                             discurso o tu oferta.
                           </p>
-                          <div className="font-tabular text-xs text-[#D4A359]">
-                            Precio preferencial ecosistemas: <strong>{ESCUELA_CARDS[0].preferentialPrice}</strong>
-                          </div>
                         </div>
 
                         {/* Item 2: Narrativa Comercial */}
@@ -765,20 +685,14 @@ export default function App() {
                             <button
                               type="button"
                               onClick={() => navigateTo('/escuela/narrativa-comercial')}
-                              className="font-semibold text-base text-[#F4F1EA] hover:text-[#D4A359] text-left transition-colors cursor-pointer"
+                              className="font-semibold text-base text-[#F4F1EA] hover:text-[var(--color-accent-fill)] text-left transition-colors cursor-pointer"
                             >
                               Narrativa Comercial →
                             </button>
-                            <span className="font-tabular text-base font-semibold text-[#F4F1EA]">
-                              {ESCUELA_CARDS[1].regularPrice}
-                            </span>
                           </div>
                           <p className="text-xs text-[#B6B2A8] mb-1.5 leading-relaxed">
                             Sesión estratégica + guion listo para usar + 7 días WhatsApp SOS.
                           </p>
-                          <div className="font-tabular text-xs text-[#D4A359]">
-                            Precio preferencial ecosistemas: <strong>{ESCUELA_CARDS[1].preferentialPrice}</strong>
-                          </div>
                         </div>
 
                         {/* Item 3: Vender sin Vender */}
@@ -787,25 +701,15 @@ export default function App() {
                             <button
                               type="button"
                               onClick={() => navigateTo('/escuela/vender-sin-vender')}
-                              className="font-semibold text-base text-[#F4F1EA] hover:text-[#D4A359] text-left transition-colors cursor-pointer"
+                              className="font-semibold text-base text-[#F4F1EA] hover:text-[var(--color-accent-fill)] text-left transition-colors cursor-pointer"
                             >
                               Vender sin Vender →
                             </button>
-                            <span className="font-tabular text-base font-semibold text-[#F4F1EA]">
-                              {ESCUELA_CARDS[2].regularPrice}
-                            </span>
                           </div>
                           <p className="text-xs text-[#B6B2A8] mb-2 leading-relaxed">
                             Curso grupal intensivo + 30 días de acompañamiento por WhatsApp.
                           </p>
-                          <div className="font-tabular text-xs text-[#D4A359] space-y-1">
-                            <div>
-                              Precio preferencial: <strong>{ESCUELA_CARDS[2].preferentialPrice}</strong>
-                            </div>
-                            <div className="text-[#E6E2D8]">
-                              Próxima cohorte: <strong>fecha por confirmar</strong>
-                            </div>
-                          </div>
+                          <p className="font-tabular text-xs text-[#E6E2D8]">Próxima cohorte: fecha por confirmar</p>
                         </div>
                       </div>
                     </div>
@@ -814,7 +718,7 @@ export default function App() {
                       <button
                         type="button"
                         onClick={() => navigateTo('/escuela')}
-                        className="w-full inline-flex items-center justify-between px-4 py-3 text-xs sm:text-sm font-semibold text-[#121A16] bg-[#D4A359] hover:bg-[#E2B46B] rounded-sm transition-colors duration-150 whitespace-nowrap cursor-pointer"
+                        className="w-full inline-flex items-center justify-between px-4 py-3 text-xs sm:text-sm font-semibold text-[#121A16] bg-[var(--color-accent-fill)] hover:bg-[#E2B46B] rounded-sm transition-colors duration-150 whitespace-nowrap cursor-pointer"
                       >
                         <span>Ver catálogo completo de la Escuela</span>
                         <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
@@ -825,11 +729,21 @@ export default function App() {
                   {/* COLUMNA 02: SPEAKER & EVENTOS */}
                   <article
                     id="speaker"
-                    className="scroll-mt-20 flex flex-col justify-between bg-[#18221D] border border-[#2C3A32] rounded-sm p-6 sm:p-8"
+                    className="scroll-mt-20 flex flex-col justify-between overflow-hidden bg-[#18221D] border border-[#2C3A32] rounded-sm p-6 sm:p-8"
                   >
                     <div>
+                      <div className="-mx-6 -mt-6 sm:-mx-8 sm:-mt-8 mb-6 aspect-[16/9] overflow-hidden border-b border-[#2C3A32] bg-[#121A16]">
+                        <ResilientImage
+                          {...photo('home-card-speaker')}
+                          sizes="(min-width: 1280px) 600px, (min-width: 1024px) 45vw, 92vw"
+                          loading="lazy"
+                          decoding="async"
+                          fallbackTitle="Speaker y Eventos"
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
                       <div className="flex items-center justify-between gap-2 pb-4 mb-6 border-b border-[#2C3A32]">
-                        <span className="font-tabular text-xs text-[#D4A359]">
+                        <span className="font-tabular text-xs text-[var(--color-accent-fill)]">
                           EMPRESAS &amp; ECOSISTEMA
                         </span>
                         <span className="font-tabular text-xs text-[#9BA39D]">
@@ -852,13 +766,10 @@ export default function App() {
                             <button
                               type="button"
                               onClick={() => navigateTo('/speaker')}
-                              className="font-semibold text-base text-[#F4F1EA] hover:text-[#D4A359] text-left transition-colors cursor-pointer"
+                              className="font-semibold text-base text-[#F4F1EA] hover:text-[var(--color-accent-fill)] text-left transition-colors cursor-pointer"
                             >
                               Relatorías y Conferencias →
                             </button>
-                            <span className="font-tabular text-xs text-[#D4A359] shrink-0">
-                              Precio: Consultar
-                            </span>
                           </div>
                           <p className="text-xs text-[#B6B2A8] mb-2 leading-relaxed">
                             Conferencias sobre <strong>Problema Real del Cliente</strong>,{' '}
@@ -873,17 +784,13 @@ export default function App() {
                             <button
                               type="button"
                               onClick={() => navigateTo('/escuela/conexiones-que-conectan')}
-                              className="font-semibold text-base text-[#F4F1EA] hover:text-[#D4A359] text-left transition-colors cursor-pointer"
+                              className="font-semibold text-base text-[#F4F1EA] hover:text-[var(--color-accent-fill)] text-left transition-colors cursor-pointer"
                             >
                               Conexiones que Conectan →
                             </button>
-                            <span className="font-tabular text-xs text-[#D4A359] shrink-0">
-                              $50.000 / $25.000
-                            </span>
                           </div>
                           <p className="text-xs text-[#B6B2A8] mb-2 leading-relaxed">
-                            10º Taller de Networking presencial en Concepción (Ticket general
-                            $50.000 / Ex-participantes $25.000).
+                            Taller de Networking presencial en Concepción. Revisa los detalles en su ficha.
                           </p>
                         </div>
                       </div>
@@ -893,7 +800,7 @@ export default function App() {
                       <button
                         type="button"
                         onClick={() => navigateTo('/speaker')}
-                        className="w-full inline-flex items-center justify-between px-4 py-3 text-xs sm:text-sm font-semibold text-[#F4F1EA] bg-transparent border border-[#495A4F] hover:border-[#D4A359] hover:text-[#D4A359] rounded-sm transition-colors duration-150 whitespace-nowrap cursor-pointer"
+                        className="w-full inline-flex items-center justify-between px-4 py-3 text-xs sm:text-sm font-semibold text-[#F4F1EA] bg-transparent border border-[#495A4F] hover:border-[var(--color-accent-fill)] hover:text-[var(--color-accent-fill)] rounded-sm transition-colors duration-150 whitespace-nowrap cursor-pointer"
                       >
                         <span>Ver página de Speaker &amp; Conferencias</span>
                         <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
@@ -907,7 +814,7 @@ export default function App() {
             {/* 6. TESTIMONIOS REALES (3 TARJETAS) */}
             <section
               aria-labelledby="testimonios-heading"
-              className="py-16 lg:py-24 bg-[#F8F6F1] border-b border-[#DEDAD0]"
+              className="py-16 lg:py-24 bg-[var(--color-paper)] border-b border-[#DEDAD0]"
             >
               <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 mb-12 border-b border-[#DEDAD0]">
@@ -935,7 +842,7 @@ export default function App() {
                   {TESTIMONIALS.map((item, index) => (
                     <article
                       key={item.name}
-                      className="flex flex-col justify-between bg-[#FBF9F5] border border-[#DCD7CA] rounded-sm p-6 sm:p-8"
+                      className="flex flex-col justify-between bg-[var(--color-surface)] border border-[#DCD7CA] rounded-sm p-6 sm:p-8"
                     >
                       <div>
                         <div className="flex items-center justify-between gap-2 text-xs font-tabular text-[#676A63] pb-4 mb-6 border-b border-[#E6E2D6]">
@@ -968,7 +875,7 @@ export default function App() {
               <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
                 <div className="flex flex-wrap items-center justify-between gap-4 pb-6 mb-10 border-b border-[#362E29] text-xs sm:text-sm font-tabular text-[#D9CBB8]">
                   <div className="flex items-center gap-2.5">
-                    <Radio className="w-4 h-4 text-[#D4A359]" aria-hidden="true" />
+                    <Radio className="w-4 h-4 text-[var(--color-accent-fill)]" aria-hidden="true" />
                     <span className="text-[#F6F3EC] font-semibold">EN EL AIRE</span>
                     <span aria-hidden="true">·</span>
                     <span>Radio Femenina de Concepción (44 años al aire)</span>
@@ -976,13 +883,13 @@ export default function App() {
                   <div>
                     <span>Lunes - Miércoles - Viernes</span>
                     <span aria-hidden="true"> · </span>
-                    <span className="text-[#D4A359] font-semibold">18:00 a 19:00 hrs</span>
+                    <span className="text-[var(--color-accent-fill)] font-semibold">18:00 a 19:00 hrs</span>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
                   <div className="lg:col-span-7">
-                    <div className="text-xs font-tabular text-[#D4A359] mb-2">
+                    <div className="text-xs font-tabular text-[var(--color-accent-fill)] mb-2">
                       PROGRAMA DE CONVERSACIÓN Y NEGOCIOS EN BIOBÍO
                     </div>
                     <h2
@@ -1000,8 +907,8 @@ export default function App() {
                       sobre los desafíos reales de sacar adelante un negocio.
                     </p>
 
-                    <div className="p-5 bg-[#29221E] border-l-2 border-[#D4A359] mb-8">
-                      <div className="font-tabular text-xs text-[#D4A359] mb-1">
+                    <div className="p-5 bg-[#29221E] border-l-2 border-[var(--color-accent-fill)] mb-8">
+                      <div className="font-tabular text-xs text-[var(--color-accent-fill)] mb-1">
                         IMPACTO Y ALTA DEMANDA EN LA REGIÓN
                       </div>
                       <p className="font-editorial text-xl sm:text-2xl text-[#F6F3EC]">
@@ -1012,7 +919,7 @@ export default function App() {
                     <div className="bg-[#26201C] border border-[#3D332D] rounded-sm p-6">
                       <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-tabular text-[#C9B9A6] pb-3 mb-3 border-b border-[#382F29]">
                         <span>EN VIVO</span>
-                        <span className="text-[#D4A359]">{SITE_LINKS.radioEmisora}</span>
+                        <span className="text-[var(--color-accent-fill)]">{SITE_LINKS.radioEmisora}</span>
                       </div>
 
                       <p className="text-xs sm:text-sm text-[#BFB7AC] mb-5 leading-relaxed">
@@ -1023,19 +930,19 @@ export default function App() {
 
                       <div className="flex flex-wrap items-center gap-3">
                         <a
-                          href={SITE_LINKS.social.Spotify}
+                          href={SITE_LINKS.radioYouTubePlaylist}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-[#171A17] bg-[#D4A359] hover:bg-[#E3B56C] rounded-sm transition-colors duration-150 whitespace-nowrap"
+                          className="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-[#171A17] bg-[var(--color-accent-fill)] hover:bg-[#E3B56C] rounded-sm transition-colors duration-150 whitespace-nowrap"
                         >
                           <Play className="w-3.5 h-3.5 fill-current shrink-0" aria-hidden="true" />
-                          <span>Escuchar en Spotify</span>
+                          <span>Ver capítulos en YouTube</span>
                         </a>
 
                         <button
                           type="button"
                           onClick={() => navigateTo('/radio')}
-                          className="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-[#D4A359] hover:underline cursor-pointer"
+                          className="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-[var(--color-accent-fill)] hover:underline cursor-pointer"
                         >
                           <span>Ver planes de auspicio y cómo participar →</span>
                         </button>
@@ -1047,13 +954,16 @@ export default function App() {
                     <figure>
                       <div className="relative overflow-hidden rounded-sm border border-[#3D332D] bg-[#29221E] aspect-[16/9] lg:aspect-[4/3]">
                         <ResilientImage
-                          src="/images/radio_estudio_femenina_1791226539429.webp"
-                          alt="Estudio de radio durante la transmisión del programa Aprende a Emprender en Radio Femenina de Concepción"
-                          fallbackTitle="Aprende a Emprender — Radio Femenina"
+                          {...photo('home-radio')}
+                          sizes="(min-width: 1280px) 480px, (min-width: 1024px) 38vw, 92vw"
+                          loading="lazy"
+                          decoding="async"
+                          fallbackTitle="Radio Femenina de Concepción"
                           className="w-full h-full object-cover"
                         />
-                        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent p-5 text-[#F6F3EC]">
-                          <div className="font-tabular text-xs text-[#D4A359] mb-1">
+                        {/* Capa ≥75 % de #171A17 detrás del texto: sostiene 4,5:1 (también el dorado) sobre cualquier foto. */}
+                        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#171A17]/92 via-[#171A17]/80 via-60% to-transparent px-5 pb-5 pt-16 text-[#F6F3EC]">
+                          <div className="font-tabular text-xs text-[var(--color-accent-fill)] mb-1">
                             LUN · MIÉ · VIE · 18:00 A 19:00 HRS
                           </div>
                           <div className="font-editorial text-lg">
@@ -1070,15 +980,34 @@ export default function App() {
               </div>
             </section>
 
-            {/* 8. CTA DE NEWSLETTER & DIAGNÓSTICO DE 1 MINUTO */}
+            {/* 8. BLOG + AUTODIAGNÓSTICO */}
+            <section aria-labelledby="blog-home-title" className="py-16 lg:py-20 bg-[var(--color-paper)] border-b border-[var(--color-border)]">
+              <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
+                <div className="flex flex-wrap items-end justify-between gap-5 mb-8">
+                  <div><p className="font-tabular text-xs text-[var(--color-accent-strong)] mb-2">IDEAS PARA EMPRENDER</p>
+                    <h2 id="blog-home-title" className="font-editorial text-3xl sm:text-4xl text-[var(--color-ink)]">Del blog</h2></div>
+                  <button type="button" onClick={() => navigateTo('/blog')} className="min-h-11 text-sm font-semibold text-[var(--color-accent-strong)] hover:underline">Ver todos los artículos →</button>
+                </div>
+                <div className="grid gap-5 md:grid-cols-3">
+                  {latestPosts(3).map((post) => <article key={post.slug} className="p-5 sm:p-6 border border-[var(--color-border)] bg-[var(--color-surface)]">
+                    <p className="font-tabular text-xs text-[var(--color-muted)] mb-3">{new Intl.DateTimeFormat('es-CL', { dateStyle: 'medium' }).format(new Date(post.date))}</p>
+                    <h3 className="font-editorial text-xl text-[var(--color-ink)] leading-snug mb-3">{post.title}</h3>
+                    <p className="text-sm text-[var(--color-ink-soft)] leading-relaxed mb-5">{post.excerpt}</p>
+                    <a href={post.url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center text-sm font-semibold text-[var(--color-accent-strong)] hover:underline">Leer artículo <ArrowUpRight className="ml-1 w-4 h-4" aria-hidden="true" /></a>
+                  </article>)}
+                </div>
+              </div>
+            </section>
+
             <section
               id="diagnostico"
-              className="scroll-mt-16 py-16 lg:py-24 bg-[#F2EFE7] border-b border-[#DEDAD0]"
+              className="scroll-mt-16 py-16 lg:py-24 bg-[var(--color-surface-alt)] border-b border-[var(--color-border)]"
             >
               <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
+                <h2 className="sr-only">Autodiagnóstico de narrativa comercial</h2>
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
                   {/* Left Column: 1-Minute Interactive Self-Check (5 cols) */}
-                  <div className="lg:col-span-5 bg-[#FBF9F5] border border-[#D8D3C6] rounded-sm p-6 sm:p-8">
+                  <div className="lg:col-span-5 bg-[var(--color-surface)] border border-[#D8D3C6] rounded-sm p-6 sm:p-8">
                     <div className="flex items-center justify-between gap-2 text-xs font-tabular text-[#676A63] pb-3 mb-4 border-b border-[#E5E0D4]">
                       <span>TEST RÁPIDO · 1 MINUTO</span>
                       <span>AUTODIAGNÓSTICO</span>
@@ -1101,7 +1030,7 @@ export default function App() {
                             className={`flex items-start gap-3 p-3.5 rounded-sm border cursor-pointer transition-colors duration-150 ${
                               isChecked
                                 ? 'bg-[#F4ECE9] border-[var(--color-accent)]/50 text-[#171A17]'
-                                : 'bg-[#F8F6F1] border-[#DEDAD0] text-[#3E413B] hover:border-[#B5B0A3]'
+                                : 'bg-[var(--color-paper)] border-[#DEDAD0] text-[#3E413B] hover:border-[#B5B0A3]'
                             }`}
                           >
                             <input
@@ -1121,151 +1050,35 @@ export default function App() {
                         RESULTADO PRELIMINAR ({checkedCount}/3 SEÑALES DETECTADAS)
                       </div>
                       {checkedCount === 0 ? (
-                        <p>
-                          Tienes una base clara. Suscríbete al costado para recibir herramientas
-                          avanzadas de narrativa comercial y fechas de próximas cohortes.
-                        </p>
+                        <p>Tienes una base clara. Explora los programas y recursos disponibles para seguir avanzando.</p>
                       ) : (
-                        <p>
-                          Tu servicio tiene valor, pero tu mensaje está centrado en la solución y
-                          no en el problema de tu cliente. Recibe la guía de 1 minuto en tu correo.
-                        </p>
+                        <p>Tu servicio tiene valor. Puede ayudarte traducirlo a los problemas concretos que quieres resolver.</p>
                       )}
                     </div>
                   </div>
 
-                  {/* Right Column: Main Newsletter CTA "¿Tu mensaje ya vende?" (7 cols) */}
+                  {/* Próximo paso claro, sin simular una suscripción no integrada. */}
                   <div className="lg:col-span-7 lg:pl-4">
-                    <div className="flex items-center gap-2 text-xs sm:text-sm font-tabular text-[var(--color-accent)] mb-3">
-                      <span>DIAGNÓSTICO COMERCIAL &amp; NEWSLETTER</span>
-                      <span aria-hidden="true">·</span>
-                      <span>RECURSO GRATUITO</span>
-                    </div>
-
-                    <h2
-                      className="font-editorial text-4xl sm:text-5xl lg:text-[3.25rem] text-[#171A17] leading-[1.1] mb-4"
-                      style={{ textWrap: 'balance' }}
-                    >
-                      ¿Tu mensaje ya vende?
-                    </h2>
-
-                    <p className="text-base sm:text-lg text-[#383B36] leading-relaxed max-w-[58ch] mb-6">
-                      Recibe en tu correo la guía práctica de{' '}
-                      <strong className="text-[#171A17]">La Retina Emprendedora</strong> para
-                      evaluar en 1 minuto si tu presentación comercial conecta con el problema de
-                      tu cliente ideal, además de novedades de la Escuela de Ventas y episodios de{' '}
-                      <em>Aprende a Emprender</em>.
+                    <p className="font-tabular text-xs sm:text-sm text-[var(--color-accent-strong)] mb-3">
+                      UNA MIRADA MÁS CLARA A TU MENSAJE
                     </p>
-
-                    {selectedProgram && (
-                      <div className="mb-6 p-3.5 bg-[#EBE6DA] border border-[#CCC5B5] rounded-sm flex items-center justify-between gap-3 text-xs sm:text-sm text-[#171A17]">
-                        <span>
-                          Interés seleccionado: <strong>{selectedProgram}</strong>. Déjanos tu
-                          correo para enviarte el detalle y aranceles vigentes.
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => setSelectedProgram(null)}
-                          className="font-tabular text-xs text-[var(--color-accent)] hover:underline shrink-0"
-                        >
-                          Cambiar
-                        </button>
-                      </div>
-                    )}
-
-                    {!isSubscribed ? (
-                      <form
-                        onSubmit={handleNewsletterSubmit}
-                        noValidate
-                        className="bg-[#FBF9F5] border border-[#D4CFC3] rounded-sm p-6 sm:p-8"
-                      >
-                        <label
-                          htmlFor="newsletter-email"
-                          className="block text-sm font-semibold text-[#171A17] mb-2"
-                        >
-                          Tu correo electrónico profesional
-                        </label>
-                        <div className="flex flex-col sm:flex-row gap-3">
-                          <input
-                            id="newsletter-email"
-                            name="email"
-                            type="email"
-                            autoComplete="email"
-                            value={email}
-                            onChange={(e) => {
-                              setEmail(e.target.value);
-                              if (emailError) setEmailError(null);
-                            }}
-                            placeholder="nombre@tunegocio.cl"
-                            aria-invalid={emailError ? 'true' : 'false'}
-                            aria-describedby={emailError ? 'newsletter-error' : 'newsletter-hint'}
-                            className={`flex-1 px-4 py-3.5 text-sm sm:text-base bg-white border rounded-sm text-[#171A17] placeholder:text-[#8A8D84] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] ${
-                              emailError ? 'border-[var(--color-accent)]' : 'border-[#C8C2B4]'
-                            }`}
-                          />
-                          <button
-                            type="submit"
-                            className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-sm sm:text-base font-semibold text-white bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] rounded-sm transition-colors duration-150 whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#171A17]"
-                          >
-                            <span>Suscribirme</span>
-                            <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
-                          </button>
-                        </div>
-
-                        {emailError ? (
-                          <p
-                            id="newsletter-error"
-                            role="alert"
-                            className="mt-3 text-xs sm:text-sm font-medium text-[var(--color-accent)]"
-                          >
-                            {emailError}
-                          </p>
-                        ) : (
-                          <p id="newsletter-hint" className="mt-3 text-xs text-[#646760]">
-                            Sin spam. Recibirás el autodiagnóstico de narrativa comercial y fechas
-                            de próximas cohortes en Concepción y online.
-                          </p>
-                        )}
-                      </form>
-                    ) : (
-                      <div
-                        role="status"
-                        aria-live="polite"
-                        className="bg-[#121A16] text-[#F4F1EA] border border-[#2C3A32] rounded-sm p-6 sm:p-8"
-                      >
-                        <div className="flex items-start gap-4">
-                          <div className="w-10 h-10 rounded-sm bg-[#D4A359] text-[#121A16] flex items-center justify-center shrink-0 mt-0.5">
-                            <Check className="w-5 h-5 stroke-[2.5]" aria-hidden="true" />
-                          </div>
-                          <div className="space-y-2">
-                            <div className="font-tabular text-xs text-[#D4A359]">
-                              SUSCRIPCIÓN CONFIRMADA
-                            </div>
-                            <h3 className="font-editorial text-2xl text-[#F4F1EA]">
-                              ¡Casi listo, {submittedEmail}!
-                            </h3>
-                            <p className="text-sm text-[#C4C0B6] leading-relaxed">
-                              Se abrió el formulario oficial del diagnóstico de 1 minuto de{' '}
-                              <em>La Retina Emprendedora</em> en una pestaña nueva
-                              {selectedProgram ? `, cuéntale ahí tu interés en ${selectedProgram}` : ''}.
-                              Si no se abrió, revisa que tu navegador no haya bloqueado la ventana.
-                            </p>
-                            <div className="pt-3">
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setIsSubscribed(false);
-                                  setSubmittedEmail('');
-                                }}
-                                className="text-xs font-tabular text-[#D4A359] hover:underline focus-visible:outline-2 focus-visible:outline-white"
-                              >
-                                Ingresar otro correo electrónico
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                    <h3 className="font-editorial text-4xl sm:text-5xl text-[var(--color-ink)] leading-tight mb-5">
+                      Vender empieza por escuchar.
+                    </h3>
+                    <p className="text-base sm:text-lg text-[var(--color-ink-soft)] leading-relaxed max-w-[58ch] mb-7">
+                      Este ejercicio es una primera señal, no un diagnóstico profesional. Explora los
+                      programas de la Escuela o conversemos sobre el desafío que estás viviendo.
+                    </p>
+                    <div className="flex flex-wrap gap-3">
+                      <button type="button" onClick={() => navigateTo('/escuela')}
+                        className="inline-flex min-h-11 items-center gap-2 px-5 py-3 text-sm font-semibold text-[var(--color-accent-on-fill)] bg-[var(--color-accent-fill)] rounded-sm hover:brightness-95">
+                        Conocer la Escuela <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                      </button>
+                      <button type="button" onClick={() => navigateTo('/contacto')}
+                        className="inline-flex min-h-11 items-center px-5 py-3 text-sm font-semibold text-[var(--color-ink)] border border-[var(--color-border)] rounded-sm hover:bg-[var(--color-surface)]">
+                        Contactar a Geraldine
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1275,27 +1088,21 @@ export default function App() {
       </main>
 
       {/* 9. FOOTER COMPLETO CON NAVEGACIÓN A TODAS LAS PÁGINAS */}
-      <footer className="bg-[#121A16] text-[#D8D4C9] py-12 lg:py-16">
+      <footer className={`${isSponsorLanding ? 'hidden' : ''} bg-[#121A16] text-[#D8D4C9] py-12 lg:py-16`}>
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10 border-b border-[#26312B] items-start">
             {/* Brand Column */}
             <div className="md:col-span-4">
-              <div className="flex items-center gap-3 mb-3">
-                <span className="font-editorial text-2xl font-semibold text-[#F4F1EA]">GM</span>
-                <span aria-hidden="true" className="text-[#56635B]">
-                  ·
-                </span>
-                <span className="font-editorial text-lg text-[#F4F1EA]">
-                  Geraldine Manríquez — Aprende a Emprender
-                </span>
-              </div>
+              <a href={withBase("/")} onClick={(event) => { event.preventDefault(); navigateTo('/'); }} aria-label="Geraldine Manríquez — Volver al inicio" className="inline-flex min-h-11 bg-[var(--color-paper)] p-3 mb-4 rounded-sm">
+                <GeraldineLogo />
+              </a>
               <p className="text-xs sm:text-sm text-[#9DA49E] max-w-[40ch] leading-relaxed mb-4">
                 Coach de ventas y narrativa comercial para emprendedores, terapeutas, coaches y
                 profesionales independientes en Concepción, Biobío, Chile.
               </p>
               <a
                 href="mailto:hola@geraldinemanriquez.com"
-                className="font-tabular text-xs text-[#D4A359] hover:underline"
+                className="font-tabular text-xs text-[var(--color-accent-fill)] hover:underline"
               >
                 hola@geraldinemanriquez.com
               </a>
@@ -1304,7 +1111,7 @@ export default function App() {
             {/* Mapa del Sitio */}
             <div className="md:col-span-4 grid grid-cols-2 gap-4">
               <div>
-                <div className="font-tabular text-xs text-[#D4A359] mb-3">PÁGINAS</div>
+                <div className="font-tabular text-xs text-[var(--color-accent-fill)] mb-3">PÁGINAS</div>
                 <ul className="space-y-2 text-xs sm:text-sm">
                   {navItems.map((item) => (
                     <li key={item.route}>
@@ -1324,11 +1131,11 @@ export default function App() {
               </div>
 
               <div>
-                <div className="font-tabular text-xs text-[#D4A359] mb-3">FICHAS ESCUELA</div>
+                <div className="font-tabular text-xs text-[var(--color-accent-fill)] mb-3">FICHAS ESCUELA</div>
                 <ul className="space-y-2 text-xs sm:text-sm">
                   <li>
                     <a
-                      href="/escuela/diagnostico"
+                      href={withBase("/escuela/diagnostico")}
                       onClick={(e) => {
                         e.preventDefault();
                         navigateTo('/escuela/diagnostico');
@@ -1340,7 +1147,7 @@ export default function App() {
                   </li>
                   <li>
                     <a
-                      href="/escuela/narrativa-comercial"
+                      href={withBase("/escuela/narrativa-comercial")}
                       onClick={(e) => {
                         e.preventDefault();
                         navigateTo('/escuela/narrativa-comercial');
@@ -1352,7 +1159,7 @@ export default function App() {
                   </li>
                   <li>
                     <a
-                      href="/escuela/vender-sin-vender"
+                      href={withBase("/escuela/vender-sin-vender")}
                       onClick={(e) => {
                         e.preventDefault();
                         navigateTo('/escuela/vender-sin-vender');
@@ -1364,7 +1171,7 @@ export default function App() {
                   </li>
                   <li>
                     <a
-                      href="/escuela/conexiones-que-conectan"
+                      href={withBase("/escuela/conexiones-que-conectan")}
                       onClick={(e) => {
                         e.preventDefault();
                         navigateTo('/escuela/conexiones-que-conectan');
@@ -1380,31 +1187,20 @@ export default function App() {
 
             {/* Social Channels (Exact 6 networks required) */}
             <div className="md:col-span-4">
-              <div className="font-tabular text-xs text-[#D4A359] mb-3">
+              <div className="font-tabular text-xs text-[var(--color-accent-fill)] mb-3">
                 REDES &amp; CANALES OFICIALES
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs sm:text-sm">
-                {(Object.keys(SITE_LINKS.social) as Array<keyof typeof SITE_LINKS.social>).map(
-                  (network) => (
-                    <a
-                      key={network}
-                      href={SITE_LINKS.social[network]}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center justify-between px-3 py-2 bg-[#1A251F] border border-[#2C3A32] hover:border-[#D4A359] text-[#F4F1EA] rounded-sm transition-colors duration-150 whitespace-nowrap focus-visible:outline-2 focus-visible:outline-[#D4A359]"
-                    >
-                      <span>{network}</span>
-                      <ArrowUpRight className="w-3.5 h-3.5 text-[#D4A359]" aria-hidden="true" />
-                    </a>
-                  )
-                )}
-              </div>
+              <SocialLinks variant="footer" />
             </div>
           </div>
 
           <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#9DA49E] font-tabular">
-            <div>© Geraldine Manríquez</div>
-            <div>Concepción · Región del Biobío, Chile</div>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <span>© Geraldine Manríquez</span>
+              <a href={withBase("/privacidad")} onClick={(e) => { e.preventDefault(); navigateTo('/privacidad'); }} className="hover:text-white">Privacidad</a>
+              <a href={withBase("/terminos")} onClick={(e) => { e.preventDefault(); navigateTo('/terminos'); }} className="hover:text-white">Términos</a>
+            </div>
+            <div className="flex items-center gap-4"><span>Concepción · Región del Biobío, Chile</span><a href="https://anami.cl" target="_blank" rel="noopener noreferrer" className="hover:text-white">Sitio por ANAMI</a></div>
           </div>
         </div>
       </footer>
