@@ -73,7 +73,7 @@ export function ServiceDetailTemplate({
               )}
 
               {/* Regla de oro / Promesa central */}
-              <div className="p-6 bg-[#F1EDE4] border-l-2 border-[var(--color-accent)] rounded-r-sm mb-6">
+              <div className="p-6 bg-[#F1EDE4] border border-[#D8D2C5] rounded-sm mb-6">
                 <div className="font-tabular text-xs text-[var(--color-accent)] font-semibold mb-2">
                   {service.goldenRuleLabel}
                 </div>
@@ -135,9 +135,6 @@ export function ServiceDetailTemplate({
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
             <div className="lg:col-span-6">
-              <div className="font-tabular text-xs text-[var(--color-accent)] mb-2">
-                RESULTADOS CONCRETOS
-              </div>
               <h2 className="font-editorial text-2xl sm:text-3xl text-[#171A17] mb-6">
                 {service.achievementsTitle}
               </h2>
@@ -205,9 +202,6 @@ export function ServiceDetailTemplate({
               {!service.includesList && !service.bonuses && (
                 <div className="bg-[var(--color-surface-alt)] border border-[#D8D2C5] rounded-sm p-6 sm:p-8 h-full flex flex-col justify-between">
                   <div>
-                    <div className="font-tabular text-xs text-[var(--color-accent)] mb-2">
-                      ENFOQUE LA RETINA EMPRENDEDORA
-                    </div>
                     <h3 className="font-editorial text-2xl text-[#171A17] mb-3">
                       Por qué este formato funciona desde la primera sesión
                     </h3>
@@ -231,7 +225,6 @@ export function ServiceDetailTemplate({
       <section className="py-14 lg:py-20 border-b border-[#DEDAD0]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="mb-10">
-            <div className="font-tabular text-xs text-[var(--color-accent)] mb-2">METODOLOGÍA PASO A PASO</div>
             <h2 className="font-editorial text-3xl sm:text-4xl text-[#171A17]">
               {service.stepsTitle}
             </h2>
@@ -265,9 +258,6 @@ export function ServiceDetailTemplate({
       <section className="py-14 lg:py-20 border-b border-[#DEDAD0] bg-[var(--color-surface-alt)]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="mb-10">
-            <div className="font-tabular text-xs text-[var(--color-accent)] mb-2">
-              EXPERIENCIAS VERIFICADAS
-            </div>
             <h2 className="font-editorial text-3xl sm:text-4xl text-[#171A17]">
               Testimonios reales de quienes aplicaron el método
             </h2>
@@ -310,9 +300,6 @@ export function ServiceDetailTemplate({
             {/* Left Column: Guarantee & Value Summary (5 cols) */}
             <div className="lg:col-span-5 space-y-6">
               <div>
-                <div className="font-tabular text-xs text-[var(--color-accent-fill)] mb-2">
-                  INVERSIÓN Y RESPALDO
-                </div>
                 <h2 className="font-editorial text-3xl sm:text-4xl text-[#F4F1EA]">
                   Reserva tu cupo en {service.shortTitle}
                 </h2>
@@ -363,7 +350,6 @@ export function ServiceDetailTemplate({
       <section className="py-14 lg:py-20 border-b border-[#DEDAD0] bg-[var(--color-paper)]">
         <div className="max-w-[960px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="mb-10">
-            <div className="font-tabular text-xs text-[var(--color-accent)] mb-2">PREGUNTAS FRECUENTES</div>
             <h2 className="font-editorial text-3xl sm:text-4xl text-[#171A17]">
               Resuelve tus dudas sobre {service.shortTitle}
             </h2>
@@ -388,7 +374,7 @@ export function ServiceDetailTemplate({
                     )}
                   </button>
                   {isOpen && (
-                    <p className="mt-3 text-sm sm:text-base text-[#3D403A] leading-relaxed pr-8">
+                    <p className="mt-3 max-w-[58ch] text-sm sm:text-base text-[#3D403A] leading-relaxed pr-8">
                       {faq.answer}
                     </p>
                   )}

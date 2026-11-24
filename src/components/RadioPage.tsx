@@ -52,9 +52,6 @@ export function RadioPage({ onNavigate }: { onNavigate: (route: RoutePath) => vo
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             <div className="lg:col-span-7">
               <ServiceBrand service="radio" />
-              <div className="font-tabular text-xs text-[var(--color-accent-fill)] mb-3">
-                PROGRAMA RADIAL &amp; PLATAFORMA DE VISIBILIDAD REGIONAL
-              </div>
               <h1
                 className="font-editorial text-4xl sm:text-5xl lg:text-[3.5rem] leading-[1.08] text-[#F6F3EC] mb-6"
                 style={{ textWrap: 'balance' }}
@@ -140,7 +137,7 @@ export function RadioPage({ onNavigate }: { onNavigate: (route: RoutePath) => vo
       {/* FORMATOS GRATUITOS: suben justo después de la primera información (pedido de Geraldine, nov-2026) */}
       <section className="py-12 lg:py-16 border-b border-[#DEDAD0]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
-          <div className="bg-[var(--color-surface-alt)] border border-[#D5CFC2] rounded-sm p-6 sm:p-8">
+          <div>
             <div className="font-tabular text-xs text-[var(--color-accent)] font-semibold mb-2">
               FORMATOS GRATUITOS SIN LISTA DE ESPERA
             </div>
@@ -186,7 +183,6 @@ export function RadioPage({ onNavigate }: { onNavigate: (route: RoutePath) => vo
       <section className="py-16 lg:py-20 border-b border-[#DEDAD0]" aria-labelledby="radio-episodes-title">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="max-w-[70ch] mb-8">
-            <div className="font-tabular text-xs text-[var(--color-accent)] mb-2">ARCHIVO DEL PROGRAMA</div>
             <h2 id="radio-episodes-title" className="font-editorial text-3xl sm:text-4xl text-[#171A17] mb-3">
               Capítulos de Aprende a Emprender
             </h2>
@@ -305,7 +301,6 @@ export function RadioPage({ onNavigate }: { onNavigate: (route: RoutePath) => vo
       <section className="py-16 lg:py-24 border-b border-[#DEDAD0]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="mb-12">
-            <div className="font-tabular text-xs text-[var(--color-accent)] mb-2">MODALIDADES DE PRESENCIA</div>
             <h2 className="font-editorial text-3xl sm:text-4xl text-[#171A17]">
               ¿Cómo participar en Aprende a Emprender?
             </h2>
@@ -382,7 +377,6 @@ export function RadioPage({ onNavigate }: { onNavigate: (route: RoutePath) => vo
 
       <section id="planes-auspicio" className="scroll-mt-20 bg-[#121A16] py-16 text-[#F4F1EA]">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-10">
-          <p className="font-tabular text-xs text-[var(--color-accent-fill)] mb-2">AUSPICIOS RADIALES</p>
           <h2 className="font-editorial text-3xl sm:text-4xl">Conoce las opciones para tu marca</h2>
           <p className="mt-4 max-w-[65ch] text-[#C4C0B6]">Explora los planes en la página dedicada a tu tipo de organización.</p>
           <div className="mt-8 flex flex-wrap gap-4">

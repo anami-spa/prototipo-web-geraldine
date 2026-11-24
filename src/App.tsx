@@ -5,6 +5,7 @@ import {
   ArrowRight,
   ArrowUpRight,
   Check,
+  Pause,
   ChevronDown,
   ChevronUp,
   Menu,
@@ -132,6 +133,7 @@ export default function App() {
     typeof window !== 'undefined' ? normalizePath(stripBase(window.location.pathname)) : '/'
   );
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [bandaPausada, setBandaPausada] = useState(false);
   const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
   const mobileDrawerRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLElement>(null);
@@ -456,13 +458,25 @@ export default function App() {
             {/* 3. FRANJA / MARQUEE CON PALABRAS CLAVE EN LOOP: bajo el hero (Cristian, 24-nov: arriba no se ve bien) */}
             <section
               aria-label="Trayectoria y credenciales clave"
-              className="bg-[var(--color-accent-fill)] text-[#171A17] py-4 border-b border-[#CDB56A] overflow-hidden"
+              className="relative bg-[var(--color-accent-fill)] text-[#171A17] py-4 border-b border-[#CDB56A] overflow-hidden"
             >
-              <div className="animate-marquee-loop flex items-center">
+              <button
+                type="button"
+                onClick={() => setBandaPausada((p) => !p)}
+                aria-pressed={bandaPausada}
+                aria-label="Pausar el movimiento de la banda"
+                className="absolute right-2 top-1/2 z-10 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[var(--color-accent-fill)] shadow-md hover:brightness-95 motion-reduce:hidden"
+              >
+                {bandaPausada ? <Play className="h-4 w-4" aria-hidden="true" /> : <Pause className="h-4 w-4" aria-hidden="true" />}
+              </button>
+              <div
+                className="animate-marquee-loop flex items-center motion-reduce:flex-wrap motion-reduce:justify-center motion-reduce:gap-y-2"
+                style={{ animationPlayState: bandaPausada ? 'paused' : 'running' }}
+              >
                 {[0, 1, 2, 3].map((repeatIndex) => (
                   <div
                     key={repeatIndex}
-                    className="flex items-center shrink-0"
+                    className={`flex items-center shrink-0 ${repeatIndex > 0 ? 'motion-reduce:hidden' : 'motion-reduce:flex-wrap motion-reduce:justify-center'}`}
                     aria-hidden={repeatIndex > 0 ? 'true' : undefined}
                   >
                     {MARQUEE_ITEMS.map((item, itemIdx) => (
@@ -488,7 +502,7 @@ export default function App() {
               <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
                 <h2
                   id="mision-title"
-                  className="lg:col-span-7 border-l-4 border-[var(--color-accent-fill)] pl-6 sm:pl-8 font-editorial text-3xl sm:text-4xl lg:text-5xl leading-[1.15] italic"
+                  className="lg:col-span-7 font-editorial text-3xl sm:text-4xl lg:text-5xl leading-[1.15] italic before:mb-6 before:block before:h-1 before:w-16 before:bg-[var(--color-accent-fill)] before:content-['']"
                   style={{ textWrap: 'balance' }}
                 >
                   Mi misión es ayudarte a destrabar tu negocio, estructurar tus ideas y dominar una
@@ -699,7 +713,7 @@ export default function App() {
                       </div>
 
                       <h3 className="font-editorial text-2xl sm:text-3xl text-[#F4F1EA] mb-3 tracking-[0.01em]">
-                        01. Escuela de Ventas
+                        Escuela de Ventas
                       </h3>
                       <p className="text-sm text-[#C4C0B6] leading-relaxed mb-6 tracking-[0.01em]">
                         Programas prácticos para traducir tu servicio al lenguaje de tu cliente
@@ -798,7 +812,7 @@ export default function App() {
                       </div>
 
                       <h3 className="font-editorial text-2xl sm:text-3xl text-[#F4F1EA] mb-3 tracking-[0.01em]">
-                        02. Speaker &amp; Eventos
+                        Speaker &amp; Eventos
                       </h3>
                       <p className="text-sm text-[#C4C0B6] leading-relaxed mb-6 tracking-[0.01em]">
                         Instancias presenciales de formación corporativa y articulación de redes de
@@ -887,7 +901,7 @@ export default function App() {
                     >
                       <div>
                         <div className="flex items-center justify-between gap-2 text-xs font-tabular text-[#676A63] pb-4 mb-6 border-b border-[#E6E2D6]">
-                          <span>Caso 0{index + 1}</span>
+                          <span className="whitespace-nowrap">Caso 0{index + 1}</span>
                           <span>{item.shift}</span>
                         </div>
 
@@ -961,7 +975,7 @@ export default function App() {
                         <span className="text-[var(--color-accent-fill)]">{SITE_LINKS.radioEmisora}</span>
                       </div>
 
-                      <p className="text-sm text-[#BFB7AC] mb-5 leading-relaxed">
+                      <p className="max-w-[56ch] text-sm text-[#BFB7AC] mb-5 leading-relaxed">
                         {SITE_LINKS.radioInvitados}. Alcance real: {SITE_LINKS.radioAlcance}.
                         Escucha las entrevistas y conoce los planes de auspicio PYME y Empresa en
                         la página oficial del programa.
