@@ -1,32 +1,33 @@
-import { useState } from 'react';
-import { ArrowUpRight, BookOpen, Check, MessageCircle } from 'lucide-react';
+import { ArrowUpRight, BookOpen } from 'lucide-react';
 import { SITE_LINKS } from '../data/siteContent';
 import { ResilientImage } from './ResilientImage';
+import { ScrollCarousel } from './ScrollCarousel';
 import { photo, type PhotoId } from '../data/photos';
 
-const PRESENTATION_GALLERY: { photo: PhotoId; caption: string }[] = [
+/**
+ * Fotos de la presentación. Solo entran las que no muestran a terceros reconocibles (coautoras, asistentes);
+ * las demás esperan consentimiento escrito. `caption` es opcional: los pies los cambia Geraldine.
+ */
+const PRESENTATION_GALLERY: { photo: PhotoId; caption?: string }[] = [
   { photo: 'libro-g-firma', caption: 'Firma de ejemplares' },
   { photo: 'libro-g-presentacion', caption: 'Durante la presentación del libro' },
   { photo: 'libro-g-auditorio', caption: 'El auditorio, visto desde atrás' },
-];
-
-const COAUTHORS = [
-  'Jessica Sepúlveda Bobadilla',
-  'Ale Carpio de Zúñiga',
-  'Romina Núñez Arriaza',
-  'Geraldine Manríquez Plaza',
-  'María Paz Molina',
-  'Susana Sarmiento Hernández',
+  { photo: 'libro-c-inacap' },
+  { photo: 'libro-c-firma-manos' },
+  { photo: 'libro-c-firma-libro' },
+  { photo: 'libro-c-mesa-firma' },
+  { photo: 'libro-c-firma-pila' },
+  { photo: 'libro-c-hablando' },
+  { photo: 'libro-c-sentada-1' },
+  { photo: 'libro-c-sentada-2' },
+  { photo: 'libro-c-lectura' },
+  { photo: 'libro-c-manos-libro' },
+  { photo: 'libro-c-mesa' },
+  { photo: 'libro-c-mesa-libros' },
+  { photo: 'libro-c-escalinatas' },
 ];
 
 export function BookPage() {
-  const [delivery, setDelivery] = useState<'retiro' | 'envio'>('retiro');
-  const [previewConfirmed, setPreviewConfirmed] = useState(false);
-  const demoPrice = 19990;
-  const demoDelivery = delivery === 'envio' ? 3990 : 0;
-  const formatPrice = (price: number) => new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(price);
-  const whatsappText = encodeURIComponent('Hola, quiero consultar por el libro Revolución Emprendedora.');
-
   return (
     <div className="bg-[var(--color-paper)] text-[var(--color-ink)]">
       <section className="py-14 lg:py-20 border-b border-[var(--color-border)]">
@@ -65,57 +66,46 @@ export function BookPage() {
                 los negocios.
               </p>
 
-              <h2 className="font-editorial text-2xl mb-3">Seis coautoras</h2>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm sm:text-base text-[var(--color-ink-soft)] mb-8">
-                {COAUTHORS.map((author) => <li key={author}>{author}</li>)}
-              </ul>
+              {/* Reseña escrita por Geraldine (revisión nov-2026): reemplaza la lista de coautoras. */}
+              <div className="space-y-4 text-base text-[var(--color-ink-soft)] leading-relaxed max-w-[62ch] mb-8">
+                <p>
+                  Este libro nació del dolor de hacer todo al pie de la letra (inclusive
+                  levantarse a las 5:00 a.m.) y, aun así, no lograr vender ni sacar adelante el
+                  negocio. Ante ese escenario, la pregunta que surge de manera inevitable es: ¿qué
+                  hice mal si cumplí con todo lo que me dijeron? La respuesta es que faltaba el
+                  pilar fundamental: conocerse y conectarse con uno mismo, pues sólo desde esa
+                  autenticidad es posible conectar con los demás y, en especial, con el cliente.
+                </p>
+                <p>
+                  En un escenario donde el liderazgo femenino consolida su impacto en el ecosistema
+                  emprendedor, este libro reúne la trayectoria, reflexiones y herramientas de seis
+                  destacadas especialistas: Susana Sarmiento Hernández (experta en desarrollo
+                  sistémico de las organizaciones), Jéssica Sepúlveda Bobadilla (coach ontológico,
+                  maestra en meditación y terapeuta holística), Ale Carpio (economista y
+                  comunicadora), Romina Núñez Arriaza (comunicadora y biodescodificadora), María
+                  Paz Molina (especialista en liderazgo consciente) y Geraldine Manríquez Plaza
+                  (speaker de venta humanizada y networking).
+                </p>
+              </div>
 
+              {/* Precio y canal de compra: los dio Geraldine en su revisión (fila 12 del doc «Para modificar», 16-nov-2026)
+                  y se verificó en la ficha de Buscalibre el 23-nov-2026 ($20.000). Si cambia, confirmar con ella. */}
               <div className="max-w-xl rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] p-5 sm:p-6">
-                <p className="font-tabular text-xs text-[var(--color-accent-strong)] font-semibold mb-3">COMPRA DE MUESTRA</p>
+                <p className="font-tabular text-xs text-[var(--color-accent-strong)] font-semibold mb-3">COMPRA EN LÍNEA</p>
                 <div className="flex flex-wrap items-baseline justify-between gap-3 mb-2">
                   <h2 className="font-editorial text-2xl">Revolución Emprendedora</h2>
-                  <span className="font-tabular text-2xl font-semibold">{formatPrice(demoPrice)}</span>
+                  <span className="font-tabular text-2xl font-semibold">$20.000</span>
                 </div>
-                <p className="text-sm text-[var(--color-muted)] mb-5">Ejemplar impreso · formato de muestra</p>
-                <p className="text-sm text-[var(--color-ink-soft)] border-l-2 border-[var(--color-accent-fill)] pl-3 mb-5">
-                  Precio y entrega ficticios para revisar esta experiencia. No constituyen una oferta de Geraldine.
-                </p>
-                <fieldset className="space-y-2 mb-5">
-                  <legend className="text-sm font-semibold mb-2">Elige una entrega de prueba</legend>
-                  {([
-                    { value: 'retiro', label: 'Retiro en Concepción', cost: 'Sin costo' },
-                    { value: 'envio', label: 'Envío a domicilio', cost: formatPrice(3990) },
-                  ] as const).map((option) => (
-                    <label key={option.value} className="flex min-h-11 items-center gap-3 border border-[var(--color-border)] rounded-sm p-3 cursor-pointer">
-                      <input type="radio" name="book-demo-delivery" value={option.value} checked={delivery === option.value}
-                        onChange={() => { setDelivery(option.value); setPreviewConfirmed(false); }} className="h-4 w-4 accent-[var(--color-accent)]" />
-                      <span className="flex-1 text-sm">{option.label}</span>
-                      <span className="text-xs font-tabular">{option.cost}</span>
-                    </label>
-                  ))}
-                </fieldset>
-                <div className="flex items-center justify-between gap-3 border-t border-[var(--color-border)] pt-4 mb-4" aria-live="polite">
-                  <span className="text-sm font-semibold">Total de muestra</span>
-                  <strong className="font-tabular text-xl">{formatPrice(demoPrice + demoDelivery)}</strong>
-                </div>
-                <button type="button" onClick={() => setPreviewConfirmed(true)} className="flex w-full min-h-11 items-center justify-center gap-2 rounded-sm bg-[var(--color-accent-fill)] px-5 py-3 text-sm font-semibold text-[var(--color-accent-on-fill)] hover:brightness-95">
-                  Simular reserva de un ejemplar
-                </button>
-                <div role="status" aria-live="polite">
-                  {previewConfirmed && <p className="flex gap-2 text-sm text-[var(--color-ink-soft)] mt-4 p-3 bg-[var(--color-surface-alt)]">
-                    <Check className="h-5 w-5 shrink-0" aria-hidden="true" />
-                    <span>Vista previa completada: un ejemplar con {delivery === 'retiro' ? 'retiro' : 'envío'} por {formatPrice(demoPrice + demoDelivery)}. No se creó una reserva ni se realizó un cobro.</span>
-                  </p>}
-                </div>
+                <p className="text-sm text-[var(--color-muted)] mb-5">Más costo de envío. Despacho a través de Buscalibre.</p>
                 <a
-                  href={`${SITE_LINKS.whatsapp}?text=${whatsappText}`}
+                  href={SITE_LINKS.bookBuscalibre}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex min-h-11 items-center justify-center gap-2 mt-3 text-sm font-semibold text-[var(--color-accent-strong)] hover:underline"
+                  className="flex w-full min-h-11 items-center justify-center gap-2 rounded-sm bg-[var(--color-accent-fill)] px-5 py-3 text-sm font-semibold text-[var(--color-accent-on-fill)] hover:brightness-95"
                 >
-                  <MessageCircle className="w-4 h-4" aria-hidden="true" />
-                  Consultar condiciones reales
+                  Comprar en Buscalibre
                   <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
+                  <span className="sr-only">(se abre en una pestaña nueva)</span>
                 </a>
               </div>
             </div>
@@ -160,23 +150,23 @@ export function BookPage() {
       <section className="py-14 lg:py-20 border-b border-[var(--color-border)]" aria-labelledby="libro-presentacion-title">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-10">
           <h2 id="libro-presentacion-title" className="font-editorial text-3xl sm:text-4xl mb-8">La presentación del libro</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {PRESENTATION_GALLERY.map((item) => (
+          <ScrollCarousel label="Fotos de la presentación del libro">
+            {PRESENTATION_GALLERY.map((item, index) => (
               <figure key={item.photo}>
                 <div className="aspect-[4/3] overflow-hidden rounded-sm border border-[var(--color-border)] bg-[var(--color-surface-alt)]">
                   <ResilientImage
                     {...photo(item.photo)}
-                    sizes="(min-width: 1024px) 380px, (min-width: 768px) 30vw, 92vw"
-                    loading="lazy"
+                    sizes="(min-width: 1024px) 380px, (min-width: 640px) 46vw, 86vw"
+                    loading={index < 3 ? 'eager' : 'lazy'}
                     decoding="async"
-                    fallbackTitle={item.caption}
+                    fallbackTitle={item.caption ?? 'Foto de la presentación del libro'}
                     className="h-full w-full object-cover"
                   />
                 </div>
-                <figcaption className="mt-2 text-sm font-medium">{item.caption}</figcaption>
+                {item.caption && <figcaption className="mt-2 text-sm font-medium">{item.caption}</figcaption>}
               </figure>
             ))}
-          </div>
+          </ScrollCarousel>
         </div>
       </section>
     </div>

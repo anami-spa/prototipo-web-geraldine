@@ -4,6 +4,7 @@ import { ArrowRight, Check } from 'lucide-react';
 import { ESCUELA_CARDS, RoutePath } from '../data/siteContent';
 import { photo } from '../data/photos';
 import { ResilientImage } from './ResilientImage';
+import { VideoTestimonialsCarousel } from './VideoTestimonialsCarousel';
 
 interface EscuelaCatalogPageProps {
   onNavigate: (route: RoutePath) => void;
@@ -49,6 +50,9 @@ export function EscuelaCatalogPage({ onNavigate }: EscuelaCatalogPageProps) {
           </div>
         </div>
       </section>
+
+      {/* Maqueta de testimonios en video (el espacio del centro): Geraldine entrega los videos. */}
+      <VideoTestimonialsCarousel />
 
       {/* 4 Service Cards Grid */}
       <section className="py-16 lg:py-24 border-b border-[#DEDAD0]">
@@ -106,22 +110,14 @@ export function EscuelaCatalogPage({ onNavigate }: EscuelaCatalogPageProps) {
                   </div>
                 </div>
 
-                <div className="pt-6 border-t border-[#E5E0D4] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div>
-                    <div className="text-xs font-tabular text-[#5A5D56]">
-                      Valor regular: <strong className="text-[#171A17]">{card.regularPrice}</strong>
-                    </div>
-                    <div className="text-xs sm:text-sm font-tabular text-[var(--color-accent)] font-semibold">
-                      {card.preferentialTag}: {card.preferentialPrice}
-                    </div>
-                  </div>
-
+                {/* Sin precios aquí: se publican solo en la carta de venta de cada programa (pedido de Geraldine). */}
+                <div className="pt-6 border-t border-[#E5E0D4] flex">
                   <button
                     type="button"
                     onClick={() => onNavigate(card.slug)}
-                    className="inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold text-[var(--color-accent-on-fill)] bg-[var(--color-accent-fill)] hover:brightness-95 rounded-sm transition-colors duration-150 whitespace-nowrap cursor-pointer"
+                    className="inline-flex w-full sm:w-auto min-h-11 items-center justify-center gap-2 px-5 py-3 text-sm font-semibold text-[var(--color-accent-on-fill)] bg-[var(--color-accent-fill)] hover:brightness-95 rounded-sm transition-colors duration-150 cursor-pointer"
                   >
-                    <span>Ver ficha y pagar con Flow</span>
+                    <span>Más información y próximas fechas</span>
                     <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
                   </button>
                 </div>

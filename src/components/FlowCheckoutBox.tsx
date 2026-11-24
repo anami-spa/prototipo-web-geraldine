@@ -81,7 +81,13 @@ export function FlowCheckoutBox({
   const activeTierLabel = selectedTier === 'regular' ? regularPriceLabel : preferentialPriceLabel;
   const currentOrder = orders.find((order) => order.orderId === currentOrderId) ?? null;
 
+  // El foco pasa al encabezado solo cuando el paso CAMBIA. Al montar no se enfoca nada: antes enfocaba el paso 1 al
+  // abrir la carta de venta y la página saltaba sola hasta el pago. Se compara con el paso previo (no con un flag de
+  // montaje) para que tampoco se dispare con el doble montaje de desarrollo.
+  const pasoPrevio = useRef(step);
   useEffect(() => {
+    if (pasoPrevio.current === step) return;
+    pasoPrevio.current = step;
     headingRef.current?.focus();
   }, [step]);
 
@@ -462,8 +468,9 @@ export function FlowCheckoutBox({
                 />
                 <span>
                   Acepto la{' '}
-                  <a className="underline decoration-[var(--color-accent-fill)] underline-offset-2" href={withBase("/privacidad")}>
+                  <a className="underline decoration-[var(--color-accent-fill)] underline-offset-2" href={withBase("/privacidad")} target="_blank" rel="noopener noreferrer">
                     política de privacidad
+                    <span className="sr-only"> (se abre en una pestaña nueva)</span>
                   </a>
                   .
                 </span>
@@ -493,8 +500,9 @@ export function FlowCheckoutBox({
                 />
                 <span>
                   Acepto los{' '}
-                  <a className="underline decoration-[var(--color-accent-fill)] underline-offset-2" href={withBase("/terminos")}>
+                  <a className="underline decoration-[var(--color-accent-fill)] underline-offset-2" href={withBase("/terminos")} target="_blank" rel="noopener noreferrer">
                     términos y condiciones
+                    <span className="sr-only"> (se abre en una pestaña nueva)</span>
                   </a>
                   .
                 </span>

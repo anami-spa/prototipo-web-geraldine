@@ -32,7 +32,7 @@ export function SobreMiPage({ onNavigate }: SobreMiPageProps) {
 
           <p className="text-base sm:text-lg lg:text-xl text-[#383B36] max-w-[66ch] leading-relaxed border-l-2 border-[var(--color-accent)] pl-5">
             Esta es mi historia real: cómo pasé de hacer “todo bien” sin lograr que llegaran los
-            clientes, al punto de quiebre que dio origen a Aprende a Emprender en Concepción.
+            clientes, al punto de quiebre que dio origen a Aprende a Emprender.
           </p>
           </div>
 
@@ -61,8 +61,8 @@ export function SobreMiPage({ onNavigate }: SobreMiPageProps) {
                 CAPÍTULO 01 · LA VOCACIÓN DOCENTE Y EL QUIEBRE LABORAL
               </div>
               <h2 className="font-editorial text-2xl sm:text-3xl lg:text-4xl text-[#171A17]">
-                “Tenía contrato indefinido, dos magíster y era jefa de curso por tercera vez… y aun
-                así me despidieron.”
+                “Tenía contrato indefinido, dos magíster y con jefatura de curso… y aun así me
+                despidieron.”
               </h2>
               <p className="first-letter:text-5xl first-letter:font-editorial first-letter:font-semibold first-letter:float-left first-letter:mr-3 first-letter:leading-none first-letter:text-[var(--color-accent)]">
                 Durante 12 años trabajé como profesora de Educación Física, recorriendo la

@@ -21,18 +21,31 @@ import { ServiceDetailTemplate } from './components/ServiceDetailTemplate';
 import { SobreMiPage } from './components/SobreMiPage';
 import { BlogPage, ContactoPage, SpeakerPage } from './components/SpeakerBlogContactoPages';
 import { HeroSlider } from './components/HeroCarousel';
+import { FloatingActions } from './components/FloatingActions';
+import { AvisoPrioritario } from './components/AvisoPrioritario';
 import { BookPage } from './components/BookPage';
 import { LegalPage } from './components/LegalPage';
-import { ESCUELA_CARDS, RoutePath, SERVICE_DETAILS, SITE_LINKS } from './data/siteContent';
+import { ESCUELA_CARDS, RoutePath, SERVICE_DETAILS, SITE_CONFIG, SITE_LINKS } from './data/siteContent';
 import { latestPosts } from './data/blogPosts';
 import { withBase, stripBase } from './lib/base';
 
 const MARQUEE_ITEMS = [
-  'Profesora de Emprendedores',
+  'Venta humanizada y networking',
   'Retina Emprendedora',
   '+1.000 Emprendedores',
-  'Biobío, Chile',
+  'Chile y Latam',
   '12 años de trayectoria',
+];
+
+/**
+ * Lo que le dicen a Geraldine (texto de su sitio actual, pantallazo que entregó en la revisión de nov-2026).
+ * Correcciones mínimas pendientes de su aprobación: «pasó, compró» (decía «pasó compro») y «Quiero» (decía «Quiere»).
+ * Falta el 4.º punto («Me da pudor salir a vender y…»): quedó cortado en la captura; no se completa por ella.
+ */
+const MISION_DICHOS = [
+  'Me interesa recuperar al cliente que pasó, compró y volvió más.',
+  'Quiero mejorar el rango de mis ventas.',
+  'Quiero tener más clientes.',
 ];
 
 const TESTIMONIALS = [
@@ -91,6 +104,19 @@ const VALID_ROUTES: RoutePath[] = [
   '/privacidad',
   '/terminos',
   '/contacto',
+];
+
+/**
+ * Cartas de venta (landing pages): sin menú, sin footer y sin elementos flotantes, solo la llamada a la acción.
+ * Los precios viven únicamente aquí (pedido de Geraldine, reunión del 29-oct-2026).
+ */
+const LANDING_ROUTES: RoutePath[] = [
+  '/escuela/diagnostico',
+  '/escuela/narrativa-comercial',
+  '/escuela/vender-sin-vender',
+  '/escuela/conexiones-que-conectan',
+  '/radio/auspicio-pyme',
+  '/radio/auspicio-empresa',
 ];
 
 function normalizePath(pathname: string): RoutePath {
@@ -208,6 +234,12 @@ export default function App() {
 
   const navigateTo = (route: RoutePath, anchorId?: string, programContext?: string) => {
     setMobileMenuOpen(false);
+    // Las cartas de venta se abren en una pestaña aparte para no perder la página de origen (configurable en SITE_CONFIG).
+    // Desde otra carta (p. ej. el botón de la ventana emergente no aplica) se navega normal.
+    if (SITE_CONFIG.abrirCartasEnPestanaNueva && LANDING_ROUTES.includes(route) && !LANDING_ROUTES.includes(activeRoute)) {
+      window.open(withBase(route), '_blank', 'noopener');
+      return;
+    }
     if (programContext) {
       setSelectedProgram(programContext);
     }
@@ -237,7 +269,7 @@ export default function App() {
   };
 
   const checkedCount = Object.values(checkedQuestions).filter(Boolean).length;
-  const isSponsorLanding = activeRoute === '/radio/auspicio-pyme' || activeRoute === '/radio/auspicio-empresa';
+  const isLanding = LANDING_ROUTES.includes(activeRoute);
 
   const navItems: { label: string; route: RoutePath; matchPrefix?: string }[] = [
     { label: 'Inicio', route: '/' },
@@ -263,7 +295,7 @@ export default function App() {
         Saltar al contenido
       </a>
       {/* 1. HEADER FIJO (Strict 3-Zone Top Bar Contract) */}
-      <header className={`${isSponsorLanding ? 'hidden' : 'fixed'} top-0 inset-x-0 z-50 h-16 bg-[var(--color-paper)]/95 backdrop-blur-md border-b border-[#DEDAD0]`}>
+      <header className={`${isLanding ? 'hidden' : 'fixed'} top-0 inset-x-0 z-50 h-16 bg-[var(--color-paper)]/95 backdrop-blur-md border-b border-[#DEDAD0]`}>
         <div className="max-w-[1280px] mx-auto h-full px-4 sm:px-6 lg:px-10 flex items-center justify-between gap-4">
           {/* Zone 1: Brand Title (Single text element wordmark) */}
           <a
@@ -379,7 +411,7 @@ export default function App() {
         )}
       </header>
 
-      <main id="main-content" ref={mainRef} tabIndex={-1} className={`flex-1 focus:outline-none ${isSponsorLanding ? '' : 'pt-16'}`}>
+      <main id="main-content" ref={mainRef} tabIndex={-1} className={`flex-1 focus:outline-none ${isLanding ? '' : 'pt-16'}`}>
         {/* ROUTE SWITCHER */}
         {activeRoute === '/sobre-mi' && <SobreMiPage onNavigate={navigateTo} />}
 
@@ -389,15 +421,12 @@ export default function App() {
           activeRoute === '/escuela/narrativa-comercial' ||
           activeRoute === '/escuela/vender-sin-vender' ||
           activeRoute === '/escuela/conexiones-que-conectan') && (
-          <ServiceDetailTemplate
-            service={SERVICE_DETAILS[activeRoute]}
-            onNavigate={navigateTo}
-          />
+          <ServiceDetailTemplate service={SERVICE_DETAILS[activeRoute]} />
         )}
 
         {activeRoute === '/radio' && <RadioPage onNavigate={navigateTo} />}
-        {activeRoute === '/radio/auspicio-pyme' && <RadioSponsorLandingPage audience="pyme" onNavigate={navigateTo} />}
-        {activeRoute === '/radio/auspicio-empresa' && <RadioSponsorLandingPage audience="empresa" onNavigate={navigateTo} />}
+        {activeRoute === '/radio/auspicio-pyme' && <RadioSponsorLandingPage audience="pyme" />}
+        {activeRoute === '/radio/auspicio-empresa' && <RadioSponsorLandingPage audience="empresa" />}
 
         {activeRoute === '/speaker' && <SpeakerPage onNavigate={navigateTo} />}
 
@@ -414,17 +443,7 @@ export default function App() {
         {/* HOME PAGE (Preserved & Expanded with direct links to all new routes) */}
         {activeRoute === '/' && (
           <>
-            {/* 2. HERO SECTION */}
-            <section
-              id="inicio"
-              className="scroll-mt-16 relative overflow-hidden pt-10 pb-16 lg:pt-16 lg:pb-24 border-b border-[#DEDAD0]"
-            >
-              <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
-                <HeroSlider onNavigate={navigateTo} />
-              </div>
-            </section>
-
-            {/* 3. FRANJA / MARQUEE CON PALABRAS CLAVE EN LOOP */}
+            {/* 3. FRANJA / MARQUEE CON PALABRAS CLAVE EN LOOP: pegada bajo el menú, antes del hero (pedido de Cristian, 24-nov) */}
             <section
               aria-label="Trayectoria y credenciales clave"
               className="bg-[#121A16] text-[#F4F1EA] py-4 border-b border-[#26312B] overflow-hidden"
@@ -451,6 +470,49 @@ export default function App() {
               </div>
             </section>
 
+            {/* 2. HERO SECTION */}
+            <section
+              id="inicio"
+              className="scroll-mt-16 relative overflow-hidden pt-10 pb-16 lg:pt-16 lg:pb-24 border-b border-[#DEDAD0]"
+            >
+              <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
+                <HeroSlider onNavigate={navigateTo} />
+              </div>
+            </section>
+
+            {/* MISIÓN: va debajo del carrusel (pedido de Geraldine, nov-2026). Texto suyo; el diseño es de ANAMI. */}
+            <section
+              aria-labelledby="mision-title"
+              className="py-16 lg:py-24 border-b border-[#26312B] bg-[var(--color-night)] text-[#F4F1EA]"
+            >
+              <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+                <h2
+                  id="mision-title"
+                  className="lg:col-span-7 border-l-4 border-[var(--color-accent-fill)] pl-6 sm:pl-8 font-editorial text-3xl sm:text-4xl lg:text-5xl leading-[1.15] italic"
+                  style={{ textWrap: 'balance' }}
+                >
+                  Mi misión es ayudarte a destrabar tu negocio, estructurar tus ideas y dominar una
+                  narrativa comercial que atraiga a tu cliente ideal de forma natural.
+                </h2>
+                <div className="lg:col-span-5 rounded-sm border border-[#2C3A32] bg-[var(--color-night-raised)] p-6 sm:p-8">
+                  <p className="text-base sm:text-lg leading-relaxed text-[#C4C0B6]">
+                    De hecho, la mayoría de los profesionales, coaches, terapeutas y emprendedores
+                    que me contactan me dicen:
+                  </p>
+                  <ul className="mt-6 space-y-4">
+                    {MISION_DICHOS.map((dicho) => (
+                      <li key={dicho} className="flex items-start gap-3 text-lg font-semibold leading-snug">
+                        <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent-fill)] text-[#171A17]">
+                          <Check className="h-3.5 w-3.5 stroke-[3]" aria-hidden="true" />
+                        </span>
+                        <span>{dicho}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </section>
+
             {/* 4. SECCIÓN "LA RETINA EMPRENDEDORA" */}
             <section
               id="sobre-mi"
@@ -463,10 +525,10 @@ export default function App() {
                     <span aria-hidden="true">·</span>
                     <span>La Retina Emprendedora</span>
                     <span aria-hidden="true">·</span>
-                    <span>12 años de trayectoria en Biobío, Chile</span>
+                    <span>12 años de trayectoria</span>
                   </div>
                   <div className="font-tabular text-xs text-[#5A5D56]">
-                    Emprendedores / Terapeutas / Coaches / Profesionales Independientes
+                    Personas emprendedoras / Terapeutas / Coaches / Profesionales Independientes / Instituciones
                   </div>
                 </div>
 
@@ -484,9 +546,6 @@ export default function App() {
                           className="h-full w-full object-cover"
                         />
                       </div>
-                      <figcaption className="mt-2.5 text-xs text-[#5E615B] font-tabular">
-                        Fig. 02 — Geraldine Manríquez en su espacio de trabajo
-                      </figcaption>
                     </figure>
 
                     <dl className="mt-8 grid grid-cols-2 gap-6 pt-6 border-t border-[#DEDAD0]">
@@ -503,7 +562,7 @@ export default function App() {
                           12 años
                         </dd>
                         <span className="text-xs text-[#5A5D56]">
-                          En ecosistemas de Biobío, Chile
+                          En Chile y Latam
                         </span>
                       </div>
                     </dl>
@@ -523,7 +582,7 @@ export default function App() {
                         className="font-editorial text-3xl sm:text-4xl lg:text-[2.75rem] leading-[1.15] italic text-[#171A17]"
                         style={{ textWrap: 'balance' }}
                       >
-                        “Enamórate del problema de tu cliente, no de la solución.”
+                        “No le hables solo cuando le quieras vender.”
                       </h2>
                     </blockquote>
 
@@ -620,8 +679,7 @@ export default function App() {
                   </div>
                   <p className="text-sm sm:text-base text-[#C4C0B6] max-w-[54ch] leading-relaxed tracking-[0.01em]">
                     Dos rutas diseñadas según el momento actual de tu negocio: desde estructurar tu
-                    discurso comercial en la Escuela hasta entrenar equipos corporativos en
-                    Concepción.
+                    discurso comercial en la Escuela hasta entrenar equipos corporativos.
                   </p>
                 </div>
 
@@ -747,7 +805,7 @@ export default function App() {
                           EMPRESAS &amp; ECOSISTEMA
                         </span>
                         <span className="font-tabular text-xs text-[#9BA39D]">
-                          Concepción y Chile
+                          Chile y Latam
                         </span>
                       </div>
 
@@ -756,7 +814,7 @@ export default function App() {
                       </h3>
                       <p className="text-sm text-[#C4C0B6] leading-relaxed mb-6 tracking-[0.01em]">
                         Instancias presenciales de formación corporativa y articulación de redes de
-                        negocios en la Región del Biobío.
+                        negocios.
                       </p>
 
                       <div className="space-y-5 border-t border-[#2C3A32] pt-5">
@@ -890,7 +948,7 @@ export default function App() {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
                   <div className="lg:col-span-7">
                     <div className="text-xs font-tabular text-[var(--color-accent-fill)] mb-2">
-                      PROGRAMA DE CONVERSACIÓN Y NEGOCIOS EN BIOBÍO
+                      PROGRAMA DE CONVERSACIÓN Y NEGOCIOS
                     </div>
                     <h2
                       className="font-editorial text-3xl sm:text-4xl lg:text-5xl text-[#F6F3EC] mb-4 tracking-[0.01em]"
@@ -1088,7 +1146,7 @@ export default function App() {
       </main>
 
       {/* 9. FOOTER COMPLETO CON NAVEGACIÓN A TODAS LAS PÁGINAS */}
-      <footer className={`${isSponsorLanding ? 'hidden' : ''} bg-[#121A16] text-[#D8D4C9] py-12 lg:py-16`}>
+      <footer className={`${isLanding ? 'hidden' : ''} bg-[#121A16] text-[#D8D4C9] py-12 lg:py-16`}>
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10 border-b border-[#26312B] items-start">
             {/* Brand Column */}
@@ -1098,7 +1156,7 @@ export default function App() {
               </a>
               <p className="text-xs sm:text-sm text-[#9DA49E] max-w-[40ch] leading-relaxed mb-4">
                 Coach de ventas y narrativa comercial para emprendedores, terapeutas, coaches y
-                profesionales independientes en Concepción, Biobío, Chile.
+                profesionales independientes.
               </p>
               <a
                 href="mailto:hola@geraldinemanriquez.com"
@@ -1200,10 +1258,17 @@ export default function App() {
               <a href={withBase("/privacidad")} onClick={(e) => { e.preventDefault(); navigateTo('/privacidad'); }} className="hover:text-white">Privacidad</a>
               <a href={withBase("/terminos")} onClick={(e) => { e.preventDefault(); navigateTo('/terminos'); }} className="hover:text-white">Términos</a>
             </div>
-            <div className="flex items-center gap-4"><span>Concepción · Región del Biobío, Chile</span><a href="https://anami.cl" target="_blank" rel="noopener noreferrer" className="hover:text-white">Sitio por ANAMI</a></div>
+            <div className="flex items-center gap-4"><span>Chile y Latam</span><a href="https://anami.cl" target="_blank" rel="noopener noreferrer" className="hover:text-white">Sitio por ANAMI</a></div>
           </div>
         </div>
       </footer>
+
+      {/* Flotantes y ventana emergente: no se montan en las cartas de venta ni en las páginas legales. */}
+      {!isLanding && <FloatingActions />}
+      <AvisoPrioritario
+        enabled={!isLanding && !mobileMenuOpen && activeRoute !== '/privacidad' && activeRoute !== '/terminos'}
+        onNavigate={navigateTo}
+      />
     </div>
   );
 }

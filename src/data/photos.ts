@@ -26,7 +26,7 @@ export const PHOTOS = {
     permiso: 'propia',
   },
   'home-hero-vender': {
-    alt: 'Geraldine Manríquez escribe «Vender sin Vender» en una pizarra, en una fotografía en blanco y negro.',
+    alt: 'Geraldine Manríquez junto a una baranda frente a un río, con blazer negro, mirando hacia un lado.',
     permiso: 'propia',
   },
   'home-hero-libro': {
@@ -119,6 +119,59 @@ export const PHOTOS = {
   'libro-g-auditorio': {
     alt: 'Auditorio lleno en la presentación del libro Revolución Emprendedora, visto desde atrás.',
     permiso: 'condicional', // logo de INACAP visible; panelistas a lo lejos
+  },
+  // --- Fase D · carrusel de la presentación del libro (nov-2026). Solo fotos sin terceros reconocibles. ---
+  'libro-c-inacap': {
+    alt: 'Geraldine Manríquez de pie, hablando con micrófono durante la presentación del libro.',
+    permiso: 'condicional', // logo de INACAP visible al fondo
+  },
+  'libro-c-firma-manos': {
+    alt: 'Primer plano de unas manos firmando un ejemplar del libro.',
+    permiso: 'propia',
+  },
+  'libro-c-firma-libro': {
+    alt: 'Manos firmando la primera página de un ejemplar de Revolución Emprendedora.',
+    permiso: 'propia',
+  },
+  'libro-c-lectura': {
+    alt: 'Manos sostienen un ejemplar abierto del libro durante la presentación.',
+    permiso: 'propia',
+  },
+  'libro-c-manos-libro': {
+    alt: 'Manos hojeando un ejemplar del libro sobre una mesa.',
+    permiso: 'propia',
+  },
+  'libro-c-mesa': {
+    alt: 'Geraldine Manríquez sentada junto a una mesa redonda con ejemplares del libro, mirando a cámara.',
+    permiso: 'propia',
+  },
+  'libro-c-mesa-firma': {
+    alt: 'Geraldine Manríquez firma ejemplares del libro sobre una mesa redonda.',
+    permiso: 'propia',
+  },
+  'libro-c-hablando': {
+    alt: 'Geraldine Manríquez sentada, hablando con un micrófono durante la presentación del libro.',
+    permiso: 'propia',
+  },
+  'libro-c-sentada-1': {
+    alt: 'Geraldine Manríquez sentada junto a una mesa con ejemplares del libro, durante la presentación.',
+    permiso: 'propia',
+  },
+  'libro-c-sentada-2': {
+    alt: 'Geraldine Manríquez sentada, mirando hacia un lado, durante la presentación del libro.',
+    permiso: 'propia',
+  },
+  'libro-c-firma-pila': {
+    alt: 'Manos firmando un libro junto a una pila de ejemplares de Revolución Emprendedora.',
+    permiso: 'propia',
+  },
+  'libro-c-escalinatas': {
+    alt: 'Geraldine Manríquez sentada en unas escalinatas con un ejemplar del libro en la mano.',
+    permiso: 'propia',
+  },
+  'libro-c-mesa-libros': {
+    alt: 'Geraldine Manríquez sentada a una mesa con ejemplares del libro, sonriendo.',
+    permiso: 'propia',
   },
   // --- Fase C ---
   'escuela-hero': {

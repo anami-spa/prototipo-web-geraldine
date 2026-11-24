@@ -21,7 +21,7 @@ import { withBase } from '../lib/base';
 
 const PARTNER_LOGOS = [
   { name: 'Ecosistema Biobío', file: 'svg' },
-  { name: 'CorpArauco', file: 'corparauco.png' },
+  { name: 'Corparauco', file: 'corparauco.png' },
   { name: 'Ecosistema LA', file: 'ecosistema-la.jpg' },
   { name: 'Rediversas', file: 'rediversas.png' },
 ];
@@ -137,6 +137,51 @@ export function RadioPage({ onNavigate }: { onNavigate: (route: RoutePath) => vo
         </div>
       </section>
 
+      {/* FORMATOS GRATUITOS: suben justo después de la primera información (pedido de Geraldine, nov-2026) */}
+      <section className="py-12 lg:py-16 border-b border-[#DEDAD0]">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
+          <div className="bg-[var(--color-surface-alt)] border border-[#D5CFC2] rounded-sm p-6 sm:p-8">
+            <div className="font-tabular text-xs text-[var(--color-accent)] font-semibold mb-2">
+              FORMATOS GRATUITOS SIN LISTA DE ESPERA
+            </div>
+            <h2 className="font-editorial text-2xl text-[#171A17] mb-6">
+              Participa hoy mismo con la comunidad de Aprende a Emprender
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="p-5 bg-[var(--color-surface)] border border-[#DED8CA] rounded-sm">
+                <div className="flex items-center gap-2 text-xs font-tabular text-[var(--color-accent)] mb-2">
+                  <Mic className="w-4 h-4" aria-hidden="true" />
+                  <span>FORMATO GRATUITO 01</span>
+                </div>
+                <h3 className="font-editorial text-xl text-[#171A17] mb-2">
+                  Audio Emprendedor (Pitch de 20 seg por WhatsApp)
+                </h3>
+                <p className="text-sm text-[#383B36] leading-relaxed">
+                  Envía tu nota de voz con un pitch de 20 segundos por WhatsApp presentando qué
+                  problema resuelves y cómo contactarte para ser emitido al aire sin lista de
+                  espera.
+                </p>
+              </div>
+
+              <div className="p-5 bg-[var(--color-surface)] border border-[#DED8CA] rounded-sm">
+                <div className="flex items-center gap-2 text-xs font-tabular text-[var(--color-accent)] mb-2">
+                  <Calendar className="w-4 h-4" aria-hidden="true" />
+                  <span>FORMATO GRATUITO 02</span>
+                </div>
+                <h3 className="font-editorial text-xl text-[#171A17] mb-2">
+                  Panoramas Mensuales (Agenda de eventos del ecosistema)
+                </h3>
+                <p className="text-sm text-[#383B36] leading-relaxed">
+                  Difusión gratuita de talleres, ferias, charlas y encuentros del ecosistema
+                  emprendedor dentro de nuestra agenda radial mensual.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CAPÍTULOS DEL PROGRAMA */}
       <section className="py-16 lg:py-20 border-b border-[#DEDAD0]" aria-labelledby="radio-episodes-title">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
@@ -205,7 +250,59 @@ export function RadioPage({ onNavigate }: { onNavigate: (route: RoutePath) => vo
         </div>
       </section>
 
-      {/* 2. CÓMO PARTICIPAR (ÚNICA VS AUSPICIADOR) + FORMATOS GRATUITOS */}
+      {/* ALIANZAS DE COLABORACIÓN Y AUSPICIADORES */}
+      <section className="py-16 bg-[var(--color-surface-alt)] border-b border-[#DEDAD0]">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+            <div>
+              <div className="font-tabular text-xs text-[var(--color-accent)] mb-2">ALIANZAS DE COLABORACIÓN</div>
+              <h2 className="font-editorial text-2xl sm:text-3xl text-[#171A17]">
+                Alianzas de colaboración
+              </h2>
+            </div>
+          </div>
+
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {PARTNER_LOGOS.map((partner) => {
+              const url = PARTNER_ORGS.find((o) => o.name === partner.name)?.url;
+              const card = (
+                <>
+                  <div className="h-28 bg-white rounded-sm flex items-center justify-center p-4 mb-4">
+                    {partner.file === 'svg' ? (
+                      <EcosistemaBiobioLogo />
+                    ) : partner.name === 'Ecosistema LA' ? (
+                      <EcosistemaLALogo decorative />
+                    ) : (
+                      <img src={withBase(`/images/marca/${partner.file}`)} alt="" className="max-h-20 max-w-full object-contain" loading="lazy" />
+                    )}
+                  </div>
+                  <div className="font-tabular text-[11px] text-[#3B3E39] mb-1">ALIANZA DE COLABORACIÓN</div>
+                  <div className="font-editorial text-xl text-[#171A17] font-medium">{partner.name}</div>
+                </>
+              );
+              const cls = 'block h-full p-5 bg-[var(--color-surface)] border border-[#D5CFC2] rounded-sm';
+              return (
+                <li key={partner.name}>
+                  {url ? (
+                    <a href={url} target="_blank" rel="noopener noreferrer" className={`${cls} hover:border-[var(--color-accent)] transition-colors`}>
+                      {card}
+                      <span className="sr-only"> (se abre en una pestaña nueva)</span>
+                    </a>
+                  ) : (
+                    <div className={cls}>{card}</div>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+          <div className="mt-8 rounded-sm border border-dashed border-[#9B8D75] bg-[var(--color-surface)] p-6">
+            <div className="font-tabular text-xs text-[var(--color-accent)] mb-2">AUSPICIADORES DEL PROGRAMA</div>
+            <p className="text-sm text-[#383B36]">Logos de los auspiciadores por confirmar con Geraldine.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* CÓMO PARTICIPAR (ÚNICA VS AUSPICIADOR) */}
       <section className="py-16 lg:py-24 border-b border-[#DEDAD0]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="mb-12">
@@ -281,46 +378,6 @@ export function RadioPage({ onNavigate }: { onNavigate: (route: RoutePath) => vo
             </div>
           </div>
 
-          {/* Formatos Gratuitos sin Lista de Espera */}
-          <div className="bg-[var(--color-surface-alt)] border border-[#D5CFC2] rounded-sm p-6 sm:p-8">
-            <div className="font-tabular text-xs text-[var(--color-accent)] font-semibold mb-2">
-              FORMATOS GRATUITOS SIN LISTA DE ESPERA
-            </div>
-            <h3 className="font-editorial text-2xl text-[#171A17] mb-6">
-              Participa hoy mismo con la comunidad de Aprende a Emprender
-            </h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-5 bg-[var(--color-surface)] border border-[#DED8CA] rounded-sm">
-                <div className="flex items-center gap-2 text-xs font-tabular text-[var(--color-accent)] mb-2">
-                  <Mic className="w-4 h-4" aria-hidden="true" />
-                  <span>FORMATO GRATUITO 01</span>
-                </div>
-                <h4 className="font-editorial text-xl text-[#171A17] mb-2">
-                  Audio Emprendedor (Pitch de 20 seg por WhatsApp)
-                </h4>
-                <p className="text-sm text-[#383B36] leading-relaxed">
-                  Envía tu nota de voz con un pitch de 20 segundos por WhatsApp presentando qué
-                  problema resuelves y cómo contactarte para ser emitido al aire sin lista de
-                  espera.
-                </p>
-              </div>
-
-              <div className="p-5 bg-[var(--color-surface)] border border-[#DED8CA] rounded-sm">
-                <div className="flex items-center gap-2 text-xs font-tabular text-[var(--color-accent)] mb-2">
-                  <Calendar className="w-4 h-4" aria-hidden="true" />
-                  <span>FORMATO GRATUITO 02</span>
-                </div>
-                <h4 className="font-editorial text-xl text-[#171A17] mb-2">
-                  Panoramas Mensuales (Agenda de eventos del ecosistema)
-                </h4>
-                <p className="text-sm text-[#383B36] leading-relaxed">
-                  Difusión gratuita de talleres, ferias, charlas y encuentros del ecosistema
-                  emprendedor de la Región del Biobío dentro de nuestra agenda radial mensual.
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -333,54 +390,6 @@ export function RadioPage({ onNavigate }: { onNavigate: (route: RoutePath) => vo
             <a href={withBase("/radio/auspicio-pyme")} onClick={(event) => { event.preventDefault(); onNavigate('/radio/auspicio-pyme'); }} className="inline-flex min-h-11 items-center rounded-sm bg-[var(--color-accent-fill)] px-6 py-3 font-semibold text-[#171A17]">Planes para PyME →</a>
             <a href={withBase("/radio/auspicio-empresa")} onClick={(event) => { event.preventDefault(); onNavigate('/radio/auspicio-empresa'); }} className="inline-flex min-h-11 items-center rounded-sm border border-[var(--color-accent-fill)] px-6 py-3 font-semibold text-[var(--color-accent-fill)]">Planes para Empresa →</a>
           </div>
-        </div>
-      </section>
-
-      {/* 4. SINERGIA REGIONAL (LOGOS PLACEHOLDER) */}
-      <section className="py-16 bg-[var(--color-surface-alt)] border-b border-[#DEDAD0]">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
-            <div>
-              <div className="font-tabular text-xs text-[var(--color-accent)] mb-2">SINERGIA REGIONAL</div>
-              <h2 className="font-editorial text-2xl sm:text-3xl text-[#171A17]">
-                Alianza estratégica con los ecosistemas del Biobío
-              </h2>
-            </div>
-          </div>
-
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {PARTNER_LOGOS.map((partner) => {
-              const url = PARTNER_ORGS.find((o) => o.name === partner.name)?.url;
-              const card = (
-                <>
-                  <div className="h-28 bg-white rounded-sm flex items-center justify-center p-4 mb-4">
-                    {partner.file === 'svg' ? (
-                      <EcosistemaBiobioLogo />
-                    ) : partner.name === 'Ecosistema LA' ? (
-                      <EcosistemaLALogo decorative />
-                    ) : (
-                      <img src={withBase(`/images/marca/${partner.file}`)} alt="" className="max-h-20 max-w-full object-contain" loading="lazy" />
-                    )}
-                  </div>
-                  <div className="font-tabular text-[11px] text-[#3B3E39] mb-1">ALIANZA REGIONAL</div>
-                  <div className="font-editorial text-xl text-[#171A17] font-medium">{partner.name}</div>
-                </>
-              );
-              const cls = 'block h-full p-5 bg-[var(--color-surface)] border border-[#D5CFC2] rounded-sm';
-              return (
-                <li key={partner.name}>
-                  {url ? (
-                    <a href={url} target="_blank" rel="noopener noreferrer" className={`${cls} hover:border-[var(--color-accent)] transition-colors`}>
-                      {card}
-                      <span className="sr-only"> (se abre en una pestaña nueva)</span>
-                    </a>
-                  ) : (
-                    <div className={cls}>{card}</div>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
         </div>
       </section>
     </div>

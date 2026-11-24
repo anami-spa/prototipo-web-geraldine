@@ -596,13 +596,14 @@ export function ContactoPage() {
             className="font-editorial text-4xl sm:text-5xl lg:text-[3.5rem] leading-[1.08] text-[#171A17] mb-6"
             style={{ textWrap: 'balance' }}
           >
-            ¡Contáctame! Desbloquea el potencial de tu marca hoy.
+            Cuéntame qué se está trabando en tu negocio.
           </h1>
 
+          {/* Propuesta de redacción (opción A) para aprobar con Geraldine; el texto original está en la nota de propuestas. */}
           <p className="text-base sm:text-lg text-[#383B36] max-w-[62ch] leading-relaxed">
-            ¿Quieres consultar por la Escuela de Ventas, cotizar una conferencia como Speaker,
-            auspiciar el programa radial <em>Aprende a Emprender</em> o resolver una duda puntual?
-            Escríbeme directamente.
+            Escríbeme y vemos qué camino te conviene: la Escuela de Ventas, una conferencia como
+            Speaker, auspiciar el programa radial <em>Aprende a Emprender</em> o resolver una duda
+            puntual. Te respondo personalmente.
           </p>
           </div>
 
@@ -627,11 +628,15 @@ export function ContactoPage() {
             {/* Left Column: Real Email + WhatsApp & Social Placeholders (6 cols) */}
             <div className="min-w-0 lg:col-span-6 space-y-6">
               {/* Real Email Card */}
-              <div className="bg-[#121A16] text-[#F4F1EA] border border-[#2C3A32] rounded-sm p-6 sm:p-8">
+              <div className="@container bg-[#121A16] text-[#F4F1EA] border border-[#2C3A32] rounded-sm p-6 sm:p-8">
                 <div className="font-tabular text-xs text-[var(--color-accent-fill)] mb-2">
                   CORREO ELECTRÓNICO OFICIAL (CONFIRMADO)
                 </div>
-                <h2 className="font-editorial text-2xl sm:text-3xl text-[#F4F1EA] mb-2 [overflow-wrap:anywhere]">
+                {/* Una sola línea (pedido de Geraldine): el tamaño sigue el ancho de la tarjeta. Fuente de texto, no la de títulos (versalitas, muy ancha). */}
+                <h2
+                  className="font-semibold text-[clamp(0.875rem,5.8cqw,1.875rem)] whitespace-nowrap text-[#F4F1EA] mb-2"
+                  style={{ fontFamily: 'var(--font-sans)' }}
+                >
                   {SITE_LINKS.email}
                 </h2>
                 <p className="text-sm text-[#C4C0B6] mb-6">

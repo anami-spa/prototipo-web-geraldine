@@ -535,6 +535,12 @@ export const RADIO_PLANS: Record<'pyme' | 'empresa', RadioPlanTier[]> = {
  * geraldinemanriquez.com (sitio vivo) y de la ficha de la aliada en el baúl.
  * Fuente única — no hardcodear estos valores en otro lugar.
  */
+/** Ajustes del sitio que Geraldine puede querer cambiar. En el sitio Laravel + Filament pasan a un campo del panel. */
+export const SITE_CONFIG = {
+  /** true: las cartas de venta (landing) se abren en una pestaña nueva y no reemplazan la página actual. false: abren en la misma pestaña. */
+  abrirCartasEnPestanaNueva: true,
+};
+
 export const SITE_LINKS = {
   whatsapp: 'https://wa.me/56959571507',
   whatsappDisplay: '+56 9 5957 1507',
@@ -547,7 +553,8 @@ export const SITE_LINKS = {
     Facebook: 'https://web.facebook.com/geraldinemanriquezplaza/',
     Spotify: 'https://open.spotify.com/show/0CDXxDx16FFI9kfr9Gr6kg',
   },
-  bookBuscalibre: 'https://www.buscalibre.cl/libros/search/?q=geraldine+manriquez+plaza',
+  // Enlace directo del libro entregado por Geraldine (revisión nov-2026).
+  bookBuscalibre: 'https://www.buscalibre.cl/libro-revolucion-emprendedora-como-crear-sin-agotarte-y-liderar-con-proposito/9789566315629/p/68499595',
   // Playlist entregada por Cristian el 29-oct-2026.
   radioYouTubePlaylist: 'https://www.youtube.com/watch?v=eRyexugXTqs&list=PL6Z8t3mS8vaTUDtCw2ocTuCkEFyfUqJ3P',
   radioListaEsperaForm: 'https://forms.gle/k4d7pQH9irQ3WPee6',
@@ -575,25 +582,25 @@ export interface HeroSlide {
 export const HERO_SLIDES: HeroSlide[] = [
   {
     id: 'retina',
-    kicker: 'Profesora de Emprendedores',
-    title: 'Deja de explicar tu técnica: destraba tu negocio nombrando',
-    emphasis: 'el problema real de tu cliente.',
+    kicker: 'Venta humanizada y networking',
+    title: 'Cuando nombras el problema real,',
+    emphasis: 'vender deja de sentirse forzado e incómodo.',
     subtitle:
-      'Ayudarte a destrabar tu negocio, estructurar tus ideas y dominar una narrativa comercial que atraiga a tu cliente ideal.',
+      'Olvídate de explicar procesos complejos. Habla directo al dolor de tu cliente y convierte conversaciones en cierres naturales.',
     primaryCta: { label: 'Encuentra tu programa', route: '/escuela' },
     secondaryCta: { label: 'Conoce a Geraldine', route: '/sobre-mi' },
     image: {
       photo: 'home-hero-retina',
-      quote: '“Vender no es convencer a la fuerza; es saber traducir lo que haces al dolor que tu cliente ya quiere resolver.”',
-      caption: 'Geraldine Manríquez · Concepción, Biobío',
+      quote: '“Vender no es convencer, es ayudar a decidir.”',
+      caption: 'Geraldine Manríquez',
     },
   },
   {
     id: 'vender-sin-vender',
     kicker: 'Próxima edición: por confirmar',
     title: 'Vender sin Vender',
-    emphasis: 'conecta sin forzar.',
-    subtitle: 'Conoce el curso y revisa sus contenidos en la Escuela de Ventas.',
+    emphasis: 'curso con acompañamiento.',
+    subtitle: 'Curso que desarrolla habilidades de venta que conecta, llega y atrae al cliente.',
     primaryCta: { label: 'Conocer el curso', route: '/escuela/vender-sin-vender' },
     secondaryCta: { label: 'Ver todos los servicios', route: '/escuela' },
     image: {
@@ -640,7 +647,7 @@ export const SPEAKER_GALLERY: SpeakerGalleryItem[] = [
 export const PARTNER_ORGS: { name: string; url?: string }[] = [
   { name: 'Ecosistema Biobío', url: 'https://ecosistemabiobio.cl/' },
   { name: 'Rediversas', url: 'https://www.rediversas.cl' },
-  { name: 'CorpArauco' },
+  { name: 'Corparauco' },
   { name: 'Ecosistema LA' },
   { name: 'CIDERE' },
   { name: 'Etmday' },

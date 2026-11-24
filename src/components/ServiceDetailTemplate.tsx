@@ -1,7 +1,6 @@
 import { ServiceBrand } from './BrandLogo';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  ArrowLeft,
   ArrowRight,
   Check,
   ChevronDown,
@@ -10,7 +9,6 @@ import {
 } from 'lucide-react';
 import {
   ESCUELA_CARDS,
-  RoutePath,
   ServiceDetailData,
 } from '../data/siteContent';
 import { FlowCheckoutBox } from './FlowCheckoutBox';
@@ -19,39 +17,31 @@ import { photo } from '../data/photos';
 
 interface ServiceDetailTemplateProps {
   service: ServiceDetailData;
-  onNavigate: (route: RoutePath) => void;
 }
 
+/**
+ * Carta de venta (landing): sin menú, sin footer y sin salidas. Una sola acción: inscribirse y pagar.
+ * El mecanismo que oculta header y footer vive en App.tsx (`LANDING_ROUTES`).
+ */
 export function ServiceDetailTemplate({
   service,
-  onNavigate,
 }: ServiceDetailTemplateProps) {
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+  const [checkoutInView, setCheckoutInView] = useState(false);
 
   const cardImage = ESCUELA_CARDS.find((c) => c.slug === service.slug)?.image;
-  const otherServices = ESCUELA_CARDS.filter((c) => c.slug !== service.slug);
+
+  // La barra fija de móvil se oculta cuando el formulario de pago ya está a la vista.
+  useEffect(() => {
+    const target = document.getElementById('checkout-flow');
+    if (!target || typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver(([entry]) => setCheckoutInView(entry.isIntersecting), { threshold: 0.1 });
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [service.slug]);
 
   return (
-    <div className="bg-[var(--color-paper)] text-[#171A17]">
-      {/* Breadcrumb Bar */}
-      <div className="border-b border-[#DEDAD0] bg-[var(--color-surface-alt)]">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10 py-3.5 flex flex-wrap items-center justify-between gap-3 text-xs font-tabular text-[#5A5D56]">
-          <button
-            type="button"
-            onClick={() => onNavigate('/escuela')}
-            className="inline-flex items-center gap-2 text-[#171A17] hover:text-[var(--color-accent)] font-medium transition-colors cursor-pointer"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
-            <span>Volver al catálogo de Escuela</span>
-          </button>
-          <div>
-            <span>Escuela de Ventas</span>
-            <span aria-hidden="true"> / </span>
-            <span className="text-[var(--color-accent)] font-semibold">{service.shortTitle}</span>
-          </div>
-        </div>
-      </div>
-
+    <div className="bg-[var(--color-paper)] text-[#171A17] pb-24 sm:pb-0">
       {/* 1. HERO CON PREGUNTA / DOLOR + REGLA DE ORO */}
       <section className="py-14 lg:py-20 border-b border-[#DEDAD0]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
@@ -228,7 +218,7 @@ export function ServiceDetailTemplate({
                     </p>
                   </div>
                   <div className="pt-6 mt-6 border-t border-[#DED8CA] font-tabular text-xs text-[#5A5D56]">
-                    Metodología creada por Geraldine Manríquez · Concepción, Chile
+                    Metodología creada por Geraldine Manríquez
                   </div>
                 </div>
               )}
@@ -313,7 +303,7 @@ export function ServiceDetailTemplate({
       {/* 5 & 6 & 7. PRECIO REGULAR VS PREFERENCIAL + GARANTÍA + BOTÓN DE PAGO FLOW */}
       <section
         id="checkout-flow"
-        className="scroll-mt-16 py-16 lg:py-24 bg-[#121A16] text-[#F4F1EA] border-b border-[#26312B]"
+        className="py-16 lg:py-24 bg-[#121A16] text-[#F4F1EA] border-b border-[#26312B]"
       >
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
@@ -347,12 +337,7 @@ export function ServiceDetailTemplate({
                 <p>
                   Si perteneces a alguno de los ecosistemas en convenio o necesitas ayuda con tu
                   inscripción, puedes escribir directamente a{' '}
-                  <a
-                    href="mailto:hola@geraldinemanriquez.com"
-                    className="text-[#F4F1EA] underline hover:text-[var(--color-accent-fill)]"
-                  >
-                    hola@geraldinemanriquez.com
-                  </a>
+                  <span className="text-[#F4F1EA]">hola@geraldinemanriquez.com</span>
                   .
                 </p>
               </div>
@@ -414,39 +399,18 @@ export function ServiceDetailTemplate({
         </div>
       </section>
 
-      {/* Cross-navigation to other Escuela programs */}
-      <section className="py-12 bg-[var(--color-surface-alt)]">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
-          <div className="font-tabular text-xs text-[#5A5D56] mb-6">
-            OTROS PROGRAMAS DE LA ESCUELA DE VENTAS
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {otherServices.map((card) => (
-              <button
-                key={card.slug}
-                type="button"
-                onClick={() => onNavigate(card.slug)}
-                className="text-left p-5 bg-[var(--color-surface)] border border-[#D8D3C6] hover:border-[var(--color-accent)] rounded-sm transition-colors cursor-pointer flex flex-col justify-between group"
-              >
-                <div>
-                  <div className="font-tabular text-xs text-[var(--color-accent)] mb-1">
-                    Programa {card.index}
-                  </div>
-                  <h3 className="font-editorial text-xl text-[#171A17] group-hover:text-[var(--color-accent)] transition-colors mb-2">
-                    {card.title}
-                  </h3>
-                </div>
-                <div className="pt-3 border-t border-[#EAE6DC] flex items-center justify-between text-xs font-tabular text-[#5A5D56]">
-                  <span>
-                    {card.regularPrice} / Pref. {card.preferentialPrice}
-                  </span>
-                  <ArrowRight className="w-3.5 h-3.5 text-[var(--color-accent)]" />
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Barra fija en móvil: repite la única acción de la carta de venta. */}
+      <div
+        className={`${checkoutInView ? 'hidden' : 'sm:hidden'} fixed inset-x-0 bottom-0 z-40 border-t border-[#DEDAD0] bg-[var(--color-paper)]/95 p-3 backdrop-blur-md`}
+      >
+        <a
+          href="#checkout-flow"
+          className="flex min-h-11 w-full items-center justify-center gap-2 rounded-sm bg-[var(--color-accent-fill)] px-5 py-3 text-sm font-semibold text-[var(--color-accent-on-fill)]"
+        >
+          <span>Ir a inscripción y pago Flow</span>
+          <ArrowRight className="h-4 w-4 shrink-0" aria-hidden="true" />
+        </a>
+      </div>
     </div>
   );
 }
