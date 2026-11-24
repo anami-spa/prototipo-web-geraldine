@@ -535,6 +535,12 @@ export const RADIO_PLANS: Record<'pyme' | 'empresa', RadioPlanTier[]> = {
  * geraldinemanriquez.com (sitio vivo) y de la ficha de la aliada en el baúl.
  * Fuente única — no hardcodear estos valores en otro lugar.
  */
+/** Ajustes del sitio que Geraldine puede querer cambiar. En el sitio Laravel + Filament pasan a un campo del panel. */
+export const SITE_CONFIG = {
+  /** true: las cartas de venta (landing) se abren en una pestaña nueva y no reemplazan la página actual. false: abren en la misma pestaña. */
+  abrirCartasEnPestanaNueva: true,
+};
+
 export const SITE_LINKS = {
   whatsapp: 'https://wa.me/56959571507',
   whatsappDisplay: '+56 9 5957 1507',

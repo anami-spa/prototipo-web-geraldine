@@ -25,7 +25,7 @@ import { FloatingActions } from './components/FloatingActions';
 import { AvisoPrioritario } from './components/AvisoPrioritario';
 import { BookPage } from './components/BookPage';
 import { LegalPage } from './components/LegalPage';
-import { ESCUELA_CARDS, RoutePath, SERVICE_DETAILS, SITE_LINKS } from './data/siteContent';
+import { ESCUELA_CARDS, RoutePath, SERVICE_DETAILS, SITE_CONFIG, SITE_LINKS } from './data/siteContent';
 import { latestPosts } from './data/blogPosts';
 import { withBase, stripBase } from './lib/base';
 
@@ -234,6 +234,12 @@ export default function App() {
 
   const navigateTo = (route: RoutePath, anchorId?: string, programContext?: string) => {
     setMobileMenuOpen(false);
+    // Las cartas de venta se abren en una pestaña aparte para no perder la página de origen (configurable en SITE_CONFIG).
+    // Desde otra carta (p. ej. el botón de la ventana emergente no aplica) se navega normal.
+    if (SITE_CONFIG.abrirCartasEnPestanaNueva && LANDING_ROUTES.includes(route) && !LANDING_ROUTES.includes(activeRoute)) {
+      window.open(withBase(route), '_blank', 'noopener');
+      return;
+    }
     if (programContext) {
       setSelectedProgram(programContext);
     }
