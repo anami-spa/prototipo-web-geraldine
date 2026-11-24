@@ -313,7 +313,7 @@ export default function App() {
                     navigateTo(item.route);
                   }}
                   aria-current={active ? 'page' : undefined}
-                  className={`whitespace-nowrap py-1 border-b transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-accent)] ${
+                  className={`inline-flex min-w-11 justify-center whitespace-nowrap py-3 border-b transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-accent)] ${
                     active
                       ? 'text-[var(--color-accent)] border-[var(--color-accent)] font-semibold'
                       : 'text-[#464944] border-transparent hover:text-[#171A17] hover:border-[#171A17]'
@@ -333,7 +333,7 @@ export default function App() {
                 e.preventDefault();
                 navigateTo('/escuela');
               }}
-              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 text-xs lg:text-sm font-semibold text-[var(--color-accent-on-fill)] bg-[var(--color-accent-fill)] hover:brightness-95 rounded-sm transition-colors duration-150 whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#171A17]"
+              className="hidden sm:inline-flex min-h-11 items-center gap-2 px-4 py-2 text-xs lg:text-sm font-semibold text-[var(--color-accent-on-fill)] bg-[var(--color-accent-fill)] hover:brightness-95 rounded-sm transition-colors duration-150 whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#171A17]"
             >
               <span>Encuentra tu programa</span>
               <ArrowRight className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
@@ -487,7 +487,7 @@ export default function App() {
               <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
                 <h2
                   id="mision-title"
-                  className="lg:col-span-7 font-editorial text-3xl sm:text-4xl lg:text-5xl leading-[1.15] italic before:mb-6 before:block before:h-1 before:w-16 before:bg-[var(--color-accent-fill)] before:content-['']"
+                  className="lg:col-span-7 font-sans text-2xl sm:text-3xl lg:text-4xl font-medium leading-[1.3] before:mb-6 before:block before:h-1 before:w-16 before:bg-[var(--color-accent-fill)] before:content-['']"
                   style={{ textWrap: 'balance' }}
                 >
                   Mi misión es ayudarte a destrabar tu negocio, estructurar tus ideas y dominar una
@@ -520,8 +520,6 @@ export default function App() {
               <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
                 <div className="flex flex-wrap items-center justify-between gap-4 pb-8 mb-10 border-b border-[#DEDAD0]">
                   <div className="flex items-center gap-2 text-xs sm:text-sm font-medium text-[#5A5D56]">
-                    <span className="font-tabular text-[var(--color-accent)] font-semibold">MÉTODO PROPIO</span>
-                    <span aria-hidden="true">·</span>
                     <span>La Retina Emprendedora</span>
                     <span aria-hidden="true">·</span>
                     <span>12 años de trayectoria</span>
@@ -614,7 +612,7 @@ export default function App() {
                         type="button"
                         onClick={() => setStoryExpanded((prev) => !prev)}
                         aria-expanded={storyExpanded}
-                        className="inline-flex items-center gap-2 px-4 py-3 text-xs sm:text-sm font-semibold text-[#171A17] bg-[#EAE5DA] hover:bg-[#DFD9CB] border border-[#C9C3B4] rounded-sm transition-colors duration-150 whitespace-nowrap cursor-pointer"
+                        className="inline-flex min-h-11 items-center gap-2 px-4 py-3 text-xs sm:text-sm font-semibold text-[#171A17] bg-[#EAE5DA] hover:bg-[#DFD9CB] border border-[#C9C3B4] rounded-sm transition-colors duration-150 whitespace-nowrap cursor-pointer"
                       >
                         <span>Resumen rápido aquí</span>
                         {storyExpanded ? (
@@ -689,9 +687,6 @@ export default function App() {
                         />
                       </div>
                       <div className="flex items-center justify-between gap-2 pb-4 mb-6 border-b border-[#2C3A32]">
-                        <span className="font-tabular text-xs text-[var(--color-accent-fill)]">
-                          FORMACIÓN APLICADA
-                        </span>
                         <span className="font-tabular text-xs text-[#9BA39D]">
                           Pago online con Flow
                         </span>
@@ -713,7 +708,7 @@ export default function App() {
                             <button
                               type="button"
                               onClick={() => navigateTo('/escuela/diagnostico')}
-                              className="font-semibold text-base text-[#F4F1EA] hover:text-[var(--color-accent-fill)] text-left transition-colors cursor-pointer"
+                              className="inline-flex min-h-11 items-center font-semibold text-base text-[#F4F1EA] hover:text-[var(--color-accent-fill)] text-left transition-colors cursor-pointer"
                             >
                               Sesión Diagnóstica →
                             </button>
@@ -730,7 +725,7 @@ export default function App() {
                             <button
                               type="button"
                               onClick={() => navigateTo('/escuela/narrativa-comercial')}
-                              className="font-semibold text-base text-[#F4F1EA] hover:text-[var(--color-accent-fill)] text-left transition-colors cursor-pointer"
+                              className="inline-flex min-h-11 items-center font-semibold text-base text-[#F4F1EA] hover:text-[var(--color-accent-fill)] text-left transition-colors cursor-pointer"
                             >
                               Narrativa Comercial →
                             </button>
@@ -746,7 +741,7 @@ export default function App() {
                             <button
                               type="button"
                               onClick={() => navigateTo('/escuela/vender-sin-vender')}
-                              className="font-semibold text-base text-[#F4F1EA] hover:text-[var(--color-accent-fill)] text-left transition-colors cursor-pointer"
+                              className="inline-flex min-h-11 items-center font-semibold text-base text-[#F4F1EA] hover:text-[var(--color-accent-fill)] text-left transition-colors cursor-pointer"
                             >
                               Vender sin Vender →
                             </button>
@@ -763,7 +758,7 @@ export default function App() {
                       <button
                         type="button"
                         onClick={() => navigateTo('/escuela')}
-                        className="w-full inline-flex items-center justify-between px-4 py-3 text-xs sm:text-sm font-semibold text-[#121A16] bg-[var(--color-accent-fill)] hover:bg-[#E2B46B] rounded-sm transition-colors duration-150 whitespace-nowrap cursor-pointer"
+                        className="w-full inline-flex min-h-11 items-center justify-between px-4 py-3 text-xs sm:text-sm font-semibold text-[#121A16] bg-[var(--color-accent-fill)] hover:bg-[#E2B46B] rounded-sm transition-colors duration-150 whitespace-nowrap cursor-pointer"
                       >
                         <span>Ver catálogo completo de la Escuela</span>
                         <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
@@ -788,9 +783,6 @@ export default function App() {
                         />
                       </div>
                       <div className="flex items-center justify-between gap-2 pb-4 mb-6 border-b border-[#2C3A32]">
-                        <span className="font-tabular text-xs text-[var(--color-accent-fill)]">
-                          EMPRESAS &amp; ECOSISTEMA
-                        </span>
                         <span className="font-tabular text-xs text-[#9BA39D]">
                           Chile y Latam
                         </span>
@@ -811,7 +803,7 @@ export default function App() {
                             <button
                               type="button"
                               onClick={() => navigateTo('/speaker')}
-                              className="font-semibold text-base text-[#F4F1EA] hover:text-[var(--color-accent-fill)] text-left transition-colors cursor-pointer"
+                              className="inline-flex min-h-11 items-center font-semibold text-base text-[#F4F1EA] hover:text-[var(--color-accent-fill)] text-left transition-colors cursor-pointer"
                             >
                               Relatorías y Conferencias →
                             </button>
@@ -829,7 +821,7 @@ export default function App() {
                             <button
                               type="button"
                               onClick={() => navigateTo('/escuela/conexiones-que-conectan')}
-                              className="font-semibold text-base text-[#F4F1EA] hover:text-[var(--color-accent-fill)] text-left transition-colors cursor-pointer"
+                              className="inline-flex min-h-11 items-center font-semibold text-base text-[#F4F1EA] hover:text-[var(--color-accent-fill)] text-left transition-colors cursor-pointer"
                             >
                               Conexiones que Conectan →
                             </button>
@@ -845,7 +837,7 @@ export default function App() {
                       <button
                         type="button"
                         onClick={() => navigateTo('/speaker')}
-                        className="w-full inline-flex items-center justify-between px-4 py-3 text-xs sm:text-sm font-semibold text-[#F4F1EA] bg-transparent border border-[#495A4F] hover:border-[var(--color-accent-fill)] hover:text-[var(--color-accent-fill)] rounded-sm transition-colors duration-150 whitespace-nowrap cursor-pointer"
+                        className="w-full inline-flex min-h-11 items-center justify-between px-4 py-3 text-xs sm:text-sm font-semibold text-[#F4F1EA] bg-transparent border border-[#495A4F] hover:border-[var(--color-accent-fill)] hover:text-[var(--color-accent-fill)] rounded-sm transition-colors duration-150 whitespace-nowrap cursor-pointer"
                       >
                         <span>Ver página de Speaker &amp; Conferencias</span>
                         <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
@@ -886,7 +878,6 @@ export default function App() {
                     >
                       <div>
                         <div className="flex items-center justify-between gap-2 text-xs font-tabular text-[#676A63] pb-4 mb-6 border-b border-[#E6E2D6]">
-                          <span className="whitespace-nowrap">Caso 0{index + 1}</span>
                           <span>{item.shift}</span>
                         </div>
 
@@ -911,16 +902,11 @@ export default function App() {
             {/* 7. BANDA DE RADIO: "APRENDE A EMPRENDER" */}
             <section
               id="radio"
-              className="scroll-mt-16 py-16 lg:py-24 bg-[#1F1A17] text-[#F6F3EC] border-b border-[#332B26]"
+              className="scroll-mt-16 py-16 lg:py-24 bg-[var(--color-night)] text-[#F6F3EC] border-b border-[#26312B]"
             >
               <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
-                <div className="flex flex-wrap items-center justify-between gap-4 pb-6 mb-10 border-b border-[#362E29] text-xs sm:text-sm font-tabular text-[#D9CBB8]">
-                  <div className="flex items-center gap-2.5">
-                    <Radio className="w-4 h-4 text-[var(--color-accent-fill)]" aria-hidden="true" />
-                    <span className="text-[#F6F3EC] font-semibold">EN EL AIRE</span>
-                    <span aria-hidden="true">·</span>
-                    <span>Radio Femenina de Concepción (44 años al aire)</span>
-                  </div>
+                <div className="flex flex-wrap items-center gap-4 pb-6 mb-10 border-b border-[#26312B] text-sm text-[#D9CBB8]">
+                  <Radio className="w-4 h-4 text-[var(--color-accent-fill)]" aria-hidden="true" />
                   <div>
                     <span>Lunes - Miércoles - Viernes</span>
                     <span aria-hidden="true"> · </span>
@@ -938,30 +924,20 @@ export default function App() {
                     </h2>
                     <p className="text-base sm:text-lg text-[#D6D0C6] leading-relaxed max-w-[60ch] mb-6 tracking-[0.01em]">
                       Tres veces por semana, en los micrófonos de{' '}
-                      <strong className="text-[#F6F3EC]">
-                        Radio Femenina de Concepción (44 años al aire)
-                      </strong>
+                      <strong className="text-[#F6F3EC]">Radio Femenina de Concepción</strong>
                       , conversamos sin libreto con emprendedores, profesionales y líderes locales
                       sobre los desafíos reales de sacar adelante un negocio.
                     </p>
 
-                    <div className="p-5 bg-[#29221E] border-l-2 border-[var(--color-accent-fill)] mb-8">
-                      <div className="font-tabular text-xs text-[var(--color-accent-fill)] mb-1">
-                        IMPACTO Y ALTA DEMANDA EN LA REGIÓN
-                      </div>
+                    <div className="p-5 bg-[var(--color-night-raised)] border border-[#2C3A32] rounded-sm mb-8">
                       <p className="font-editorial text-xl sm:text-2xl text-[#F6F3EC]">
                         +150 invitados entrevistados, hoy con 2 meses de lista de espera.
                       </p>
                     </div>
 
-                    <div className="bg-[#26201C] border border-[#3D332D] rounded-sm p-6">
-                      <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-tabular text-[#C9B9A6] pb-3 mb-3 border-b border-[#382F29]">
-                        <span>EN VIVO</span>
-                        <span className="text-[var(--color-accent-fill)]">{SITE_LINKS.radioEmisora}</span>
-                      </div>
-
+                    <div className="bg-[var(--color-night-raised)] border border-[#2C3A32] rounded-sm p-6">
                       <p className="max-w-[56ch] text-sm text-[#BFB7AC] mb-5 leading-relaxed">
-                        {SITE_LINKS.radioInvitados}. Alcance real: {SITE_LINKS.radioAlcance}.
+                        Alcance real: {SITE_LINKS.radioAlcance}.
                         Escucha las entrevistas y conoce los planes de auspicio PYME y Empresa en
                         la página oficial del programa.
                       </p>
@@ -971,7 +947,7 @@ export default function App() {
                           href={SITE_LINKS.radioYouTubePlaylist}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-[#171A17] bg-[var(--color-accent-fill)] hover:bg-[#E3B56C] rounded-sm transition-colors duration-150 whitespace-nowrap"
+                          className="inline-flex min-h-11 items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-[#171A17] bg-[var(--color-accent-fill)] hover:bg-[#E3B56C] rounded-sm transition-colors duration-150 whitespace-nowrap"
                         >
                           <Play className="w-3.5 h-3.5 fill-current shrink-0" aria-hidden="true" />
                           <span>Ver capítulos en YouTube</span>
@@ -980,7 +956,7 @@ export default function App() {
                         <button
                           type="button"
                           onClick={() => navigateTo('/radio')}
-                          className="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-[var(--color-accent-fill)] hover:underline cursor-pointer"
+                          className="inline-flex min-h-11 items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-[var(--color-accent-fill)] hover:underline cursor-pointer"
                         >
                           <span>Ver planes de auspicio y cómo participar →</span>
                         </button>
@@ -990,7 +966,7 @@ export default function App() {
 
                   <div className="lg:col-span-5">
                     <figure>
-                      <div className="relative overflow-hidden rounded-sm border border-[#3D332D] bg-[#29221E] aspect-[16/9] lg:aspect-[4/3]">
+                      <div className="relative overflow-hidden rounded-sm border border-[#2C3A32] bg-[var(--color-night-raised)] aspect-[16/9] lg:aspect-[4/3]">
                         <ResilientImage
                           {...photo('home-radio')}
                           sizes="(min-width: 1280px) 480px, (min-width: 1024px) 38vw, 92vw"
@@ -1001,16 +977,13 @@ export default function App() {
                         />
                         {/* Capa ≥75 % de #171A17 detrás del texto: sostiene 4,5:1 (también el dorado) sobre cualquier foto. */}
                         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#171A17]/92 via-[#171A17]/80 via-60% to-transparent px-5 pb-5 pt-16 text-[#F6F3EC]">
-                          <div className="font-tabular text-xs text-[var(--color-accent-fill)] mb-1">
-                            LUN · MIÉ · VIE · 18:00 A 19:00 HRS
-                          </div>
                           <div className="font-editorial text-lg">
                             Radio Femenina de Concepción · 44 años al aire
                           </div>
                         </div>
                       </div>
                       <figcaption className="mt-2.5 text-xs text-[#A89F94] font-tabular">
-                        Fig. 03 — Estudio de transmisión · Concepción
+                        Estudio de transmisión · Concepción
                       </figcaption>
                     </figure>
                   </div>
@@ -1071,7 +1044,7 @@ export default function App() {
                   <p className="text-sm font-semibold text-[var(--color-accent-strong)] mb-4">¿Te suena alguna de estas frases?</p>
                   <ul className="divide-y divide-[var(--color-border)] border-y border-[var(--color-border)]">
                     {QUICK_DIAGNOSTIC_QUESTIONS.map((q) => (
-                      <li key={q.id} className="py-5 font-editorial text-lg sm:text-xl italic leading-snug text-[var(--color-ink)]">
+                      <li key={q.id} className="py-5 text-lg sm:text-xl leading-snug text-[var(--color-ink)]">
                         “{q.text}”
                       </li>
                     ))}

@@ -97,7 +97,7 @@ export function HeroSlider({ onNavigate }: HeroSliderProps) {
                   style={{ textWrap: 'balance' }}
                 >
                   {item.title}{' '}
-                  <span className="italic font-normal text-[var(--color-accent)]">{item.emphasis}</span>
+                  <span className="font-normal text-[var(--color-accent)]">{item.emphasis}</span>
                 </h1>
 
                 {/* Móvil: el botón principal va antes que el subtítulo, para que entre en la primera pantalla. */}
@@ -237,7 +237,7 @@ function HeroFigure({ activeIndex, onShow }: { activeIndex: number; onShow: (ind
 
         {/* Escritorio: capa oscura bajo el texto: ≥75 % de #171A17 donde hay letras, para sostener 4,5:1 sobre cualquier foto. */}
         <div className="absolute inset-x-0 bottom-0 hidden bg-gradient-to-t from-[#171A17]/92 via-[#171A17]/80 via-60% to-transparent px-6 pb-6 pt-16 text-[var(--color-paper)] lg:block">
-          <p className="font-editorial text-xl italic leading-snug">{active.image.quote}</p>
+          <p className="font-editorial text-xl leading-snug">{active.image.quote}</p>
         </div>
 
         {/* Móvil/tablet: controles sobre la foto (flechas a los lados, numeración abajo) */}
