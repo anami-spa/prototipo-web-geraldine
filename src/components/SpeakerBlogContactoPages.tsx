@@ -95,11 +95,6 @@ export function SpeakerPage({ onNavigate }: SpeakerPageProps) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             <div className="lg:col-span-7">
               <ServiceBrand service="speaker" />
-              <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm font-tabular text-[var(--color-accent)] mb-4">
-                <span>SPEAKER &amp; RELATORÍAS</span>
-                <span aria-hidden="true">·</span>
-                <span>CONFERENCIAS QUE SE VIVEN, NO SOLO SE ESCUCHAN</span>
-              </div>
 
               <h1
                 className="font-editorial text-3xl sm:text-4xl lg:text-5xl text-[#171A17] leading-[1.12] mb-6"
@@ -158,9 +153,6 @@ export function SpeakerPage({ onNavigate }: SpeakerPageProps) {
       <section className="py-16 lg:py-24 border-b border-[#DEDAD0] bg-[#121A16] text-[#F4F1EA]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="mb-12">
-            <div className="font-tabular text-xs text-[var(--color-accent-fill)] mb-2">
-              EJES TEMÁTICOS OFICIALES
-            </div>
             <h2 className="font-editorial text-3xl sm:text-4xl lg:text-5xl text-[#F4F1EA]">
               3 Temas de Conferencia
             </h2>
@@ -197,9 +189,6 @@ export function SpeakerPage({ onNavigate }: SpeakerPageProps) {
       <section className="py-16 lg:py-20 border-b border-[#DEDAD0]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="max-w-[64ch] mb-10">
-            <div className="font-tabular text-xs text-[var(--color-accent)] mb-2">
-              EXPERIENCIAS EN ESCENARIO
-            </div>
             <h2 className="font-editorial text-3xl sm:text-4xl text-[#171A17] mb-3">
               Conferencias destacadas
             </h2>
@@ -240,9 +229,6 @@ export function SpeakerPage({ onNavigate }: SpeakerPageProps) {
       >
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="max-w-[760px] mx-auto bg-[var(--color-surface)] border border-[#D5CFC2] rounded-sm p-6 sm:p-9">
-            <div className="font-tabular text-xs text-[var(--color-accent)] mb-2">
-              CONSULTA DE DISPONIBILIDAD
-            </div>
             <h2
               id="consulta-speaker-title"
               className="font-editorial text-2xl sm:text-3xl text-[#171A17] mb-3"
@@ -475,9 +461,6 @@ export function BlogPage() {
     <div className="bg-[var(--color-paper)] text-[#171A17]">
       <section className="py-14 lg:py-20 border-b border-[#DEDAD0]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
-          <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm font-tabular text-[var(--color-accent)] mb-4">
-            <span>BLOG EDITORIAL · APRENDE A EMPRENDER</span>
-          </div>
 
           <h1 className="font-editorial text-4xl sm:text-5xl text-[#171A17] mb-4">
             Artículos sobre Ventas y Narrativa Comercial
@@ -630,7 +613,7 @@ export function ContactoPage() {
               {/* Real Email Card */}
               <div className="@container bg-[#121A16] text-[#F4F1EA] border border-[#2C3A32] rounded-sm p-6 sm:p-8">
                 <div className="font-tabular text-xs text-[var(--color-accent-fill)] mb-2">
-                  CORREO ELECTRÓNICO OFICIAL (CONFIRMADO)
+                  CORREO ELECTRÓNICO
                 </div>
                 {/* Una sola línea (pedido de Geraldine): el tamaño sigue el ancho de la tarjeta. Fuente de texto, no la de títulos (versalitas, muy ancha). */}
                 <h2

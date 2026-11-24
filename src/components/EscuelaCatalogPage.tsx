@@ -18,12 +18,6 @@ export function EscuelaCatalogPage({ onNavigate }: EscuelaCatalogPageProps) {
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
           <div className="lg:col-span-7">
           <ServiceBrand service="escuela" />
-          <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm font-tabular text-[var(--color-accent)] mb-4">
-            <span>ESCUELA DE VENTAS · CATÁLOGO OFICIAL</span>
-            <span aria-hidden="true">·</span>
-            <span>4 FORMATOS CON INSCRIPCIÓN ONLINE</span>
-          </div>
-
           <h1
             className="font-editorial text-4xl sm:text-5xl lg:text-[3.5rem] leading-[1.08] text-[#171A17] max-w-[24ch] mb-6"
             style={{ textWrap: 'balance' }}
@@ -76,14 +70,11 @@ export function EscuelaCatalogPage({ onNavigate }: EscuelaCatalogPageProps) {
                   </div>
                   {/* Unboxed top metadata */}
                   <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-tabular text-[#5A5D56] pb-4 mb-6 border-b border-[#E5E0D4]">
-                    <span className="text-[var(--color-accent)] font-semibold">
-                      FICHA {card.index} · ESCUELA DE VENTAS
-                    </span>
                     <span>Pago online vía Flow</span>
                   </div>
 
                   <h2 className="font-editorial text-2xl sm:text-3xl text-[#171A17] mb-4">
-                    {card.index}. {card.title}
+                    {card.title}
                   </h2>
 
                   <p className="font-editorial text-lg sm:text-xl italic text-[#323530] mb-6 leading-snug">

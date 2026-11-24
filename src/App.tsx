@@ -5,6 +5,7 @@ import {
   ArrowRight,
   ArrowUpRight,
   Check,
+  Pause,
   ChevronDown,
   ChevronUp,
   Menu,
@@ -132,19 +133,13 @@ export default function App() {
     typeof window !== 'undefined' ? normalizePath(stripBase(window.location.pathname)) : '/'
   );
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [bandaPausada, setBandaPausada] = useState(false);
   const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
   const mobileDrawerRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLElement>(null);
   const previousRouteRef = useRef(activeRoute);
   const [storyExpanded, setStoryExpanded] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<string | null>(null);
-  // Quick 1-minute diagnostic state
-  const [checkedQuestions, setCheckedQuestions] = useState<Record<string, boolean>>({
-    q1: false,
-    q2: false,
-    q3: false,
-  });
-
   // One presentation direction, including links with the old ?tema=b parameter.
   useEffect(() => {
     document.documentElement.setAttribute('data-tema', 'a');
@@ -261,14 +256,6 @@ export default function App() {
     }
   };
 
-  const handleToggleQuestion = (id: string) => {
-    setCheckedQuestions((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
-  };
-
-  const checkedCount = Object.values(checkedQuestions).filter(Boolean).length;
   const isLanding = LANDING_ROUTES.includes(activeRoute);
 
   const navItems: { label: string; route: RoutePath; matchPrefix?: string }[] = [
@@ -326,7 +313,7 @@ export default function App() {
                     navigateTo(item.route);
                   }}
                   aria-current={active ? 'page' : undefined}
-                  className={`whitespace-nowrap py-1 border-b transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-accent)] ${
+                  className={`inline-flex min-w-11 justify-center whitespace-nowrap py-3 border-b transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-accent)] ${
                     active
                       ? 'text-[var(--color-accent)] border-[var(--color-accent)] font-semibold'
                       : 'text-[#464944] border-transparent hover:text-[#171A17] hover:border-[#171A17]'
@@ -346,7 +333,7 @@ export default function App() {
                 e.preventDefault();
                 navigateTo('/escuela');
               }}
-              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 text-xs lg:text-sm font-semibold text-[var(--color-accent-on-fill)] bg-[var(--color-accent-fill)] hover:brightness-95 rounded-sm transition-colors duration-150 whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#171A17]"
+              className="hidden sm:inline-flex min-h-11 items-center gap-2 px-4 py-2 text-xs lg:text-sm font-semibold text-[var(--color-accent-on-fill)] bg-[var(--color-accent-fill)] hover:brightness-95 rounded-sm transition-colors duration-150 whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#171A17]"
             >
               <span>Encuentra tu programa</span>
               <ArrowRight className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
@@ -443,33 +430,6 @@ export default function App() {
         {/* HOME PAGE (Preserved & Expanded with direct links to all new routes) */}
         {activeRoute === '/' && (
           <>
-            {/* 3. FRANJA / MARQUEE CON PALABRAS CLAVE EN LOOP: pegada bajo el menú, antes del hero (pedido de Cristian, 24-nov) */}
-            <section
-              aria-label="Trayectoria y credenciales clave"
-              className="bg-[#121A16] text-[#F4F1EA] py-4 border-b border-[#26312B] overflow-hidden"
-            >
-              <div className="animate-marquee-loop flex items-center">
-                {[0, 1, 2, 3].map((repeatIndex) => (
-                  <div
-                    key={repeatIndex}
-                    className="flex items-center shrink-0"
-                    aria-hidden={repeatIndex > 0 ? 'true' : undefined}
-                  >
-                    {MARQUEE_ITEMS.map((item, itemIdx) => (
-                      <React.Fragment key={`${repeatIndex}-${itemIdx}`}>
-                        <span className="px-5 sm:px-7 text-sm sm:text-base font-editorial tracking-wide whitespace-nowrap text-[#F4F1EA]">
-                          {item}
-                        </span>
-                        <span className="text-[var(--color-accent-fill)] select-none" aria-hidden="true">
-                          ·
-                        </span>
-                      </React.Fragment>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </section>
-
             {/* 2. HERO SECTION */}
             <section
               id="inicio"
@@ -480,35 +440,88 @@ export default function App() {
               </div>
             </section>
 
-            {/* MISIÓN: va debajo del carrusel (pedido de Geraldine, nov-2026). Texto suyo; el diseño es de ANAMI. */}
+            {/* 3. FRANJA / MARQUEE CON PALABRAS CLAVE EN LOOP: bajo el hero (Cristian, 24-nov: arriba no se ve bien) */}
+            <section
+              aria-label="Trayectoria y credenciales clave"
+              className="relative bg-[var(--color-accent-fill)] text-[#171A17] py-4 border-b border-[#CDB56A] overflow-hidden"
+            >
+              <button
+                type="button"
+                onClick={() => setBandaPausada((p) => !p)}
+                aria-pressed={bandaPausada}
+                aria-label="Pausar el movimiento de la banda"
+                className="absolute right-2 top-1/2 z-10 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[var(--color-accent-fill)] shadow-md hover:brightness-95 motion-reduce:hidden"
+              >
+                {bandaPausada ? <Play className="h-4 w-4" aria-hidden="true" /> : <Pause className="h-4 w-4" aria-hidden="true" />}
+              </button>
+              <div
+                className="animate-marquee-loop flex items-center motion-reduce:flex-wrap motion-reduce:justify-center motion-reduce:gap-y-2"
+                style={{ animationPlayState: bandaPausada ? 'paused' : 'running' }}
+              >
+                {[0, 1, 2, 3].map((repeatIndex) => (
+                  <div
+                    key={repeatIndex}
+                    className={`flex items-center shrink-0 ${repeatIndex > 0 ? 'motion-reduce:hidden' : 'motion-reduce:flex-wrap motion-reduce:justify-center'}`}
+                    aria-hidden={repeatIndex > 0 ? 'true' : undefined}
+                  >
+                    {MARQUEE_ITEMS.map((item, itemIdx) => (
+                      <React.Fragment key={`${repeatIndex}-${itemIdx}`}>
+                        <span className="px-5 sm:px-7 text-sm sm:text-base font-editorial tracking-wide whitespace-nowrap text-[#171A17]">
+                          {item}
+                        </span>
+                        <span className="text-[#171A17]/60 select-none" aria-hidden="true">
+                          ·
+                        </span>
+                      </React.Fragment>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* MISIÓN: va debajo del carrusel (pedido de Geraldine, nov-2026). Texto suyo; el diseño y la foto son de ANAMI. */}
             <section
               aria-labelledby="mision-title"
               className="py-16 lg:py-24 border-b border-[#26312B] bg-[var(--color-night)] text-[#F4F1EA]"
             >
-              <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-                <h2
-                  id="mision-title"
-                  className="lg:col-span-7 border-l-4 border-[var(--color-accent-fill)] pl-6 sm:pl-8 font-editorial text-3xl sm:text-4xl lg:text-5xl leading-[1.15] italic"
-                  style={{ textWrap: 'balance' }}
-                >
-                  Mi misión es ayudarte a destrabar tu negocio, estructurar tus ideas y dominar una
-                  narrativa comercial que atraiga a tu cliente ideal de forma natural.
-                </h2>
-                <div className="lg:col-span-5 rounded-sm border border-[#2C3A32] bg-[var(--color-night-raised)] p-6 sm:p-8">
-                  <p className="text-base sm:text-lg leading-relaxed text-[#C4C0B6]">
-                    De hecho, la mayoría de los profesionales, coaches, terapeutas y emprendedores
-                    que me contactan me dicen:
-                  </p>
-                  <ul className="mt-6 space-y-4">
-                    {MISION_DICHOS.map((dicho) => (
-                      <li key={dicho} className="flex items-start gap-3 text-lg font-semibold leading-snug">
-                        <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent-fill)] text-[#171A17]">
-                          <Check className="h-3.5 w-3.5 stroke-[3]" aria-hidden="true" />
-                        </span>
-                        <span>{dicho}</span>
-                      </li>
-                    ))}
-                  </ul>
+              <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+                <figure className="lg:col-span-4 mx-auto w-full max-w-sm lg:max-w-none">
+                  <div className="overflow-hidden rounded-sm border border-[#2C3A32] bg-[var(--color-night-raised)] aspect-[4/5]">
+                    <ResilientImage
+                      {...photo('sobre-retrato')}
+                      sizes="(min-width: 1024px) 380px, 90vw"
+                      loading="lazy"
+                      decoding="async"
+                      fallbackTitle="Geraldine Manríquez"
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                </figure>
+                <div className="lg:col-span-8">
+                  <h2
+                    id="mision-title"
+                    className="font-sans text-2xl sm:text-3xl lg:text-4xl font-medium leading-[1.3] before:mb-6 before:block before:h-1 before:w-16 before:bg-[var(--color-accent-fill)] before:content-['']"
+                    style={{ textWrap: 'balance' }}
+                  >
+                    Mi misión es ayudarte a destrabar tu negocio, estructurar tus ideas y dominar una
+                    narrativa comercial que atraiga a tu cliente ideal de forma natural.
+                  </h2>
+                  <div className="mt-10 rounded-sm border border-[#2C3A32] bg-[var(--color-night-raised)] p-6 sm:p-8">
+                    <p className="text-base sm:text-lg leading-relaxed text-[#C4C0B6]">
+                      De hecho, la mayoría de los profesionales, coaches, terapeutas y emprendedores
+                      que me contactan me dicen:
+                    </p>
+                    <ul className="mt-6 space-y-4">
+                      {MISION_DICHOS.map((dicho) => (
+                        <li key={dicho} className="flex items-start gap-3 text-lg font-semibold leading-snug">
+                          <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent-fill)] text-[#171A17]">
+                            <Check className="h-3.5 w-3.5 stroke-[3]" aria-hidden="true" />
+                          </span>
+                          <span>{dicho}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               </div>
             </section>
@@ -521,8 +534,6 @@ export default function App() {
               <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
                 <div className="flex flex-wrap items-center justify-between gap-4 pb-8 mb-10 border-b border-[#DEDAD0]">
                   <div className="flex items-center gap-2 text-xs sm:text-sm font-medium text-[#5A5D56]">
-                    <span className="font-tabular text-[var(--color-accent)] font-semibold">MÉTODO PROPIO</span>
-                    <span aria-hidden="true">·</span>
                     <span>La Retina Emprendedora</span>
                     <span aria-hidden="true">·</span>
                     <span>12 años de trayectoria</span>
@@ -550,18 +561,18 @@ export default function App() {
 
                     <dl className="mt-8 grid grid-cols-2 gap-6 pt-6 border-t border-[#DEDAD0]">
                       <div>
-                        <dt className="text-xs text-[#5A5D56] mb-1">Profesionales formados</dt>
+                        <dt className="text-[13px] text-[#5A5D56] mb-1">Profesionales formados</dt>
                         <dd className="font-tabular text-2xl sm:text-3xl font-semibold text-[#171A17]">
                           +1.000
                         </dd>
-                        <span className="text-xs text-[#5A5D56]">Emprendedores y consultores</span>
+                        <span className="text-sm text-[#5A5D56]">Emprendedores y consultores</span>
                       </div>
                       <div>
-                        <dt className="text-xs text-[#5A5D56] mb-1">Experiencia docente</dt>
+                        <dt className="text-[13px] text-[#5A5D56] mb-1">Experiencia docente</dt>
                         <dd className="font-tabular text-2xl sm:text-3xl font-semibold text-[#171A17]">
                           12 años
                         </dd>
-                        <span className="text-xs text-[#5A5D56]">
+                        <span className="text-sm text-[#5A5D56]">
                           En Chile y Latam
                         </span>
                       </div>
@@ -570,13 +581,6 @@ export default function App() {
 
                   {/* Right Column: Anchor Quote + Brief Method Explanation + CTA (7 cols) */}
                   <div className="lg:col-span-7">
-                    <p
-                      aria-hidden="true"
-                      className="text-xs sm:text-sm font-tabular tracking-wider text-[var(--color-accent)] mb-3"
-                    >
-                      EL CAMBIO DE ENFOQUE COMERCIAL
-                    </p>
-
                     <blockquote className="mb-8">
                       <h2
                         className="font-editorial text-3xl sm:text-4xl lg:text-[2.75rem] leading-[1.15] italic text-[#171A17]"
@@ -622,7 +626,7 @@ export default function App() {
                         type="button"
                         onClick={() => setStoryExpanded((prev) => !prev)}
                         aria-expanded={storyExpanded}
-                        className="inline-flex items-center gap-2 px-4 py-3 text-xs sm:text-sm font-semibold text-[#171A17] bg-[#EAE5DA] hover:bg-[#DFD9CB] border border-[#C9C3B4] rounded-sm transition-colors duration-150 whitespace-nowrap cursor-pointer"
+                        className="inline-flex min-h-11 items-center gap-2 px-4 py-3 text-xs sm:text-sm font-semibold text-[#171A17] bg-[#EAE5DA] hover:bg-[#DFD9CB] border border-[#C9C3B4] rounded-sm transition-colors duration-150 whitespace-nowrap cursor-pointer"
                       >
                         <span>Resumen rápido aquí</span>
                         {storyExpanded ? (
@@ -665,11 +669,6 @@ export default function App() {
               <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-10 mb-12 border-b border-[#27332C]">
                   <div>
-                    <div className="flex items-center gap-2 text-xs sm:text-sm font-tabular text-[var(--color-accent-fill)] mb-3">
-                      <span>ARQUITECTURA DE PROGRAMAS</span>
-                      <span aria-hidden="true">·</span>
-                      <span>ESCUELA Y SPEAKER</span>
-                    </div>
                     <h2
                       className="font-editorial text-3xl sm:text-4xl lg:text-5xl text-[#F4F1EA] tracking-[0.01em]"
                       style={{ textWrap: 'balance' }}
@@ -702,16 +701,13 @@ export default function App() {
                         />
                       </div>
                       <div className="flex items-center justify-between gap-2 pb-4 mb-6 border-b border-[#2C3A32]">
-                        <span className="font-tabular text-xs text-[var(--color-accent-fill)]">
-                          FORMACIÓN APLICADA
-                        </span>
                         <span className="font-tabular text-xs text-[#9BA39D]">
                           Pago online con Flow
                         </span>
                       </div>
 
                       <h3 className="font-editorial text-2xl sm:text-3xl text-[#F4F1EA] mb-3 tracking-[0.01em]">
-                        01. Escuela de Ventas
+                        Escuela de Ventas
                       </h3>
                       <p className="text-sm text-[#C4C0B6] leading-relaxed mb-6 tracking-[0.01em]">
                         Programas prácticos para traducir tu servicio al lenguaje de tu cliente
@@ -726,12 +722,12 @@ export default function App() {
                             <button
                               type="button"
                               onClick={() => navigateTo('/escuela/diagnostico')}
-                              className="font-semibold text-base text-[#F4F1EA] hover:text-[var(--color-accent-fill)] text-left transition-colors cursor-pointer"
+                              className="inline-flex min-h-11 items-center rounded-sm bg-[var(--color-accent-fill)] px-4 font-semibold text-sm text-[#121A16] text-left transition-colors hover:brightness-95 cursor-pointer"
                             >
                               Sesión Diagnóstica →
                             </button>
                           </div>
-                          <p className="text-xs text-[#B6B2A8] mb-2 leading-relaxed">
+                          <p className="text-sm text-[#B6B2A8] mb-2 leading-relaxed">
                             Revisión estratégica de 60 min para detectar dónde se traba hoy tu
                             discurso o tu oferta.
                           </p>
@@ -743,12 +739,12 @@ export default function App() {
                             <button
                               type="button"
                               onClick={() => navigateTo('/escuela/narrativa-comercial')}
-                              className="font-semibold text-base text-[#F4F1EA] hover:text-[var(--color-accent-fill)] text-left transition-colors cursor-pointer"
+                              className="inline-flex min-h-11 items-center font-semibold text-base text-[#F4F1EA] hover:text-[var(--color-accent-fill)] text-left transition-colors cursor-pointer"
                             >
                               Narrativa Comercial →
                             </button>
                           </div>
-                          <p className="text-xs text-[#B6B2A8] mb-1.5 leading-relaxed">
+                          <p className="text-sm text-[#B6B2A8] mb-1.5 leading-relaxed">
                             Sesión estratégica + guion listo para usar + 7 días WhatsApp SOS.
                           </p>
                         </div>
@@ -759,12 +755,12 @@ export default function App() {
                             <button
                               type="button"
                               onClick={() => navigateTo('/escuela/vender-sin-vender')}
-                              className="font-semibold text-base text-[#F4F1EA] hover:text-[var(--color-accent-fill)] text-left transition-colors cursor-pointer"
+                              className="inline-flex min-h-11 items-center font-semibold text-base text-[#F4F1EA] hover:text-[var(--color-accent-fill)] text-left transition-colors cursor-pointer"
                             >
                               Vender sin Vender →
                             </button>
                           </div>
-                          <p className="text-xs text-[#B6B2A8] mb-2 leading-relaxed">
+                          <p className="text-sm text-[#B6B2A8] mb-2 leading-relaxed">
                             Curso grupal intensivo + 30 días de acompañamiento por WhatsApp.
                           </p>
                           <p className="font-tabular text-xs text-[#E6E2D8]">Próxima cohorte: fecha por confirmar</p>
@@ -776,7 +772,7 @@ export default function App() {
                       <button
                         type="button"
                         onClick={() => navigateTo('/escuela')}
-                        className="w-full inline-flex items-center justify-between px-4 py-3 text-xs sm:text-sm font-semibold text-[#121A16] bg-[var(--color-accent-fill)] hover:bg-[#E2B46B] rounded-sm transition-colors duration-150 whitespace-nowrap cursor-pointer"
+                        className="w-full inline-flex min-h-11 items-center justify-between px-4 py-3 text-xs sm:text-sm font-semibold text-[#121A16] bg-[var(--color-accent-fill)] hover:bg-[#E2B46B] rounded-sm transition-colors duration-150 whitespace-nowrap cursor-pointer"
                       >
                         <span>Ver catálogo completo de la Escuela</span>
                         <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
@@ -801,16 +797,13 @@ export default function App() {
                         />
                       </div>
                       <div className="flex items-center justify-between gap-2 pb-4 mb-6 border-b border-[#2C3A32]">
-                        <span className="font-tabular text-xs text-[var(--color-accent-fill)]">
-                          EMPRESAS &amp; ECOSISTEMA
-                        </span>
                         <span className="font-tabular text-xs text-[#9BA39D]">
                           Chile y Latam
                         </span>
                       </div>
 
                       <h3 className="font-editorial text-2xl sm:text-3xl text-[#F4F1EA] mb-3 tracking-[0.01em]">
-                        02. Speaker &amp; Eventos
+                        Speaker &amp; Eventos
                       </h3>
                       <p className="text-sm text-[#C4C0B6] leading-relaxed mb-6 tracking-[0.01em]">
                         Instancias presenciales de formación corporativa y articulación de redes de
@@ -824,12 +817,12 @@ export default function App() {
                             <button
                               type="button"
                               onClick={() => navigateTo('/speaker')}
-                              className="font-semibold text-base text-[#F4F1EA] hover:text-[var(--color-accent-fill)] text-left transition-colors cursor-pointer"
+                              className="inline-flex min-h-11 items-center font-semibold text-base text-[#F4F1EA] hover:text-[var(--color-accent-fill)] text-left transition-colors cursor-pointer"
                             >
                               Relatorías y Conferencias →
                             </button>
                           </div>
-                          <p className="text-xs text-[#B6B2A8] mb-2 leading-relaxed">
+                          <p className="text-sm text-[#B6B2A8] mb-2 leading-relaxed">
                             Conferencias sobre <strong>Problema Real del Cliente</strong>,{' '}
                             <strong>Experiencia del Cliente</strong> y{' '}
                             <strong>Ruta Emprendedora</strong>.
@@ -842,12 +835,12 @@ export default function App() {
                             <button
                               type="button"
                               onClick={() => navigateTo('/escuela/conexiones-que-conectan')}
-                              className="font-semibold text-base text-[#F4F1EA] hover:text-[var(--color-accent-fill)] text-left transition-colors cursor-pointer"
+                              className="inline-flex min-h-11 items-center font-semibold text-base text-[#F4F1EA] hover:text-[var(--color-accent-fill)] text-left transition-colors cursor-pointer"
                             >
                               Conexiones que Conectan →
                             </button>
                           </div>
-                          <p className="text-xs text-[#B6B2A8] mb-2 leading-relaxed">
+                          <p className="text-sm text-[#B6B2A8] mb-2 leading-relaxed">
                             Taller de Networking presencial en Concepción. Revisa los detalles en su ficha.
                           </p>
                         </div>
@@ -858,7 +851,7 @@ export default function App() {
                       <button
                         type="button"
                         onClick={() => navigateTo('/speaker')}
-                        className="w-full inline-flex items-center justify-between px-4 py-3 text-xs sm:text-sm font-semibold text-[#F4F1EA] bg-transparent border border-[#495A4F] hover:border-[var(--color-accent-fill)] hover:text-[var(--color-accent-fill)] rounded-sm transition-colors duration-150 whitespace-nowrap cursor-pointer"
+                        className="w-full inline-flex min-h-11 items-center justify-between px-4 py-3 text-xs sm:text-sm font-semibold text-[#F4F1EA] bg-transparent border border-[#495A4F] hover:border-[var(--color-accent-fill)] hover:text-[var(--color-accent-fill)] rounded-sm transition-colors duration-150 whitespace-nowrap cursor-pointer"
                       >
                         <span>Ver página de Speaker &amp; Conferencias</span>
                         <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
@@ -877,11 +870,6 @@ export default function App() {
               <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 mb-12 border-b border-[#DEDAD0]">
                   <div>
-                    <div className="flex items-center gap-2 text-xs sm:text-sm font-tabular text-[var(--color-accent)] mb-3">
-                      <span>EVIDENCIA REAL EN TERRENO</span>
-                      <span aria-hidden="true">·</span>
-                      <span>RESULTADOS DEL MÉTODO</span>
-                    </div>
                     <h2
                       id="testimonios-heading"
                       className="font-editorial text-3xl sm:text-4xl lg:text-5xl text-[#171A17]"
@@ -904,12 +892,12 @@ export default function App() {
                     >
                       <div>
                         <div className="flex items-center justify-between gap-2 text-xs font-tabular text-[#676A63] pb-4 mb-6 border-b border-[#E6E2D6]">
-                          <span>Caso 0{index + 1}</span>
                           <span>{item.shift}</span>
                         </div>
 
                         <blockquote className="mb-8">
-                          <p className="font-editorial text-lg sm:text-xl text-[#171A17] leading-relaxed">
+                          {/* Cita larga en la fuente de texto: en versalitas (fuente de títulos) un párrafo de 8 a 10 líneas no se lee. */}
+                          <p className="text-base sm:text-[1.0625rem] text-[#232620] leading-[1.7]">
                             “{item.quote}”
                           </p>
                         </blockquote>
@@ -917,7 +905,7 @@ export default function App() {
 
                       <footer className="pt-4 border-t border-[#E6E2D6]">
                         <div className="font-semibold text-base text-[#171A17]">{item.name}</div>
-                        <div className="text-xs sm:text-sm text-[#5A5D56] mt-0.5">{item.role}</div>
+                        <div className="text-sm text-[#5A5D56] mt-0.5">{item.role}</div>
                       </footer>
                     </article>
                   ))}
@@ -928,16 +916,11 @@ export default function App() {
             {/* 7. BANDA DE RADIO: "APRENDE A EMPRENDER" */}
             <section
               id="radio"
-              className="scroll-mt-16 py-16 lg:py-24 bg-[#1F1A17] text-[#F6F3EC] border-b border-[#332B26]"
+              className="scroll-mt-16 py-16 lg:py-24 bg-[var(--color-night)] text-[#F6F3EC] border-b border-[#26312B]"
             >
               <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
-                <div className="flex flex-wrap items-center justify-between gap-4 pb-6 mb-10 border-b border-[#362E29] text-xs sm:text-sm font-tabular text-[#D9CBB8]">
-                  <div className="flex items-center gap-2.5">
-                    <Radio className="w-4 h-4 text-[var(--color-accent-fill)]" aria-hidden="true" />
-                    <span className="text-[#F6F3EC] font-semibold">EN EL AIRE</span>
-                    <span aria-hidden="true">·</span>
-                    <span>Radio Femenina de Concepción (44 años al aire)</span>
-                  </div>
+                <div className="flex flex-wrap items-center gap-4 pb-6 mb-10 border-b border-[#26312B] text-sm text-[#D9CBB8]">
+                  <Radio className="w-4 h-4 text-[var(--color-accent-fill)]" aria-hidden="true" />
                   <div>
                     <span>Lunes - Miércoles - Viernes</span>
                     <span aria-hidden="true"> · </span>
@@ -947,9 +930,6 @@ export default function App() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
                   <div className="lg:col-span-7">
-                    <div className="text-xs font-tabular text-[var(--color-accent-fill)] mb-2">
-                      PROGRAMA DE CONVERSACIÓN Y NEGOCIOS
-                    </div>
                     <h2
                       className="font-editorial text-3xl sm:text-4xl lg:text-5xl text-[#F6F3EC] mb-4 tracking-[0.01em]"
                       style={{ textWrap: 'balance' }}
@@ -958,30 +938,20 @@ export default function App() {
                     </h2>
                     <p className="text-base sm:text-lg text-[#D6D0C6] leading-relaxed max-w-[60ch] mb-6 tracking-[0.01em]">
                       Tres veces por semana, en los micrófonos de{' '}
-                      <strong className="text-[#F6F3EC]">
-                        Radio Femenina de Concepción (44 años al aire)
-                      </strong>
+                      <strong className="text-[#F6F3EC]">Radio Femenina de Concepción</strong>
                       , conversamos sin libreto con emprendedores, profesionales y líderes locales
                       sobre los desafíos reales de sacar adelante un negocio.
                     </p>
 
-                    <div className="p-5 bg-[#29221E] border-l-2 border-[var(--color-accent-fill)] mb-8">
-                      <div className="font-tabular text-xs text-[var(--color-accent-fill)] mb-1">
-                        IMPACTO Y ALTA DEMANDA EN LA REGIÓN
-                      </div>
+                    <div className="p-5 bg-[var(--color-night-raised)] border border-[#2C3A32] rounded-sm mb-8">
                       <p className="font-editorial text-xl sm:text-2xl text-[#F6F3EC]">
                         +150 invitados entrevistados, hoy con 2 meses de lista de espera.
                       </p>
                     </div>
 
-                    <div className="bg-[#26201C] border border-[#3D332D] rounded-sm p-6">
-                      <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-tabular text-[#C9B9A6] pb-3 mb-3 border-b border-[#382F29]">
-                        <span>EN VIVO</span>
-                        <span className="text-[var(--color-accent-fill)]">{SITE_LINKS.radioEmisora}</span>
-                      </div>
-
-                      <p className="text-xs sm:text-sm text-[#BFB7AC] mb-5 leading-relaxed">
-                        {SITE_LINKS.radioInvitados}. Alcance real: {SITE_LINKS.radioAlcance}.
+                    <div className="bg-[var(--color-night-raised)] border border-[#2C3A32] rounded-sm p-6">
+                      <p className="max-w-[56ch] text-sm text-[#BFB7AC] mb-5 leading-relaxed">
+                        Alcance real: {SITE_LINKS.radioAlcance}.
                         Escucha las entrevistas y conoce los planes de auspicio PYME y Empresa en
                         la página oficial del programa.
                       </p>
@@ -991,7 +961,7 @@ export default function App() {
                           href={SITE_LINKS.radioYouTubePlaylist}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-[#171A17] bg-[var(--color-accent-fill)] hover:bg-[#E3B56C] rounded-sm transition-colors duration-150 whitespace-nowrap"
+                          className="inline-flex min-h-11 items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-[#171A17] bg-[var(--color-accent-fill)] hover:bg-[#E3B56C] rounded-sm transition-colors duration-150 whitespace-nowrap"
                         >
                           <Play className="w-3.5 h-3.5 fill-current shrink-0" aria-hidden="true" />
                           <span>Ver capítulos en YouTube</span>
@@ -1000,7 +970,7 @@ export default function App() {
                         <button
                           type="button"
                           onClick={() => navigateTo('/radio')}
-                          className="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-[var(--color-accent-fill)] hover:underline cursor-pointer"
+                          className="inline-flex min-h-11 items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-[var(--color-accent-fill)] hover:underline cursor-pointer"
                         >
                           <span>Ver planes de auspicio y cómo participar →</span>
                         </button>
@@ -1010,7 +980,7 @@ export default function App() {
 
                   <div className="lg:col-span-5">
                     <figure>
-                      <div className="relative overflow-hidden rounded-sm border border-[#3D332D] bg-[#29221E] aspect-[16/9] lg:aspect-[4/3]">
+                      <div className="relative overflow-hidden rounded-sm border border-[#2C3A32] bg-[var(--color-night-raised)] aspect-[16/9] lg:aspect-[4/3]">
                         <ResilientImage
                           {...photo('home-radio')}
                           sizes="(min-width: 1280px) 480px, (min-width: 1024px) 38vw, 92vw"
@@ -1021,16 +991,13 @@ export default function App() {
                         />
                         {/* Capa ≥75 % de #171A17 detrás del texto: sostiene 4,5:1 (también el dorado) sobre cualquier foto. */}
                         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#171A17]/92 via-[#171A17]/80 via-60% to-transparent px-5 pb-5 pt-16 text-[#F6F3EC]">
-                          <div className="font-tabular text-xs text-[var(--color-accent-fill)] mb-1">
-                            LUN · MIÉ · VIE · 18:00 A 19:00 HRS
-                          </div>
                           <div className="font-editorial text-lg">
                             Radio Femenina de Concepción · 44 años al aire
                           </div>
                         </div>
                       </div>
                       <figcaption className="mt-2.5 text-xs text-[#A89F94] font-tabular">
-                        Fig. 03 — Estudio de transmisión · Concepción
+                        Estudio de transmisión · Concepción
                       </figcaption>
                     </figure>
                   </div>
@@ -1042,7 +1009,7 @@ export default function App() {
             <section aria-labelledby="blog-home-title" className="py-16 lg:py-20 bg-[var(--color-paper)] border-b border-[var(--color-border)]">
               <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
                 <div className="flex flex-wrap items-end justify-between gap-5 mb-8">
-                  <div><p className="font-tabular text-xs text-[var(--color-accent-strong)] mb-2">IDEAS PARA EMPRENDER</p>
+                  <div>
                     <h2 id="blog-home-title" className="font-editorial text-3xl sm:text-4xl text-[var(--color-ink)]">Del blog</h2></div>
                   <button type="button" onClick={() => navigateTo('/blog')} className="min-h-11 text-sm font-semibold text-[var(--color-accent-strong)] hover:underline">Ver todos los artículos →</button>
                 </div>
@@ -1057,87 +1024,45 @@ export default function App() {
               </div>
             </section>
 
+            {/* Antes: test rápido con puntaje. Se retiró (sin aporte, y el resultado era un texto inventado); las tres frases quedan como texto fijo. */}
             <section
               id="diagnostico"
+              aria-labelledby="escuchar-title"
               className="scroll-mt-16 py-16 lg:py-24 bg-[var(--color-surface-alt)] border-b border-[var(--color-border)]"
             >
-              <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
-                <h2 className="sr-only">Autodiagnóstico de narrativa comercial</h2>
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
-                  {/* Left Column: 1-Minute Interactive Self-Check (5 cols) */}
-                  <div className="lg:col-span-5 bg-[var(--color-surface)] border border-[#D8D3C6] rounded-sm p-6 sm:p-8">
-                    <div className="flex items-center justify-between gap-2 text-xs font-tabular text-[#676A63] pb-3 mb-4 border-b border-[#E5E0D4]">
-                      <span>TEST RÁPIDO · 1 MINUTO</span>
-                      <span>AUTODIAGNÓSTICO</span>
-                    </div>
-
-                    <h3 className="font-editorial text-xl sm:text-2xl text-[#171A17] mb-2">
-                      Marca las frases que hoy te resulten familiares:
-                    </h3>
-                    <p className="text-xs sm:text-sm text-[#5A5D56] mb-5">
-                      Descubre en menos de 60 segundos si tu narrativa comercial actual está
-                      frenando tus ventas.
-                    </p>
-
-                    <div className="space-y-3 mb-6">
-                      {QUICK_DIAGNOSTIC_QUESTIONS.map((q) => {
-                        const isChecked = !!checkedQuestions[q.id];
-                        return (
-                          <label
-                            key={q.id}
-                            className={`flex items-start gap-3 p-3.5 rounded-sm border cursor-pointer transition-colors duration-150 ${
-                              isChecked
-                                ? 'bg-[#F4ECE9] border-[var(--color-accent)]/50 text-[#171A17]'
-                                : 'bg-[var(--color-paper)] border-[#DEDAD0] text-[#3E413B] hover:border-[#B5B0A3]'
-                            }`}
-                          >
-                            <input
-                              type="checkbox"
-                              checked={isChecked}
-                              onChange={() => handleToggleQuestion(q.id)}
-                              className="mt-1 h-4 w-4 accent-[var(--color-accent)] rounded-sm shrink-0 focus-visible:outline-2 focus-visible:outline-[var(--color-accent)]"
-                            />
-                            <span className="text-xs sm:text-sm leading-relaxed">{q.text}</span>
-                          </label>
-                        );
-                      })}
-                    </div>
-
-                    <div className="p-4 bg-[#EFECE3] border-l-2 border-[var(--color-accent)] text-xs sm:text-sm text-[#2A2D28]">
-                      <div className="font-tabular text-xs font-semibold text-[var(--color-accent)] mb-1">
-                        RESULTADO PRELIMINAR ({checkedCount}/3 SEÑALES DETECTADAS)
-                      </div>
-                      {checkedCount === 0 ? (
-                        <p>Tienes una base clara. Explora los programas y recursos disponibles para seguir avanzando.</p>
-                      ) : (
-                        <p>Tu servicio tiene valor. Puede ayudarte traducirlo a los problemas concretos que quieres resolver.</p>
-                      )}
-                    </div>
+              <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+                <div className="lg:col-span-6">
+                  <h2
+                    id="escuchar-title"
+                    className="font-editorial text-4xl sm:text-5xl lg:text-6xl text-[var(--color-ink)] leading-[1.08] mb-6"
+                  >
+                    Vender empieza por escuchar.
+                  </h2>
+                  <p className="text-base sm:text-lg text-[var(--color-ink-soft)] leading-relaxed max-w-[52ch] mb-8">
+                    Explora los programas de la Escuela o conversemos sobre el desafío que estás viviendo.
+                  </p>
+                  <div className="flex flex-wrap gap-3">
+                    <button type="button" onClick={() => navigateTo('/escuela')}
+                      className="inline-flex min-h-11 items-center gap-2 px-5 py-3 text-sm font-semibold text-[var(--color-accent-on-fill)] bg-[var(--color-accent-fill)] rounded-sm hover:brightness-95 cursor-pointer">
+                      Conocer la Escuela <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                    </button>
+                    <button type="button" onClick={() => navigateTo('/contacto')}
+                      className="inline-flex min-h-11 items-center px-5 py-3 text-sm font-semibold text-[var(--color-ink)] border border-[var(--color-border)] rounded-sm hover:bg-[var(--color-surface)] cursor-pointer">
+                      Contactar a Geraldine
+                    </button>
                   </div>
+                </div>
 
-                  {/* Próximo paso claro, sin simular una suscripción no integrada. */}
-                  <div className="lg:col-span-7 lg:pl-4">
-                    <p className="font-tabular text-xs sm:text-sm text-[var(--color-accent-strong)] mb-3">
-                      UNA MIRADA MÁS CLARA A TU MENSAJE
-                    </p>
-                    <h3 className="font-editorial text-4xl sm:text-5xl text-[var(--color-ink)] leading-tight mb-5">
-                      Vender empieza por escuchar.
-                    </h3>
-                    <p className="text-base sm:text-lg text-[var(--color-ink-soft)] leading-relaxed max-w-[58ch] mb-7">
-                      Este ejercicio es una primera señal, no un diagnóstico profesional. Explora los
-                      programas de la Escuela o conversemos sobre el desafío que estás viviendo.
-                    </p>
-                    <div className="flex flex-wrap gap-3">
-                      <button type="button" onClick={() => navigateTo('/escuela')}
-                        className="inline-flex min-h-11 items-center gap-2 px-5 py-3 text-sm font-semibold text-[var(--color-accent-on-fill)] bg-[var(--color-accent-fill)] rounded-sm hover:brightness-95">
-                        Conocer la Escuela <ArrowRight className="w-4 h-4" aria-hidden="true" />
-                      </button>
-                      <button type="button" onClick={() => navigateTo('/contacto')}
-                        className="inline-flex min-h-11 items-center px-5 py-3 text-sm font-semibold text-[var(--color-ink)] border border-[var(--color-border)] rounded-sm hover:bg-[var(--color-surface)]">
-                        Contactar a Geraldine
-                      </button>
-                    </div>
-                  </div>
+                {/* Las tres frases de Geraldine, sin casillas ni puntaje. */}
+                <div className="lg:col-span-6">
+                  <p className="text-sm font-semibold text-[var(--color-accent-strong)] mb-4">¿Te suena alguna de estas frases?</p>
+                  <ul className="divide-y divide-[var(--color-border)] border-y border-[var(--color-border)]">
+                    {QUICK_DIAGNOSTIC_QUESTIONS.map((q) => (
+                      <li key={q.id} className="py-5 text-lg sm:text-xl leading-snug text-[var(--color-ink)]">
+                        “{q.text}”
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             </section>

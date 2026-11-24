@@ -133,7 +133,7 @@ export const SERVICE_DETAILS: Record<
   '/escuela/diagnostico': {
     slug: '/escuela/diagnostico',
     shortTitle: 'Diagnóstico Comercial',
-    categoryKicker: 'FICHA 01 · SESIÓN 1 A 1 DE 60 MINUTOS',
+    categoryKicker: 'SESIÓN 1 A 1 DE 60 MINUTOS',
     painQuestion:
       '¿Cómo identificar el bloqueo exacto que estanca tus ventas en 60 minutos, sin seguir improvisando y perdiendo dinero?',
     goldenRuleLabel: 'REGLA DE ORO DEL DIAGNÓSTICO',
@@ -206,7 +206,7 @@ export const SERVICE_DETAILS: Record<
   '/escuela/narrativa-comercial': {
     slug: '/escuela/narrativa-comercial',
     shortTitle: 'Narrativa Comercial',
-    categoryKicker: 'FICHA 02 · GUION ESTRATÉGICO + ACOMPAÑAMIENTO SOS',
+    categoryKicker: 'GUION ESTRATÉGICO + ACOMPAÑAMIENTO SOS',
     painQuestion:
       '¿Te cuesta explicar a qué te dedicas? Deja de perder clientes por falta de claridad.',
     goldenRuleLabel: 'PROMESA DE LA SESIÓN',
@@ -283,7 +283,7 @@ export const SERVICE_DETAILS: Record<
   '/escuela/vender-sin-vender': {
     slug: '/escuela/vender-sin-vender',
     shortTitle: 'Vender sin Vender — Curso Grupal',
-    categoryKicker: 'FICHA 03 · PROGRAMA GRUPAL EN VIVO + 30 DÍAS DE MENTORÍA',
+    categoryKicker: 'PROGRAMA GRUPAL EN VIVO + 30 DÍAS DE MENTORÍA',
     painQuestion:
       'El curso práctico para personas emprendedoras que quieren vender sin forzar, conectar sin manipular y cerrar con confianza.',
     goldenRuleLabel: 'ENFOQUE DEL PROGRAMA GRUPAL',
@@ -380,7 +380,7 @@ export const SERVICE_DETAILS: Record<
   '/escuela/conexiones-que-conectan': {
     slug: '/escuela/conexiones-que-conectan',
     shortTitle: 'Conexiones que Conectan — Networking',
-    categoryKicker: 'FICHA 04 · 10º TALLER DE NETWORKING PRESENCIAL EN CONCEPCIÓN',
+    categoryKicker: '10º TALLER DE NETWORKING PRESENCIAL EN CONCEPCIÓN',
     painQuestion:
       '10º Taller de Networking: amplía tu red, atrae clientes y rompe el hielo con confianza sin repartir tarjetas que nadie lee.',
     goldenRuleLabel: 'DIRIGIDO A',

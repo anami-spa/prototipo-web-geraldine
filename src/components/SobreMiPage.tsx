@@ -16,11 +16,6 @@ export function SobreMiPage({ onNavigate }: SobreMiPageProps) {
       <section className="py-14 lg:py-20 border-b border-[#DEDAD0]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
           <div className="lg:col-span-7">
-          <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm font-tabular text-[var(--color-accent)] mb-4">
-            <span>SOBRE MÍ · RELATO DE ORIGEN</span>
-            <span aria-hidden="true">·</span>
-            <span>GERALDINE MANRÍQUEZ</span>
-          </div>
 
           <h1
             className="font-editorial text-4xl sm:text-5xl lg:text-[3.5rem] leading-[1.08] text-[#171A17] max-w-[24ch] mb-6"
@@ -64,7 +59,7 @@ export function SobreMiPage({ onNavigate }: SobreMiPageProps) {
                 “Tenía contrato indefinido, dos magíster y con jefatura de curso… y aun así me
                 despidieron.”
               </h2>
-              <p className="first-letter:text-5xl first-letter:font-editorial first-letter:font-semibold first-letter:float-left first-letter:mr-3 first-letter:leading-none first-letter:text-[var(--color-accent)]">
+              <p className="max-w-[58ch] first-letter:text-5xl first-letter:font-editorial first-letter:font-semibold first-letter:float-left first-letter:mr-3 first-letter:leading-none first-letter:text-[var(--color-accent)]">
                 Durante 12 años trabajé como profesora de Educación Física, recorriendo la
                 educación regular, el pregrado y el postgrado. Me especialicé en neurociencia y
                 cursé dos magísteres porque siempre creí que la excelencia académica y el
@@ -208,7 +203,6 @@ export function SobreMiPage({ onNavigate }: SobreMiPageProps) {
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-5">
-              <div className="font-tabular text-xs text-[var(--color-accent-fill)] mb-2">COMUNIDAD Y REDES</div>
               <h2 id="organizaciones-title" className="font-editorial text-3xl sm:text-4xl text-[#F4F1EA] mb-3">Organizaciones vinculadas</h2>
               <p className="text-sm sm:text-base text-[#C4C0B6] leading-relaxed">Redes de emprendimiento y colaboración.</p>
               <p className="mt-4 text-sm text-[var(--color-accent-fill)]">Propuesta para revisión: confirmar con Geraldine el vínculo y la descripción de cada organización.</p>
