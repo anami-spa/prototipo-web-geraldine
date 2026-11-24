@@ -443,43 +443,7 @@ export default function App() {
         {/* HOME PAGE (Preserved & Expanded with direct links to all new routes) */}
         {activeRoute === '/' && (
           <>
-            {/* 2. HERO SECTION */}
-            <section
-              id="inicio"
-              className="scroll-mt-16 relative overflow-hidden pt-10 pb-16 lg:pt-16 lg:pb-24 border-b border-[#DEDAD0]"
-            >
-              <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
-                <HeroSlider onNavigate={navigateTo} />
-              </div>
-            </section>
-
-            {/* MISIÓN: va debajo del carrusel (pedido de Geraldine, nov-2026) */}
-            <section
-              aria-labelledby="mision-title"
-              className="py-14 lg:py-20 border-b border-[#DEDAD0] bg-[var(--color-surface-alt)]"
-            >
-              <div className="max-w-[860px] mx-auto px-4 sm:px-6 lg:px-10">
-                <h2
-                  id="mision-title"
-                  className="font-editorial text-2xl sm:text-3xl lg:text-4xl leading-snug text-[#171A17] text-center"
-                  style={{ textWrap: 'balance' }}
-                >
-                  Mi misión es ayudarte a destrabar tu negocio, estructurar tus ideas y dominar una
-                  narrativa comercial que atraiga a tu cliente ideal de forma natural.
-                </h2>
-                <p className="mt-10 text-lg sm:text-xl text-[#323530] leading-relaxed">
-                  De hecho, la mayoría de los profesionales, coaches, terapeutas y emprendedores
-                  que me contactan me dicen:
-                </p>
-                <ul className="mt-5 list-disc space-y-3 pl-6 text-lg sm:text-xl font-semibold leading-relaxed text-[var(--color-accent)] marker:text-[var(--color-accent-fill)]">
-                  {MISION_DICHOS.map((dicho) => (
-                    <li key={dicho}>{dicho}</li>
-                  ))}
-                </ul>
-              </div>
-            </section>
-
-            {/* 3. FRANJA / MARQUEE CON PALABRAS CLAVE EN LOOP */}
+            {/* 3. FRANJA / MARQUEE CON PALABRAS CLAVE EN LOOP: pegada bajo el menú, antes del hero (pedido de Cristian, 24-nov) */}
             <section
               aria-label="Trayectoria y credenciales clave"
               className="bg-[#121A16] text-[#F4F1EA] py-4 border-b border-[#26312B] overflow-hidden"
@@ -503,6 +467,49 @@ export default function App() {
                     ))}
                   </div>
                 ))}
+              </div>
+            </section>
+
+            {/* 2. HERO SECTION */}
+            <section
+              id="inicio"
+              className="scroll-mt-16 relative overflow-hidden pt-10 pb-16 lg:pt-16 lg:pb-24 border-b border-[#DEDAD0]"
+            >
+              <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
+                <HeroSlider onNavigate={navigateTo} />
+              </div>
+            </section>
+
+            {/* MISIÓN: va debajo del carrusel (pedido de Geraldine, nov-2026). Texto suyo; el diseño es de ANAMI. */}
+            <section
+              aria-labelledby="mision-title"
+              className="py-16 lg:py-24 border-b border-[#26312B] bg-[var(--color-night)] text-[#F4F1EA]"
+            >
+              <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+                <h2
+                  id="mision-title"
+                  className="lg:col-span-7 border-l-4 border-[var(--color-accent-fill)] pl-6 sm:pl-8 font-editorial text-3xl sm:text-4xl lg:text-5xl leading-[1.15] italic"
+                  style={{ textWrap: 'balance' }}
+                >
+                  Mi misión es ayudarte a destrabar tu negocio, estructurar tus ideas y dominar una
+                  narrativa comercial que atraiga a tu cliente ideal de forma natural.
+                </h2>
+                <div className="lg:col-span-5 rounded-sm border border-[#2C3A32] bg-[var(--color-night-raised)] p-6 sm:p-8">
+                  <p className="text-base sm:text-lg leading-relaxed text-[#C4C0B6]">
+                    De hecho, la mayoría de los profesionales, coaches, terapeutas y emprendedores
+                    que me contactan me dicen:
+                  </p>
+                  <ul className="mt-6 space-y-4">
+                    {MISION_DICHOS.map((dicho) => (
+                      <li key={dicho} className="flex items-start gap-3 text-lg font-semibold leading-snug">
+                        <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent-fill)] text-[#171A17]">
+                          <Check className="h-3.5 w-3.5 stroke-[3]" aria-hidden="true" />
+                        </span>
+                        <span>{dicho}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </section>
 
