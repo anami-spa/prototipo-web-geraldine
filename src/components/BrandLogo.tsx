@@ -5,7 +5,7 @@ import { withBase } from '../lib/base';
 export function GeraldineLogo() {
   const titleId = useId();
   return (
-    <svg viewBox="8 184 474 107" width="190" height="43" role="img" aria-labelledby={titleId} className="block max-w-full">
+    <svg viewBox="32 197 440 95" width="190" height="41" role="img" aria-labelledby={titleId} className="block max-w-full">
       <title id={titleId}>Geraldine Manríquez</title>
       <image href={withBase("/images/marca/geraldine.png")} width="500" height="500" />
     </svg>
@@ -14,7 +14,7 @@ export function GeraldineLogo() {
 
 export function ServiceBrand({ service }: { service: 'escuela' | 'radio' | 'speaker' | 'networking' }) {
   const labels = { escuela: 'Escuela', radio: 'Radio', speaker: 'Speaker', networking: 'Networking' };
-  return <img src={withBase(`/images/marca/${service}.png`)} alt={`Aprende a Emprender · ${labels[service]}`} width="112" height="112" className="mb-6 h-28 w-28 object-contain rounded-sm" />;
+  return <img src={withBase(`/images/marca/${service}.png`)} alt={`Aprende a Emprender · ${labels[service]}`} width="112" height="112" className={`mb-6 h-28 w-28 rounded-full ${service === 'radio' ? 'object-cover' : 'object-contain'}`} />;
 }
 
 export function EcosistemaBiobioLogo() {

@@ -32,7 +32,7 @@ done
 FOTOS=(
   # --- Fase A · Home ---
   "home-hero-retina|Fotos_marca personal/DSC07736.jpg|3:4|0.50|0.45|600,1200|200"
-  "home-hero-vender|Fotos_marca personal/DSC07762.jpg|3:4|0.50|0.45|600,1200|200"
+  "home-hero-vender|Fotos_marca personal/Curso vender sin vender .JPG|3:4|0.50|0.45|600,1200|200"
   "home-hero-libro|Fotos Libro/7843284c-4872-4c87-9823-11c154f25df5.jpg|3:4|0.50|0.50|600,960|160"
   "home-retina-sesion|Fotos_marca personal/DSC07731.jpg|4:3|0.50|0.38|800,1600|240"
   "home-card-escuela|Fotos_marca personal/3df4b8d4-b7d4-419d-94ba-8b8d06ac3a63.JPG|16:9|0.50|0.26|640,1280|150"
@@ -66,6 +66,20 @@ FOTOS=(
   "aus-empresa-hero|Fotos Radio/DSC01877.JPG|4:3|0.50|0.40|800,1600|240"
   "aus-redes|Fotos_marca personal/3c1f915b-029c-41de-a67f-d83cc978b642.JPG|4:3*0.85|0.40|0.55|640,1200|200"
   "contacto-hero|Fotos_marca personal/a0991172-8f96-4385-b372-411673062436.JPG|4:5|0.50|0.35|600,1200|220"
+  # --- Fase D · revisión de Geraldine (nov-2026): carrusel de la presentación del libro (solo fotos sin terceros reconocibles) ---
+  "libro-c-inacap|Fotos Libro/DSC07265.JPEG|4:3|0.50|0.33|640,1000|140"
+  "libro-c-firma-manos|Fotos Libro/DSC07565.JPEG|4:3|0.50|0.55|640,1000|140"
+  "libro-c-firma-libro|Fotos Libro/DSC09858.JPEG|4:3|0.50|0.55|640,1000|140"
+  "libro-c-lectura|Fotos Libro/DSC07052.JPEG|4:3|0.45|0.45|640,1000|140"
+  "libro-c-manos-libro|Fotos Libro/DSC09888.jpg|4:3|0.50|0.55|640,1000|140"
+  "libro-c-mesa|Fotos Libro/E4615122-4D9B-432E-8892-53D1F4E43077.jpg|4:3|0.50|0.45|640,1000|140"
+  "libro-c-mesa-firma|Fotos Libro/96416de0-d80f-4c8c-92ca-b2b1bb342ecd.JPG|4:3|0.55|0.50|640,1000|140"
+  "libro-c-hablando|Fotos Libro/IMG_4729.JPG|4:3|0.50|0.38|640,1000|140"
+  "libro-c-sentada-1|Fotos Libro/IMG_4732.jpg|4:3|0.50|0.40|640,1000|140"
+  "libro-c-sentada-2|Fotos Libro/IMG_4733.JPG|4:3|0.50|0.40|640,1000|140"
+  "libro-c-firma-pila|Fotos Libro/IMG_4716.JPG|4:3|0.55|0.62|640,1000|140"
+  "libro-c-escalinatas|Fotos Libro/IMG_3821.PNG|4:3|0.50|0.36|640,1000|140"
+  "libro-c-mesa-libros|Fotos Libro/7843284c-4872-4c87-9823-11c154f25df5.jpg|4:3|0.50|0.33|640,960|130"
 )
 
 [[ -d "$GERALDINE_FOTOS_DIR" ]] || { echo "ERROR: no existe GERALDINE_FOTOS_DIR='$GERALDINE_FOTOS_DIR'" >&2; exit 1; }
