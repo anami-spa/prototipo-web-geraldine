@@ -456,7 +456,7 @@ export default function App() {
             {/* 3. FRANJA / MARQUEE CON PALABRAS CLAVE EN LOOP: bajo el hero (Cristian, 24-nov: arriba no se ve bien) */}
             <section
               aria-label="Trayectoria y credenciales clave"
-              className="bg-[#121A16] text-[#F4F1EA] py-4 border-b border-[#26312B] overflow-hidden"
+              className="bg-[var(--color-accent-fill)] text-[#171A17] py-4 border-b border-[#CDB56A] overflow-hidden"
             >
               <div className="animate-marquee-loop flex items-center">
                 {[0, 1, 2, 3].map((repeatIndex) => (
@@ -467,10 +467,10 @@ export default function App() {
                   >
                     {MARQUEE_ITEMS.map((item, itemIdx) => (
                       <React.Fragment key={`${repeatIndex}-${itemIdx}`}>
-                        <span className="px-5 sm:px-7 text-sm sm:text-base font-editorial tracking-wide whitespace-nowrap text-[#F4F1EA]">
+                        <span className="px-5 sm:px-7 text-sm sm:text-base font-editorial tracking-wide whitespace-nowrap text-[#171A17]">
                           {item}
                         </span>
-                        <span className="text-[var(--color-accent-fill)] select-none" aria-hidden="true">
+                        <span className="text-[#171A17]/60 select-none" aria-hidden="true">
                           ·
                         </span>
                       </React.Fragment>
@@ -550,18 +550,18 @@ export default function App() {
 
                     <dl className="mt-8 grid grid-cols-2 gap-6 pt-6 border-t border-[#DEDAD0]">
                       <div>
-                        <dt className="text-xs text-[#5A5D56] mb-1">Profesionales formados</dt>
+                        <dt className="text-[13px] text-[#5A5D56] mb-1">Profesionales formados</dt>
                         <dd className="font-tabular text-2xl sm:text-3xl font-semibold text-[#171A17]">
                           +1.000
                         </dd>
-                        <span className="text-xs text-[#5A5D56]">Emprendedores y consultores</span>
+                        <span className="text-sm text-[#5A5D56]">Emprendedores y consultores</span>
                       </div>
                       <div>
-                        <dt className="text-xs text-[#5A5D56] mb-1">Experiencia docente</dt>
+                        <dt className="text-[13px] text-[#5A5D56] mb-1">Experiencia docente</dt>
                         <dd className="font-tabular text-2xl sm:text-3xl font-semibold text-[#171A17]">
                           12 años
                         </dd>
-                        <span className="text-xs text-[#5A5D56]">
+                        <span className="text-sm text-[#5A5D56]">
                           En Chile y Latam
                         </span>
                       </div>
@@ -570,13 +570,6 @@ export default function App() {
 
                   {/* Right Column: Anchor Quote + Brief Method Explanation + CTA (7 cols) */}
                   <div className="lg:col-span-7">
-                    <p
-                      aria-hidden="true"
-                      className="text-xs sm:text-sm font-tabular tracking-wider text-[var(--color-accent)] mb-3"
-                    >
-                      EL CAMBIO DE ENFOQUE COMERCIAL
-                    </p>
-
                     <blockquote className="mb-8">
                       <h2
                         className="font-editorial text-3xl sm:text-4xl lg:text-[2.75rem] leading-[1.15] italic text-[#171A17]"
@@ -665,11 +658,6 @@ export default function App() {
               <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-10 mb-12 border-b border-[#27332C]">
                   <div>
-                    <div className="flex items-center gap-2 text-xs sm:text-sm font-tabular text-[var(--color-accent-fill)] mb-3">
-                      <span>ARQUITECTURA DE PROGRAMAS</span>
-                      <span aria-hidden="true">·</span>
-                      <span>ESCUELA Y SPEAKER</span>
-                    </div>
                     <h2
                       className="font-editorial text-3xl sm:text-4xl lg:text-5xl text-[#F4F1EA] tracking-[0.01em]"
                       style={{ textWrap: 'balance' }}
@@ -731,7 +719,7 @@ export default function App() {
                               Sesión Diagnóstica →
                             </button>
                           </div>
-                          <p className="text-xs text-[#B6B2A8] mb-2 leading-relaxed">
+                          <p className="text-sm text-[#B6B2A8] mb-2 leading-relaxed">
                             Revisión estratégica de 60 min para detectar dónde se traba hoy tu
                             discurso o tu oferta.
                           </p>
@@ -748,7 +736,7 @@ export default function App() {
                               Narrativa Comercial →
                             </button>
                           </div>
-                          <p className="text-xs text-[#B6B2A8] mb-1.5 leading-relaxed">
+                          <p className="text-sm text-[#B6B2A8] mb-1.5 leading-relaxed">
                             Sesión estratégica + guion listo para usar + 7 días WhatsApp SOS.
                           </p>
                         </div>
@@ -764,7 +752,7 @@ export default function App() {
                               Vender sin Vender →
                             </button>
                           </div>
-                          <p className="text-xs text-[#B6B2A8] mb-2 leading-relaxed">
+                          <p className="text-sm text-[#B6B2A8] mb-2 leading-relaxed">
                             Curso grupal intensivo + 30 días de acompañamiento por WhatsApp.
                           </p>
                           <p className="font-tabular text-xs text-[#E6E2D8]">Próxima cohorte: fecha por confirmar</p>
@@ -829,7 +817,7 @@ export default function App() {
                               Relatorías y Conferencias →
                             </button>
                           </div>
-                          <p className="text-xs text-[#B6B2A8] mb-2 leading-relaxed">
+                          <p className="text-sm text-[#B6B2A8] mb-2 leading-relaxed">
                             Conferencias sobre <strong>Problema Real del Cliente</strong>,{' '}
                             <strong>Experiencia del Cliente</strong> y{' '}
                             <strong>Ruta Emprendedora</strong>.
@@ -847,7 +835,7 @@ export default function App() {
                               Conexiones que Conectan →
                             </button>
                           </div>
-                          <p className="text-xs text-[#B6B2A8] mb-2 leading-relaxed">
+                          <p className="text-sm text-[#B6B2A8] mb-2 leading-relaxed">
                             Taller de Networking presencial en Concepción. Revisa los detalles en su ficha.
                           </p>
                         </div>
@@ -877,11 +865,6 @@ export default function App() {
               <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 mb-12 border-b border-[#DEDAD0]">
                   <div>
-                    <div className="flex items-center gap-2 text-xs sm:text-sm font-tabular text-[var(--color-accent)] mb-3">
-                      <span>EVIDENCIA REAL EN TERRENO</span>
-                      <span aria-hidden="true">·</span>
-                      <span>RESULTADOS DEL MÉTODO</span>
-                    </div>
                     <h2
                       id="testimonios-heading"
                       className="font-editorial text-3xl sm:text-4xl lg:text-5xl text-[#171A17]"
@@ -918,7 +901,7 @@ export default function App() {
 
                       <footer className="pt-4 border-t border-[#E6E2D6]">
                         <div className="font-semibold text-base text-[#171A17]">{item.name}</div>
-                        <div className="text-xs sm:text-sm text-[#5A5D56] mt-0.5">{item.role}</div>
+                        <div className="text-sm text-[#5A5D56] mt-0.5">{item.role}</div>
                       </footer>
                     </article>
                   ))}
@@ -948,9 +931,6 @@ export default function App() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
                   <div className="lg:col-span-7">
-                    <div className="text-xs font-tabular text-[var(--color-accent-fill)] mb-2">
-                      PROGRAMA DE CONVERSACIÓN Y NEGOCIOS
-                    </div>
                     <h2
                       className="font-editorial text-3xl sm:text-4xl lg:text-5xl text-[#F6F3EC] mb-4 tracking-[0.01em]"
                       style={{ textWrap: 'balance' }}
@@ -981,7 +961,7 @@ export default function App() {
                         <span className="text-[var(--color-accent-fill)]">{SITE_LINKS.radioEmisora}</span>
                       </div>
 
-                      <p className="text-xs sm:text-sm text-[#BFB7AC] mb-5 leading-relaxed">
+                      <p className="text-sm text-[#BFB7AC] mb-5 leading-relaxed">
                         {SITE_LINKS.radioInvitados}. Alcance real: {SITE_LINKS.radioAlcance}.
                         Escucha las entrevistas y conoce los planes de auspicio PYME y Empresa en
                         la página oficial del programa.
@@ -1043,7 +1023,7 @@ export default function App() {
             <section aria-labelledby="blog-home-title" className="py-16 lg:py-20 bg-[var(--color-paper)] border-b border-[var(--color-border)]">
               <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
                 <div className="flex flex-wrap items-end justify-between gap-5 mb-8">
-                  <div><p className="font-tabular text-xs text-[var(--color-accent-strong)] mb-2">IDEAS PARA EMPRENDER</p>
+                  <div>
                     <h2 id="blog-home-title" className="font-editorial text-3xl sm:text-4xl text-[var(--color-ink)]">Del blog</h2></div>
                   <button type="button" onClick={() => navigateTo('/blog')} className="min-h-11 text-sm font-semibold text-[var(--color-accent-strong)] hover:underline">Ver todos los artículos →</button>
                 </div>
@@ -1075,7 +1055,7 @@ export default function App() {
                     <h3 className="font-editorial text-xl sm:text-2xl text-[#171A17] mb-2">
                       Marca las frases que hoy te resulten familiares:
                     </h3>
-                    <p className="text-xs sm:text-sm text-[#5A5D56] mb-5">
+                    <p className="text-sm text-[#5A5D56] mb-5">
                       Descubre en menos de 60 segundos si tu narrativa comercial actual está
                       frenando tus ventas.
                     </p>
@@ -1098,7 +1078,7 @@ export default function App() {
                               onChange={() => handleToggleQuestion(q.id)}
                               className="mt-1 h-4 w-4 accent-[var(--color-accent)] rounded-sm shrink-0 focus-visible:outline-2 focus-visible:outline-[var(--color-accent)]"
                             />
-                            <span className="text-xs sm:text-sm leading-relaxed">{q.text}</span>
+                            <span className="text-sm leading-relaxed">{q.text}</span>
                           </label>
                         );
                       })}
@@ -1118,9 +1098,6 @@ export default function App() {
 
                   {/* Próximo paso claro, sin simular una suscripción no integrada. */}
                   <div className="lg:col-span-7 lg:pl-4">
-                    <p className="font-tabular text-xs sm:text-sm text-[var(--color-accent-strong)] mb-3">
-                      UNA MIRADA MÁS CLARA A TU MENSAJE
-                    </p>
                     <h3 className="font-editorial text-4xl sm:text-5xl text-[var(--color-ink)] leading-tight mb-5">
                       Vender empieza por escuchar.
                     </h3>

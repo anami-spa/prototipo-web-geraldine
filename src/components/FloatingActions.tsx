@@ -10,6 +10,13 @@ const UMBRAL_PX = 600;
  */
 export function FloatingActions() {
   const [mostrarArriba, setMostrarArriba] = useState(false);
+  // La etiqueta de WhatsApp se ve unos segundos y luego queda solo el ícono (no tapa la foto del hero); reaparece con cursor o foco.
+  const [etiqueta, setEtiqueta] = useState(true);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setEtiqueta(false), 7000);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const alScroll = () => setMostrarArriba(window.scrollY > UMBRAL_PX);
@@ -43,10 +50,14 @@ export function FloatingActions() {
         href={`${SITE_LINKS.whatsapp}?text=${mensaje}`}
         target="_blank"
         rel="noopener noreferrer"
+        onMouseEnter={() => setEtiqueta(true)}
+        onMouseLeave={() => setEtiqueta(false)}
+        onFocus={() => setEtiqueta(true)}
+        onBlur={() => setEtiqueta(false)}
         className="pointer-events-auto inline-flex min-h-12 items-center gap-2 rounded-full bg-[#1F7A4D] px-4 py-3 text-sm font-semibold text-white shadow-lg hover:brightness-110"
       >
         <MessageCircle className="h-6 w-6 shrink-0" aria-hidden="true" />
-        <span className="max-sm:sr-only">¿Qué necesitas? Chatea conmigo</span>
+        <span className={etiqueta ? 'max-sm:sr-only' : 'sr-only'}>¿Qué necesitas? Chatea conmigo</span>
         <span className="sr-only"> (WhatsApp, se abre en una pestaña nueva)</span>
       </a>
     </div>

@@ -7,7 +7,6 @@ export function VideoTestimonialsCarousel() {
   return (
     <section className="py-14 lg:py-20 border-b border-[#DEDAD0]" aria-labelledby="testimonios-video-title">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
-        <p className="font-tabular text-xs text-[var(--color-accent)] mb-2">TESTIMONIOS EN VIDEO</p>
         <h2 id="testimonios-video-title" className="font-editorial text-3xl sm:text-4xl mb-8">
           Testimonios
         </h2>

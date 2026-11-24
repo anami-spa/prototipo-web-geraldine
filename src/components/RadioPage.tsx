@@ -255,7 +255,6 @@ export function RadioPage({ onNavigate }: { onNavigate: (route: RoutePath) => vo
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
             <div>
-              <div className="font-tabular text-xs text-[var(--color-accent)] mb-2">ALIANZAS DE COLABORACIÓN</div>
               <h2 className="font-editorial text-2xl sm:text-3xl text-[#171A17]">
                 Alianzas de colaboración
               </h2>
