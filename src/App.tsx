@@ -909,7 +909,8 @@ export default function App() {
                         </div>
 
                         <blockquote className="mb-8">
-                          <p className="font-editorial text-lg sm:text-xl text-[#171A17] leading-relaxed">
+                          {/* Cita larga en la fuente de texto: en versalitas (fuente de títulos) un párrafo de 8 a 10 líneas no se lee. */}
+                          <p className="text-base sm:text-[1.0625rem] text-[#232620] leading-[1.7]">
                             “{item.quote}”
                           </p>
                         </blockquote>
