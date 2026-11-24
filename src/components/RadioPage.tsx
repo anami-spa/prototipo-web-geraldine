@@ -144,9 +144,9 @@ export function RadioPage({ onNavigate }: { onNavigate: (route: RoutePath) => vo
             <div className="font-tabular text-xs text-[var(--color-accent)] font-semibold mb-2">
               FORMATOS GRATUITOS SIN LISTA DE ESPERA
             </div>
-            <h3 className="font-editorial text-2xl text-[#171A17] mb-6">
+            <h2 className="font-editorial text-2xl text-[#171A17] mb-6">
               Participa hoy mismo con la comunidad de Aprende a Emprender
-            </h3>
+            </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="p-5 bg-[var(--color-surface)] border border-[#DED8CA] rounded-sm">
@@ -154,9 +154,9 @@ export function RadioPage({ onNavigate }: { onNavigate: (route: RoutePath) => vo
                   <Mic className="w-4 h-4" aria-hidden="true" />
                   <span>FORMATO GRATUITO 01</span>
                 </div>
-                <h4 className="font-editorial text-xl text-[#171A17] mb-2">
+                <h3 className="font-editorial text-xl text-[#171A17] mb-2">
                   Audio Emprendedor (Pitch de 20 seg por WhatsApp)
-                </h4>
+                </h3>
                 <p className="text-sm text-[#383B36] leading-relaxed">
                   Envía tu nota de voz con un pitch de 20 segundos por WhatsApp presentando qué
                   problema resuelves y cómo contactarte para ser emitido al aire sin lista de
@@ -169,9 +169,9 @@ export function RadioPage({ onNavigate }: { onNavigate: (route: RoutePath) => vo
                   <Calendar className="w-4 h-4" aria-hidden="true" />
                   <span>FORMATO GRATUITO 02</span>
                 </div>
-                <h4 className="font-editorial text-xl text-[#171A17] mb-2">
+                <h3 className="font-editorial text-xl text-[#171A17] mb-2">
                   Panoramas Mensuales (Agenda de eventos del ecosistema)
-                </h4>
+                </h3>
                 <p className="text-sm text-[#383B36] leading-relaxed">
                   Difusión gratuita de talleres, ferias, charlas y encuentros del ecosistema
                   emprendedor dentro de nuestra agenda radial mensual.

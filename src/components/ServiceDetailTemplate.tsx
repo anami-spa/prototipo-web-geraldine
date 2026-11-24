@@ -303,7 +303,7 @@ export function ServiceDetailTemplate({
       {/* 5 & 6 & 7. PRECIO REGULAR VS PREFERENCIAL + GARANTÍA + BOTÓN DE PAGO FLOW */}
       <section
         id="checkout-flow"
-        className="scroll-mt-16 py-16 lg:py-24 bg-[#121A16] text-[#F4F1EA] border-b border-[#26312B]"
+        className="py-16 lg:py-24 bg-[#121A16] text-[#F4F1EA] border-b border-[#26312B]"
       >
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">

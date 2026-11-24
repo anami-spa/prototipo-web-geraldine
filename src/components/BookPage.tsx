@@ -88,6 +88,8 @@ export function BookPage() {
                 </p>
               </div>
 
+              {/* Precio y canal de compra: los dio Geraldine en su revisión (fila 12 del doc «Para modificar», 16-nov-2026)
+                  y se verificó en la ficha de Buscalibre el 23-nov-2026 ($20.000). Si cambia, confirmar con ella. */}
               <div className="max-w-xl rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] p-5 sm:p-6">
                 <p className="font-tabular text-xs text-[var(--color-accent-strong)] font-semibold mb-3">COMPRA EN LÍNEA</p>
                 <div className="flex flex-wrap items-baseline justify-between gap-3 mb-2">

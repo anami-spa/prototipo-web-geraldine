@@ -40,6 +40,8 @@ export function AvisoPrioritario({ enabled, onNavigate }: AvisoPrioritarioProps)
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [abierto, setAbierto] = useState(false);
   const [noVolver, setNoVolver] = useState(false);
+  // Una sola apertura por carga de la página, aunque la ruta alterne entre habilitada y no (y aunque el almacenamiento esté bloqueado).
+  const yaMostrado = useRef(false);
 
   const claveOcultar = `aviso:${aviso.id}:ocultar`;
   const claveVisto = `aviso:${aviso.id}:visto`;
@@ -54,9 +56,12 @@ export function AvisoPrioritario({ enabled, onNavigate }: AvisoPrioritarioProps)
 
   // Abrir con retraso, solo si es vigente y la persona no lo descartó (para siempre o en esta sesión).
   useEffect(() => {
-    if (!enabled || !vigente()) return;
+    if (!enabled || !vigente() || yaMostrado.current) return;
     if (leer('local', claveOcultar) || leer('session', claveVisto)) return;
-    const timer = window.setTimeout(() => setAbierto(true), RETRASO_MS);
+    const timer = window.setTimeout(() => {
+      yaMostrado.current = true;
+      setAbierto(true);
+    }, RETRASO_MS);
     return () => window.clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enabled, aviso.id]);
@@ -64,6 +69,11 @@ export function AvisoPrioritario({ enabled, onNavigate }: AvisoPrioritarioProps)
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
+    // Si la ruta deja de admitir el aviso con el diálogo abierto (p. ej. «Atrás»), se repliega también el estado.
+    if (!enabled && abierto) {
+      setAbierto(false);
+      return;
+    }
     if (abierto && enabled && !dialog.open) dialog.showModal();
     if ((!abierto || !enabled) && dialog.open) dialog.close();
   }, [abierto, enabled]);

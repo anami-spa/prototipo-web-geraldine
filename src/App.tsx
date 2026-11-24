@@ -1253,7 +1253,7 @@ export default function App() {
       {/* Flotantes y ventana emergente: no se montan en las cartas de venta ni en las páginas legales. */}
       {!isLanding && <FloatingActions />}
       <AvisoPrioritario
-        enabled={!isLanding && activeRoute !== '/privacidad' && activeRoute !== '/terminos'}
+        enabled={!isLanding && !mobileMenuOpen && activeRoute !== '/privacidad' && activeRoute !== '/terminos'}
         onNavigate={navigateTo}
       />
     </div>

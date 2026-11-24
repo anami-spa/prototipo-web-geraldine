@@ -46,7 +46,7 @@ export function ScrollCarousel({ label, children, className = '' }: ScrollCarous
   };
 
   const buttonClass =
-    'inline-flex h-11 w-11 items-center justify-center rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-ink)] transition-colors hover:bg-[var(--color-surface-alt)] disabled:cursor-not-allowed disabled:opacity-40';
+    'inline-flex h-11 w-11 items-center justify-center rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-ink)] transition-colors hover:bg-[var(--color-surface-alt)] aria-disabled:cursor-not-allowed aria-disabled:opacity-40';
 
   return (
     <div className={className}>
@@ -71,10 +71,11 @@ export function ScrollCarousel({ label, children, className = '' }: ScrollCarous
         ))}
       </div>
       <div className="mt-3 flex items-center justify-end gap-2">
-        <button type="button" onClick={() => scrollByPage(-1)} disabled={!canPrev} className={buttonClass} aria-label={`${label}: anterior`}>
+        {/* aria-disabled y no `disabled`: con `disabled` el botón enfocado al llegar al final pierde el foco hacia <body>. */}
+        <button type="button" onClick={() => canPrev && scrollByPage(-1)} aria-disabled={!canPrev} className={buttonClass} aria-label={`${label}: anterior`}>
           <ChevronLeft className="h-5 w-5" aria-hidden="true" />
         </button>
-        <button type="button" onClick={() => scrollByPage(1)} disabled={!canNext} className={buttonClass} aria-label={`${label}: siguiente`}>
+        <button type="button" onClick={() => canNext && scrollByPage(1)} aria-disabled={!canNext} className={buttonClass} aria-label={`${label}: siguiente`}>
           <ChevronRight className="h-5 w-5" aria-hidden="true" />
         </button>
       </div>
