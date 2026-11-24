@@ -596,13 +596,14 @@ export function ContactoPage() {
             className="font-editorial text-4xl sm:text-5xl lg:text-[3.5rem] leading-[1.08] text-[#171A17] mb-6"
             style={{ textWrap: 'balance' }}
           >
-            ¡Contáctame! Desbloquea el potencial de tu marca hoy.
+            Cuéntame qué se está trabando en tu negocio.
           </h1>
 
+          {/* Propuesta de redacción (opción A) para aprobar con Geraldine; el texto original está en la nota de propuestas. */}
           <p className="text-base sm:text-lg text-[#383B36] max-w-[62ch] leading-relaxed">
-            ¿Quieres consultar por la Escuela de Ventas, cotizar una conferencia como Speaker,
-            auspiciar el programa radial <em>Aprende a Emprender</em> o resolver una duda puntual?
-            Escríbeme directamente.
+            Escríbeme y vemos qué camino te conviene: la Escuela de Ventas, una conferencia como
+            Speaker, auspiciar el programa radial <em>Aprende a Emprender</em> o resolver una duda
+            puntual. Te respondo personalmente.
           </p>
           </div>
 
