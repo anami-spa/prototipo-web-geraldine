@@ -627,11 +627,15 @@ export function ContactoPage() {
             {/* Left Column: Real Email + WhatsApp & Social Placeholders (6 cols) */}
             <div className="min-w-0 lg:col-span-6 space-y-6">
               {/* Real Email Card */}
-              <div className="bg-[#121A16] text-[#F4F1EA] border border-[#2C3A32] rounded-sm p-6 sm:p-8">
+              <div className="@container bg-[#121A16] text-[#F4F1EA] border border-[#2C3A32] rounded-sm p-6 sm:p-8">
                 <div className="font-tabular text-xs text-[var(--color-accent-fill)] mb-2">
                   CORREO ELECTRÓNICO OFICIAL (CONFIRMADO)
                 </div>
-                <h2 className="font-editorial text-2xl sm:text-3xl text-[#F4F1EA] mb-2 [overflow-wrap:anywhere]">
+                {/* Una sola línea (pedido de Geraldine): el tamaño sigue el ancho de la tarjeta. Fuente de texto, no la de títulos (versalitas, muy ancha). */}
+                <h2
+                  className="font-semibold text-[clamp(0.875rem,5.8cqw,1.875rem)] whitespace-nowrap text-[#F4F1EA] mb-2"
+                  style={{ fontFamily: 'var(--font-sans)' }}
+                >
                   {SITE_LINKS.email}
                 </h2>
                 <p className="text-sm text-[#C4C0B6] mb-6">

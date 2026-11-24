@@ -90,8 +90,6 @@ export function HeroSlider({ onNavigate }: HeroSliderProps) {
                   <span className="text-[var(--color-accent)] font-semibold">{item.kicker}</span>
                   <span aria-hidden="true" className="hidden sm:inline">·</span>
                   <span className="hidden sm:inline">Geraldine Manríquez</span>
-                  <span aria-hidden="true" className="hidden sm:inline">·</span>
-                  <span className="hidden sm:inline">Concepción, Chile</span>
                 </div>
 
                 <h1

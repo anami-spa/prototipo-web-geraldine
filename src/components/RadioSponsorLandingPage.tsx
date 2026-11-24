@@ -1,13 +1,13 @@
 import { ArrowRight, Check, MessageCircle } from 'lucide-react';
-import { RADIO_PLANS, SITE_LINKS, type RoutePath } from '../data/siteContent';
+import { RADIO_PLANS, SITE_LINKS } from '../data/siteContent';
 import { photo, type PhotoId } from '../data/photos';
 import { ResilientImage } from './ResilientImage';
 
 type Audience = 'pyme' | 'empresa';
 
-export function RadioSponsorLandingPage({ audience, onNavigate }: {
+/** Carta de venta de auspicio radial (landing): sin menú, sin footer y sin salidas; la acción es consultar por WhatsApp. */
+export function RadioSponsorLandingPage({ audience }: {
   audience: Audience;
-  onNavigate: (route: RoutePath) => void;
 }) {
   const isPyme = audience === 'pyme';
   const label = isPyme ? 'PyME' : 'Empresa';
@@ -85,15 +85,9 @@ export function RadioSponsorLandingPage({ audience, onNavigate }: {
             </article>
           ))}
         </div>
-        <p className="mt-6 text-sm text-[#5A5D56]">La coordinación se realiza directamente con Geraldine. Los valores y condiciones requieren su confirmación. También puedes escribir a <a href={`mailto:${SITE_LINKS.email}`} className="font-semibold text-[var(--color-accent)] underline">{SITE_LINKS.email}</a>.</p>
+        <p className="mt-6 text-sm text-[#5A5D56]">La coordinación se realiza directamente con Geraldine. Los valores y condiciones requieren su confirmación. También puedes escribir a <span className="font-semibold text-[var(--color-accent)]">{SITE_LINKS.email}</span>.</p>
       </section>
 
-      <section className="border-t border-[#DEDAD0] bg-white py-12">
-        <div className="mx-auto max-w-[1100px] px-4 sm:px-6 flex flex-wrap items-center justify-between gap-4">
-          <p className="font-editorial text-xl">¿Necesitas otra modalidad?</p>
-          <button type="button" onClick={() => onNavigate('/radio')} className="min-h-11 text-sm font-semibold text-[var(--color-accent)] underline underline-offset-4">Volver al programa radial</button>
-        </div>
-      </section>
     </div>
   );
 }
