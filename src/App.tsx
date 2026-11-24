@@ -443,7 +443,17 @@ export default function App() {
         {/* HOME PAGE (Preserved & Expanded with direct links to all new routes) */}
         {activeRoute === '/' && (
           <>
-            {/* 3. FRANJA / MARQUEE CON PALABRAS CLAVE EN LOOP: pegada bajo el menú, antes del hero (pedido de Cristian, 24-nov) */}
+            {/* 2. HERO SECTION */}
+            <section
+              id="inicio"
+              className="scroll-mt-16 relative overflow-hidden pt-10 pb-16 lg:pt-16 lg:pb-24 border-b border-[#DEDAD0]"
+            >
+              <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
+                <HeroSlider onNavigate={navigateTo} />
+              </div>
+            </section>
+
+            {/* 3. FRANJA / MARQUEE CON PALABRAS CLAVE EN LOOP: bajo el hero (Cristian, 24-nov: arriba no se ve bien) */}
             <section
               aria-label="Trayectoria y credenciales clave"
               className="bg-[#121A16] text-[#F4F1EA] py-4 border-b border-[#26312B] overflow-hidden"
@@ -467,16 +477,6 @@ export default function App() {
                     ))}
                   </div>
                 ))}
-              </div>
-            </section>
-
-            {/* 2. HERO SECTION */}
-            <section
-              id="inicio"
-              className="scroll-mt-16 relative overflow-hidden pt-10 pb-16 lg:pt-16 lg:pb-24 border-b border-[#DEDAD0]"
-            >
-              <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
-                <HeroSlider onNavigate={navigateTo} />
               </div>
             </section>
 
