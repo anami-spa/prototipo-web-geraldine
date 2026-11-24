@@ -479,35 +479,49 @@ export default function App() {
               </div>
             </section>
 
-            {/* MISIÓN: va debajo del carrusel (pedido de Geraldine, nov-2026). Texto suyo; el diseño es de ANAMI. */}
+            {/* MISIÓN: va debajo del carrusel (pedido de Geraldine, nov-2026). Texto suyo; el diseño y la foto son de ANAMI. */}
             <section
               aria-labelledby="mision-title"
               className="py-16 lg:py-24 border-b border-[#26312B] bg-[var(--color-night)] text-[#F4F1EA]"
             >
-              <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-                <h2
-                  id="mision-title"
-                  className="lg:col-span-7 font-sans text-2xl sm:text-3xl lg:text-4xl font-medium leading-[1.3] before:mb-6 before:block before:h-1 before:w-16 before:bg-[var(--color-accent-fill)] before:content-['']"
-                  style={{ textWrap: 'balance' }}
-                >
-                  Mi misión es ayudarte a destrabar tu negocio, estructurar tus ideas y dominar una
-                  narrativa comercial que atraiga a tu cliente ideal de forma natural.
-                </h2>
-                <div className="lg:col-span-5 rounded-sm border border-[#2C3A32] bg-[var(--color-night-raised)] p-6 sm:p-8">
-                  <p className="text-base sm:text-lg leading-relaxed text-[#C4C0B6]">
-                    De hecho, la mayoría de los profesionales, coaches, terapeutas y emprendedores
-                    que me contactan me dicen:
-                  </p>
-                  <ul className="mt-6 space-y-4">
-                    {MISION_DICHOS.map((dicho) => (
-                      <li key={dicho} className="flex items-start gap-3 text-lg font-semibold leading-snug">
-                        <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent-fill)] text-[#171A17]">
-                          <Check className="h-3.5 w-3.5 stroke-[3]" aria-hidden="true" />
-                        </span>
-                        <span>{dicho}</span>
-                      </li>
-                    ))}
-                  </ul>
+              <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+                <figure className="lg:col-span-4 mx-auto w-full max-w-sm lg:max-w-none">
+                  <div className="overflow-hidden rounded-sm border border-[#2C3A32] bg-[var(--color-night-raised)] aspect-[4/5]">
+                    <ResilientImage
+                      {...photo('sobre-retrato')}
+                      sizes="(min-width: 1024px) 380px, 90vw"
+                      loading="lazy"
+                      decoding="async"
+                      fallbackTitle="Geraldine Manríquez"
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                </figure>
+                <div className="lg:col-span-8">
+                  <h2
+                    id="mision-title"
+                    className="font-sans text-2xl sm:text-3xl lg:text-4xl font-medium leading-[1.3] before:mb-6 before:block before:h-1 before:w-16 before:bg-[var(--color-accent-fill)] before:content-['']"
+                    style={{ textWrap: 'balance' }}
+                  >
+                    Mi misión es ayudarte a destrabar tu negocio, estructurar tus ideas y dominar una
+                    narrativa comercial que atraiga a tu cliente ideal de forma natural.
+                  </h2>
+                  <div className="mt-10 rounded-sm border border-[#2C3A32] bg-[var(--color-night-raised)] p-6 sm:p-8">
+                    <p className="text-base sm:text-lg leading-relaxed text-[#C4C0B6]">
+                      De hecho, la mayoría de los profesionales, coaches, terapeutas y emprendedores
+                      que me contactan me dicen:
+                    </p>
+                    <ul className="mt-6 space-y-4">
+                      {MISION_DICHOS.map((dicho) => (
+                        <li key={dicho} className="flex items-start gap-3 text-lg font-semibold leading-snug">
+                          <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent-fill)] text-[#171A17]">
+                            <Check className="h-3.5 w-3.5 stroke-[3]" aria-hidden="true" />
+                          </span>
+                          <span>{dicho}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               </div>
             </section>
@@ -708,7 +722,7 @@ export default function App() {
                             <button
                               type="button"
                               onClick={() => navigateTo('/escuela/diagnostico')}
-                              className="inline-flex min-h-11 items-center font-semibold text-base text-[#F4F1EA] hover:text-[var(--color-accent-fill)] text-left transition-colors cursor-pointer"
+                              className="inline-flex min-h-11 items-center rounded-sm bg-[var(--color-accent-fill)] px-4 font-semibold text-sm text-[#121A16] text-left transition-colors hover:brightness-95 cursor-pointer"
                             >
                               Sesión Diagnóstica →
                             </button>
