@@ -140,13 +140,6 @@ export default function App() {
   const previousRouteRef = useRef(activeRoute);
   const [storyExpanded, setStoryExpanded] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<string | null>(null);
-  // Quick 1-minute diagnostic state
-  const [checkedQuestions, setCheckedQuestions] = useState<Record<string, boolean>>({
-    q1: false,
-    q2: false,
-    q3: false,
-  });
-
   // One presentation direction, including links with the old ?tema=b parameter.
   useEffect(() => {
     document.documentElement.setAttribute('data-tema', 'a');
@@ -263,14 +256,6 @@ export default function App() {
     }
   };
 
-  const handleToggleQuestion = (id: string) => {
-    setCheckedQuestions((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
-  };
-
-  const checkedCount = Object.values(checkedQuestions).filter(Boolean).length;
   const isLanding = LANDING_ROUTES.includes(activeRoute);
 
   const navItems: { label: string; route: RoutePath; matchPrefix?: string }[] = [
@@ -1052,84 +1037,45 @@ export default function App() {
               </div>
             </section>
 
+            {/* Antes: test rápido con puntaje. Se retiró (sin aporte, y el resultado era un texto inventado); las tres frases quedan como texto fijo. */}
             <section
               id="diagnostico"
+              aria-labelledby="escuchar-title"
               className="scroll-mt-16 py-16 lg:py-24 bg-[var(--color-surface-alt)] border-b border-[var(--color-border)]"
             >
-              <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10">
-                <h2 className="sr-only">Autodiagnóstico de narrativa comercial</h2>
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
-                  {/* Left Column: 1-Minute Interactive Self-Check (5 cols) */}
-                  <div className="lg:col-span-5 bg-[var(--color-surface)] border border-[#D8D3C6] rounded-sm p-6 sm:p-8">
-                    <div className="flex items-center justify-between gap-2 text-xs font-tabular text-[#676A63] pb-3 mb-4 border-b border-[#E5E0D4]">
-                      <span>TEST RÁPIDO · 1 MINUTO</span>
-                      <span>AUTODIAGNÓSTICO</span>
-                    </div>
-
-                    <h3 className="font-editorial text-xl sm:text-2xl text-[#171A17] mb-2">
-                      Marca las frases que hoy te resulten familiares:
-                    </h3>
-                    <p className="text-sm text-[#5A5D56] mb-5">
-                      Descubre en menos de 60 segundos si tu narrativa comercial actual está
-                      frenando tus ventas.
-                    </p>
-
-                    <div className="space-y-3 mb-6">
-                      {QUICK_DIAGNOSTIC_QUESTIONS.map((q) => {
-                        const isChecked = !!checkedQuestions[q.id];
-                        return (
-                          <label
-                            key={q.id}
-                            className={`flex items-start gap-3 p-3.5 rounded-sm border cursor-pointer transition-colors duration-150 ${
-                              isChecked
-                                ? 'bg-[#F4ECE9] border-[var(--color-accent)]/50 text-[#171A17]'
-                                : 'bg-[var(--color-paper)] border-[#DEDAD0] text-[#3E413B] hover:border-[#B5B0A3]'
-                            }`}
-                          >
-                            <input
-                              type="checkbox"
-                              checked={isChecked}
-                              onChange={() => handleToggleQuestion(q.id)}
-                              className="mt-1 h-4 w-4 accent-[var(--color-accent)] rounded-sm shrink-0 focus-visible:outline-2 focus-visible:outline-[var(--color-accent)]"
-                            />
-                            <span className="text-sm leading-relaxed">{q.text}</span>
-                          </label>
-                        );
-                      })}
-                    </div>
-
-                    <div className="p-4 bg-[#EFECE3] border-l-2 border-[var(--color-accent)] text-xs sm:text-sm text-[#2A2D28]">
-                      <div className="font-tabular text-xs font-semibold text-[var(--color-accent)] mb-1">
-                        RESULTADO PRELIMINAR ({checkedCount}/3 SEÑALES DETECTADAS)
-                      </div>
-                      {checkedCount === 0 ? (
-                        <p>Tienes una base clara. Explora los programas y recursos disponibles para seguir avanzando.</p>
-                      ) : (
-                        <p>Tu servicio tiene valor. Puede ayudarte traducirlo a los problemas concretos que quieres resolver.</p>
-                      )}
-                    </div>
+              <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+                <div className="lg:col-span-6">
+                  <h2
+                    id="escuchar-title"
+                    className="font-editorial text-4xl sm:text-5xl lg:text-6xl text-[var(--color-ink)] leading-[1.08] mb-6"
+                  >
+                    Vender empieza por escuchar.
+                  </h2>
+                  <p className="text-base sm:text-lg text-[var(--color-ink-soft)] leading-relaxed max-w-[52ch] mb-8">
+                    Explora los programas de la Escuela o conversemos sobre el desafío que estás viviendo.
+                  </p>
+                  <div className="flex flex-wrap gap-3">
+                    <button type="button" onClick={() => navigateTo('/escuela')}
+                      className="inline-flex min-h-11 items-center gap-2 px-5 py-3 text-sm font-semibold text-[var(--color-accent-on-fill)] bg-[var(--color-accent-fill)] rounded-sm hover:brightness-95 cursor-pointer">
+                      Conocer la Escuela <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                    </button>
+                    <button type="button" onClick={() => navigateTo('/contacto')}
+                      className="inline-flex min-h-11 items-center px-5 py-3 text-sm font-semibold text-[var(--color-ink)] border border-[var(--color-border)] rounded-sm hover:bg-[var(--color-surface)] cursor-pointer">
+                      Contactar a Geraldine
+                    </button>
                   </div>
+                </div>
 
-                  {/* Próximo paso claro, sin simular una suscripción no integrada. */}
-                  <div className="lg:col-span-7 lg:pl-4">
-                    <h3 className="font-editorial text-4xl sm:text-5xl text-[var(--color-ink)] leading-tight mb-5">
-                      Vender empieza por escuchar.
-                    </h3>
-                    <p className="text-base sm:text-lg text-[var(--color-ink-soft)] leading-relaxed max-w-[58ch] mb-7">
-                      Este ejercicio es una primera señal, no un diagnóstico profesional. Explora los
-                      programas de la Escuela o conversemos sobre el desafío que estás viviendo.
-                    </p>
-                    <div className="flex flex-wrap gap-3">
-                      <button type="button" onClick={() => navigateTo('/escuela')}
-                        className="inline-flex min-h-11 items-center gap-2 px-5 py-3 text-sm font-semibold text-[var(--color-accent-on-fill)] bg-[var(--color-accent-fill)] rounded-sm hover:brightness-95">
-                        Conocer la Escuela <ArrowRight className="w-4 h-4" aria-hidden="true" />
-                      </button>
-                      <button type="button" onClick={() => navigateTo('/contacto')}
-                        className="inline-flex min-h-11 items-center px-5 py-3 text-sm font-semibold text-[var(--color-ink)] border border-[var(--color-border)] rounded-sm hover:bg-[var(--color-surface)]">
-                        Contactar a Geraldine
-                      </button>
-                    </div>
-                  </div>
+                {/* Las tres frases de Geraldine, sin casillas ni puntaje. */}
+                <div className="lg:col-span-6">
+                  <p className="text-sm font-semibold text-[var(--color-accent-strong)] mb-4">¿Te suena alguna de estas frases?</p>
+                  <ul className="divide-y divide-[var(--color-border)] border-y border-[var(--color-border)]">
+                    {QUICK_DIAGNOSTIC_QUESTIONS.map((q) => (
+                      <li key={q.id} className="py-5 font-editorial text-lg sm:text-xl italic leading-snug text-[var(--color-ink)]">
+                        “{q.text}”
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             </section>
